@@ -1,0 +1,6 @@
+# ... name and triggers
+jobs:
+  main:
+    runs-on: linux-medium-js
+    steps:
+      - run: npx nx affected -t lint test build
