@@ -9,10 +9,10 @@ jobs:
       # These are just illustrative examples...
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
-      - run: npx nx-cloud start-workers
-      - run: npm ci
-      - run: npx nx affected -t lint test build
+      - run: pnpm nx-cloud start-workers
+      - run: pnpm ci
+      - run: pnpm nx affected -t lint test build
 
       # NEW: Add this step at the end of your job
-      - run: npx nx fix-ci
+      - run: pnpm nx fix-ci
         if: always() # IMPORTANT: Always run
