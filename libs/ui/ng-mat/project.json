@@ -1,0 +1,71 @@
+{
+  "name": "ng-mat",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ui/ng-mat/src",
+  "prefix": "mm",
+  "projectType": "library",
+  "tags": ["scope:ui", "framework:angular", "ds:material"],
+  "targets": {
+    "storybook": {
+      "executor": "@storybook/angular:start-storybook",
+      "continuous": true,
+      "readyWhen": {
+        "port": "{env.SBCONFIG_PORT ?? options.port ?? 9009}",
+        "host": "{env.SBCONFIG_HOSTNAME ?? options.host ?? localhost}"
+      },
+      "options": {
+        "port": 4400,
+        "configDir": "libs/ui/ng-mat/.storybook",
+        "browserTarget": "ng-mat:build-storybook",
+        "compodoc": false,
+        "styles": [
+          "node_modules/@angular/material/prebuilt-themes/azure-blue.css"
+        ]
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@storybook/angular:build-storybook",
+      "outputs": [
+        "{options.outputDir}"
+      ],
+      "options": {
+        "outputDir": "dist/storybook/ng-mat",
+        "configDir": "libs/ui/ng-mat/.storybook",
+        "browserTarget": "ng-mat:build-storybook",
+        "compodoc": false,
+        "styles": [
+          "node_modules/@angular/material/prebuilt-themes/azure-blue.css"
+        ]
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "static-storybook": {
+      "executor": "@nx/web:file-server",
+      "dependsOn": [
+        "build-storybook"
+      ],
+      "readyWhen": {
+        "signal": true
+      },
+      "options": {
+        "buildTarget": "ng-mat:build-storybook",
+        "staticFilePath": "dist/storybook/ng-mat",
+        "spa": true
+      },
+      "configurations": {
+        "ci": {
+          "buildTarget": "ng-mat:build-storybook:ci"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "fl-mat",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/ui/fl-mat/lib",
+  "tags": ["scope:ui", "framework:flutter", "ds:material"],
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/ui/fl-mat",
+        "command": "flutter analyze"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/ui/fl-mat",
+        "command": "flutter test"
+      }
+    },
+    "widgetbook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/ui/fl-mat",
+        "command": "flutter run -d chrome -t lib/widgetbook.dart"
+      }
+    }
+  }
+}
