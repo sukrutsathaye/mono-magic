@@ -15,6 +15,11 @@ jobs:
       # These are just illustrative examples...
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
+      - uses: pnpm/setup@v1
+        with:
+          version: 11
+          runtime: node@22
+          cache: true
       - run: pnpm nx-cloud start-workers
       - run: pnpm ci
       - run: pnpm nx affected -t lint test build
