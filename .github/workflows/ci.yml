@@ -20,8 +20,9 @@ jobs:
           version: 12.18.0
           runtime: node@22
           cache: true
-      - run: pnpm nx-cloud start-workers
       - run: pnpm ci
+      - run: pnpm nx-cloud start-workers
+
       - run: pnpm nx affected -t lint test build
 
       # NEW: Add this step at the end of your job
