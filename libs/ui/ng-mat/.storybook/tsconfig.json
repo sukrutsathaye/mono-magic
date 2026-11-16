@@ -1,0 +1,28 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../../..",
+    "outDir": "../out-tsc/storybook",
+    "tsBuildInfoFile": "../out-tsc/storybook/tsconfig.storybook.tsbuildinfo",
+    "emitDecoratorMetadata": true,
+    "emitDeclarationOnly": false
+  },
+  "exclude": ["../**/*.spec.ts"],
+  "include": [
+    "../src/**/*.stories.ts",
+    "../src/**/*.stories.js",
+    "../src/**/*.stories.jsx",
+    "../src/**/*.stories.tsx",
+    "../src/**/*.stories.mdx",
+    "*.js", 
+    "*.ts"
+    ],
+  "references": [
+    {
+      "path": "../tsconfig.lib.json"
+    },
+    {
+      "path": "../../interfaces/tsconfig.lib.json"
+    }
+  ]
+}
