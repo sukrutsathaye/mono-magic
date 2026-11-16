@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./libs/ui/interfaces"
+    },
+    {
+      "path": "./libs/ui/react-mui"
+    },
+    {
+      "path": "./libs/ui/ng-mat"
+    },
+    {
+      "path": "./libs/ui/rn-paper"
+    }
+  ]
+}

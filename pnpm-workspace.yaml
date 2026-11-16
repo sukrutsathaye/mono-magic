@@ -1,6 +1,13 @@
 packages:
-  - 'apps/*'
-  - 'libs/*'
+  - "apps/*"
+  - "libs/*"
+  - "libs/ui/*"
+  - "!libs/ui/fl-mat"
 
 allowBuilds:
   nx: true
+  esbuild: true
+  "@parcel/watcher": false
+  unrs-resolver: false
+  lmdb: false
+  msgpackr-extract: false
