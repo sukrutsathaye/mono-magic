@@ -5,7 +5,7 @@ import type {
   ButtonAtomProps,
   ButtonVariant,
   ColorIntent,
-} from '@mono-magic/interfaces';
+} from '@mono-magic/atomic-design-interfaces';
 
 @Component({
   selector: 'mm-button',

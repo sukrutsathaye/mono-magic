@@ -1,5 +1,5 @@
 /// Atomic Design taxonomy and shared property contracts for Flutter Material 3
-/// components, mirroring `@mono-magic/interfaces`.
+/// components, mirroring `@mono-magic/atomic-design-interfaces`.
 library;
 
 enum AtomicTier { atom, molecule, organism, template }

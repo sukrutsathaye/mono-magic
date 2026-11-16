@@ -4,7 +4,7 @@ import type {
   ButtonAtomProps,
   ButtonVariant,
   ColorIntent,
-} from '@mono-magic/interfaces';
+} from '@mono-magic/atomic-design-interfaces';
 
 export interface MagicButtonProps extends ButtonAtomProps {
   onClick?: () => void;

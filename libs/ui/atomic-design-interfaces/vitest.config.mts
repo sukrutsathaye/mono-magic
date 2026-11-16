@@ -2,9 +2,9 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
-  cacheDir: '../../../node_modules/.vite/libs/ui/interfaces',
+  cacheDir: '../../../node_modules/.vite/libs/ui/atomic-design-interfaces',
   test: {
-    name: 'interfaces',
+    name: 'atomic-design-interfaces',
     watch: false,
     globals: true,
     environment: 'node',

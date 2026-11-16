@@ -5,7 +5,7 @@ import {
   type TextInputAtomProps,
 } from '../index.js';
 
-describe('interfaces', () => {
+describe('atomic-design-interfaces', () => {
   it('exposes the four UI library Atomic Design tiers in order', () => {
     expect(ATOMIC_TIERS).toEqual(['atom', 'molecule', 'organism', 'template']);
   });

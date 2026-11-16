@@ -20,6 +20,6 @@
     "react-native": "0.85.3"
   },
   "dependencies": {
-    "@mono-magic/interfaces": "workspace:*"
+    "@mono-magic/atomic-design-interfaces": "workspace:*"
   }
 }

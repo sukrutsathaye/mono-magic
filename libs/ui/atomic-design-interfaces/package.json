@@ -1,5 +1,5 @@
 {
-  "name": "@mono-magic/interfaces",
+  "name": "@mono-magic/atomic-design-interfaces",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -14,7 +14,7 @@
     "./package.json": "./package.json"
   },
   "nx": {
-    "name": "interfaces",
+    "name": "atomic-design-interfaces",
     "tags": ["scope:ui", "type:interfaces"]
   },
   "dependencies": {}

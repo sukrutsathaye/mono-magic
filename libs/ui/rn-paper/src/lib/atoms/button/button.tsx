@@ -8,7 +8,7 @@ import type {
   ButtonAtomProps,
   ButtonVariant,
   ColorIntent,
-} from '@mono-magic/interfaces';
+} from '@mono-magic/atomic-design-interfaces';
 import { magicPaperTheme } from '../../theme/paper-theme';
 
 export interface MagicButtonProps extends ButtonAtomProps {

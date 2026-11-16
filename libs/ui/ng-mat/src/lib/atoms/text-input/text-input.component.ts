@@ -8,7 +8,7 @@ import type {
   AtomicSize,
   TextInputAtomProps,
   TextInputVariant,
-} from '@mono-magic/interfaces';
+} from '@mono-magic/atomic-design-interfaces';
 
 @Component({
   selector: 'mm-text-input',

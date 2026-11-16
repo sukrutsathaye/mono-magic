@@ -53,7 +53,7 @@
   ],
   "references": [
     {
-      "path": "../interfaces/tsconfig.lib.json"
+      "path": "../atomic-design-interfaces/tsconfig.lib.json"
     }
   ]
 }

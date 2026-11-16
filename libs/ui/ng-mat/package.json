@@ -12,6 +12,6 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@mono-magic/interfaces": "workspace:*"
+    "@mono-magic/atomic-design-interfaces": "workspace:*"
   }
 }

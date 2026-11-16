@@ -4,7 +4,7 @@ import type {
   ButtonVariant,
   ColorIntent,
   SearchBarMoleculeProps,
-} from '@mono-magic/interfaces';
+} from '@mono-magic/atomic-design-interfaces';
 import { MagicButtonComponent } from '../../atoms/button/button.component';
 import { MagicTextInputComponent } from '../../atoms/text-input/text-input.component';
 

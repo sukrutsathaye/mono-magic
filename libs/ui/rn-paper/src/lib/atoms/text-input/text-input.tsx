@@ -4,7 +4,7 @@ import {
   HelperText,
   TextInput as PaperTextInput,
 } from 'react-native-paper';
-import type { TextInputAtomProps } from '@mono-magic/interfaces';
+import type { TextInputAtomProps } from '@mono-magic/atomic-design-interfaces';
 
 export interface MagicTextInputProps extends TextInputAtomProps {
   onChangeText?: (value: string) => void;

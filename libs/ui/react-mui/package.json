@@ -16,6 +16,6 @@
     "tags": ["scope:ui", "framework:react", "ds:material"]
   },
   "dependencies": {
-    "@mono-magic/interfaces": "workspace:*"
+    "@mono-magic/atomic-design-interfaces": "workspace:*"
   }
 }

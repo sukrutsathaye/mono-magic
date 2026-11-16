@@ -4,7 +4,7 @@
   "files": [],
   "references": [
     {
-      "path": "./libs/ui/interfaces"
+      "path": "./libs/ui/atomic-design-interfaces"
     },
     {
       "path": "./libs/ui/react-mui"
