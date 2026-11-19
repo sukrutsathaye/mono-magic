@@ -1,0 +1,12 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  --mat-badge-background-color: var(--magic-intent, var(--mat-sys-error));
+  --mat-badge-text-color: var(--magic-on-intent, var(--mat-sys-on-error));
+}
+
+.magic-badge__anchor {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--magic-font-size, inherit);
+}

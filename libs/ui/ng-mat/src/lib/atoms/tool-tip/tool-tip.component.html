@@ -1,0 +1,14 @@
+<span
+  class="magic-tool-tip__trigger"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || null"
+  [matTooltip]="message()"
+  [matTooltipPosition]="position()"
+  [matTooltipShowDelay]="showDelay()"
+  [matTooltipHideDelay]="hideDelay()"
+  [matTooltipDisabled]="disabled()"
+  [matTooltipTouchGestures]="touchGestures()"
+>
+  <ng-content>{{ label() }}</ng-content>
+</span>

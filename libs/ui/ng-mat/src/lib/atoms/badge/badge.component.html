@@ -1,0 +1,21 @@
+<span
+  class="magic-badge__anchor"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || null"
+  [matBadge]="content()"
+  [matBadgeSize]="matBadgeSize()"
+  [matBadgePosition]="position()"
+  [matBadgeOverlap]="overlap()"
+  [matBadgeHidden]="hidden()"
+  [matBadgeDisabled]="disabled()"
+  [matBadgeDescription]="description() || ''"
+>
+  <ng-content>
+    @if (icon()) {
+      <mat-icon aria-hidden="true">{{ icon() }}</mat-icon>
+    } @else {
+      <span>{{ label() }}</span>
+    }
+  </ng-content>
+</span>
