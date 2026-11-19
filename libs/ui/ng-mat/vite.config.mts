@@ -1,11 +1,16 @@
 /// <reference types='vitest' />
 import { defineConfig } from 'vite';
 import angular from '@analogjs/vite-plugin-angular';
+import { join } from 'node:path';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
   cacheDir: '../../../node_modules/.vite/libs/ui/ng-mat',
-  plugins: [angular()],
+  plugins: [
+    angular({
+      tsconfig: join(import.meta.dirname, 'tsconfig.vitest.json'),
+    }),
+  ],
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [],

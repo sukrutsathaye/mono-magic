@@ -1,0 +1,36 @@
+// Public SCSS API of @mono-magic/ng-mat/theme
+//
+//   @use '@mono-magic/ng-mat/theme' as magic;
+//   @include magic.styles();                // all palette classes + utilities
+//   html { @include magic.theme('azure-blue'); }   // or a single palette
+@use '@angular/material' as mat;
+@use 'palettes';
+@use 'tokens';
+
+@mixin theme($name) {
+  @include palette-tokens($name);
+}
+
+@mixin palette-tokens($name) {
+  @include palettes.palette($name);
+  @include tokens.semantic-tokens;
+}
+
+/// Emits the global stylesheet: Material core, every palette class
+/// (`light-theme`, `dark-theme`, `rose-red`, `cyan-orange`, `orange-red`,
+/// `azure-blue`, `magenta-violet`) and the intent/size/shape utilities.
+@mixin styles {
+  @include mat.core();
+
+  @each $name, $_ in palettes.$palettes {
+    .#{$name} {
+      @include palette-tokens($name);
+      background: var(--mat-sys-surface);
+      color: var(--mat-sys-on-surface);
+    }
+  }
+
+  @include tokens.intent-classes;
+  @include tokens.size-classes;
+  @include tokens.shape-classes;
+}

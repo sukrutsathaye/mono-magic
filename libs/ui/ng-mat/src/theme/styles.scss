@@ -1,0 +1,8 @@
+@use 'index' as magic;
+
+@include magic.styles();
+
+body {
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+}

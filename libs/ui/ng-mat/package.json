@@ -9,6 +9,11 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./theme": {
+      "sass": "./src/theme/_index.scss",
+      "default": "./src/theme/_index.scss"
+    },
+    "./theme/styles.css": "./src/theme/styles.scss",
     "./package.json": "./package.json"
   },
   "dependencies": {
