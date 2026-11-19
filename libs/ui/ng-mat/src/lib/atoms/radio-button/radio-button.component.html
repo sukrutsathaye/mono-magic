@@ -1,0 +1,27 @@
+<mat-radio-group
+  class="magic-radio-button__group"
+  [class.magic-radio-button__group--vertical]="vertical()"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || null"
+  [name]="name() || ''"
+  [value]="value()"
+  [labelPosition]="labelPosition()"
+  [disabled]="isDisabled()"
+  [required]="required()"
+  [disabledInteractive]="disabledInteractive()"
+  (change)="onSelectionChange($event)"
+  (focusout)="touch.emit()"
+>
+  @for (option of options(); track option.value) {
+    <mat-radio-button
+      [value]="option.value"
+      [disabled]="!!option.disabled"
+      [labelPosition]="option.labelPosition ?? labelPosition()"
+      [required]="option.required ?? required()"
+      [disableRipple]="disableRipple()"
+    >
+      {{ option.label }}
+    </mat-radio-button>
+  }
+</mat-radio-group>

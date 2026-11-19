@@ -1,0 +1,17 @@
+<mat-slide-toggle
+  [id]="id() || ''"
+  [attr.data-testid]="testId() || null"
+  [aria-label]="ariaLabel() || label() || null"
+  [checked]="checked()"
+  [disabled]="isDisabled()"
+  [required]="required()"
+  [hideIcon]="hideIcon()"
+  [labelPosition]="labelPosition()"
+  [disableRipple]="disableRipple()"
+  [disabledInteractive]="disabledInteractive()"
+  [name]="name() || null"
+  (change)="onToggleChange($event)"
+  (focusout)="touch.emit()"
+>
+  <ng-content>{{ label() }}</ng-content>
+</mat-slide-toggle>

@@ -1,0 +1,21 @@
+:host {
+  display: inline-block;
+  --mat-checkbox-label-text-size: var(--magic-font-size, 0.875rem);
+  --mat-checkbox-selected-icon-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-checkbox-selected-hover-icon-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-checkbox-selected-focus-icon-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-checkbox-selected-pressed-icon-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-checkbox-selected-checkmark-color: var(--magic-on-intent, var(--mat-sys-on-primary));
+}
+
+.magic-check-box__group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.magic-check-box__subtasks {
+  list-style: none;
+  margin: 2px 0 6px 24px;
+  padding: 0;
+}

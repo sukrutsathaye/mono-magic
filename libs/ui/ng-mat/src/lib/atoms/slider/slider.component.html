@@ -1,0 +1,39 @@
+<mat-slider
+  class="magic-slider__control"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || null"
+  [disabled]="isDisabled()"
+  [min]="min() ?? 0"
+  [max]="max() ?? 100"
+  [step]="step()"
+  [discrete]="discrete()"
+  [showTickMarks]="showTickMarks()"
+  [disableRipple]="disableRipple()"
+  [displayWith]="resolvedDisplayWith()"
+>
+  @if (range()) {
+    <input
+      matSliderStartThumb
+      [value]="startValue()"
+      (input)="onStartChange($any($event.target).valueAsNumber)"
+      (valueChange)="onStartChange($event)"
+      (focusout)="touch.emit()"
+    />
+    <input
+      matSliderEndThumb
+      [value]="endValue()"
+      (input)="onEndChange($any($event.target).valueAsNumber)"
+      (valueChange)="onEndChange($event)"
+      (focusout)="touch.emit()"
+    />
+  } @else {
+    <input
+      matSliderThumb
+      [value]="value()"
+      (input)="onSingleChange($any($event.target).valueAsNumber)"
+      (valueChange)="onSingleChange($event)"
+      (focusout)="touch.emit()"
+    />
+  }
+</mat-slider>
