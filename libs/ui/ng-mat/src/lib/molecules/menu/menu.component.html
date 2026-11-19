@@ -1,0 +1,45 @@
+<span
+  class="magic-menu__trigger"
+  [attr.data-testid]="testId() || null"
+  [matMenuTriggerFor]="disabled() ? null : rootPanel.matMenu()"
+  [matMenuTriggerData]="menuData()"
+  [matMenuTriggerRestoreFocus]="restoreFocus()"
+  (menuOpened)="opened.emit()"
+>
+  @if (hasCustomTrigger()) {
+    <ng-content select="[magicMenuTrigger]" />
+  } @else {
+    <magic-button
+      [id]="id()"
+      [kind]="triggerType() === 'icon' ? 'icon' : 'default'"
+      [variant]="triggerVariant()"
+      [label]="triggerType() === 'icon' ? '' : triggerLabel()"
+      [leadingIcon]="
+        triggerType() === 'icon'
+          ? triggerIcon() || 'more_vert'
+          : triggerIcon() || undefined
+      "
+      [color]="color()"
+      [size]="size()"
+      [disabled]="disabled()"
+      [ariaLabel]="ariaLabel() || triggerLabel() || 'Open menu'"
+      [testId]="testId() ? testId() + '-button' : undefined"
+    />
+  }
+</span>
+
+<magic-menu-submenu
+  #rootPanel
+  [items]="items()"
+  [xPosition]="xPosition()"
+  [yPosition]="yPosition()"
+  [overlapTrigger]="overlapTrigger()"
+  [hasBackdrop]="hasBackdrop()"
+  [backdropClass]="backdropClass()"
+  [panelClass]="panelClass()"
+  [ariaLabel]="ariaLabel()"
+  [ariaLabelledby]="ariaLabelledby()"
+  [ariaDescribedby]="ariaDescribedby()"
+  (itemSelected)="itemSelected.emit($event)"
+  (closed)="closed.emit($event)"
+/>

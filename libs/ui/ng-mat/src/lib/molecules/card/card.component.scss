@@ -1,0 +1,53 @@
+:host {
+  display: block;
+  width: var(--card-width, 100%);
+  max-width: 100%;
+}
+
+.magic-card {
+  width: 100%;
+  overflow: hidden;
+}
+
+.magic-card__image {
+  display: block;
+  object-fit: cover;
+  margin-inline: auto;
+
+  &--small {
+    width: 80px;
+    height: 80px;
+  }
+
+  &--medium {
+    width: 160px;
+    height: 160px;
+  }
+
+  &--large {
+    width: 240px;
+    height: 180px;
+  }
+
+  &--extra-large {
+    width: 320px;
+    height: 220px;
+  }
+
+  &--full {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.magic-card__text {
+  margin: 0;
+}
+
+.magic-card__actions {
+  gap: 8px;
+}
+
+.magic-card__footer {
+  padding: 0 16px 16px;
+}
