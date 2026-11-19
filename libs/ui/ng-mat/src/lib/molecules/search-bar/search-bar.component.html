@@ -1,0 +1,35 @@
+<form
+  class="magic-search-bar"
+  role="search"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || label()"
+  (submit)="onSubmit($event)"
+>
+  <magic-form-field
+    class="magic-search-bar__field"
+    [label]="label()"
+    [size]="size()"
+    subscriptSizing="dynamic"
+  >
+    <magic-text-input
+      type="search"
+      [placeholder]="placeholder()"
+      [disabled]="disabled()"
+      [size]="size()"
+      [value]="query()"
+      [testId]="testId() ? testId() + '-input' : undefined"
+      (valueChange)="query.set($event)"
+    />
+  </magic-form-field>
+  <magic-button
+    type="submit"
+    [label]="submitLabel()"
+    [variant]="buttonVariant()"
+    [color]="buttonColor()"
+    [size]="size()"
+    [disabled]="disabled()"
+    [loading]="loading()"
+    [testId]="testId() ? testId() + '-submit' : undefined"
+  />
+</form>

@@ -1,0 +1,29 @@
+:host {
+  display: block;
+  --mat-form-field-container-text-size: var(--magic-font-size, 1rem);
+}
+
+:host(.magic-size-xs) {
+  --mat-form-field-container-height: 40px;
+}
+:host(.magic-size-sm) {
+  --mat-form-field-container-height: 48px;
+}
+:host(.magic-size-md) {
+  --mat-form-field-container-height: 56px;
+}
+:host(.magic-size-lg) {
+  --mat-form-field-container-height: 64px;
+}
+:host(.magic-size-xl) {
+  --mat-form-field-container-height: 72px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.magic-form-field__affix {
+  display: inline-flex;
+  align-items: center;
+}
