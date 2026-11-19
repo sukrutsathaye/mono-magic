@@ -1,0 +1,61 @@
+@use 'sass:list';
+
+// All look-and-feel flows from the theme's CSS custom properties
+// (--magic-intent*, --magic-control-*, --magic-shape). No inline styles.
+
+$variants: filled, tonal, outlined, elevated, text;
+
+:host {
+  display: inline-block;
+  vertical-align: middle;
+
+  // intent -> Material button tokens
+  --mat-button-filled-container-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-button-filled-label-text-color: var(--magic-on-intent, var(--mat-sys-on-primary));
+  --mat-button-filled-state-layer-color: var(--magic-on-intent, var(--mat-sys-on-primary));
+  --mat-button-filled-ripple-color: var(--magic-on-intent, var(--mat-sys-on-primary));
+
+  --mat-button-tonal-container-color: var(--magic-intent-container, var(--mat-sys-secondary-container));
+  --mat-button-tonal-label-text-color: var(--magic-on-intent-container, var(--mat-sys-on-secondary-container));
+  --mat-button-tonal-state-layer-color: var(--magic-on-intent-container, var(--mat-sys-on-secondary-container));
+
+  --mat-button-outlined-label-text-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-button-outlined-outline-color: var(--magic-intent, var(--mat-sys-outline));
+  --mat-button-outlined-state-layer-color: var(--magic-intent, var(--mat-sys-primary));
+
+  --mat-button-elevated-label-text-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-button-elevated-state-layer-color: var(--magic-intent, var(--mat-sys-primary));
+
+  --mat-button-text-label-text-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-button-text-state-layer-color: var(--magic-intent, var(--mat-sys-primary));
+
+  // fab / icon button colours
+  --mat-icon-button-icon-color: var(--magic-intent, var(--mat-sys-on-surface-variant));
+  --mat-icon-button-state-layer-color: var(--magic-intent, var(--mat-sys-on-surface-variant));
+  --mat-fab-container-color: var(--magic-intent-container, var(--mat-sys-primary-container));
+  --mat-fab-foreground-color: var(--magic-on-intent-container, var(--mat-sys-on-primary-container));
+  --mat-fab-small-container-color: var(--magic-intent-container, var(--mat-sys-primary-container));
+  --mat-fab-small-foreground-color: var(--magic-on-intent-container, var(--mat-sys-on-primary-container));
+
+  // size + shape -> Material button tokens
+  @each $variant in $variants {
+    --mat-button-#{$variant}-container-height: var(--magic-control-height, 40px);
+    --mat-button-#{$variant}-label-text-size: var(--magic-font-size, 0.875rem);
+    --mat-button-#{$variant}-container-shape: var(--magic-shape, var(--mat-sys-corner-full));
+  }
+  --mat-fab-container-shape: var(--magic-shape, var(--mat-sys-corner-large));
+  --mat-fab-small-container-shape: var(--magic-shape, var(--mat-sys-corner-medium));
+  --mat-icon-button-container-shape: var(--magic-shape, var(--mat-sys-corner-full));
+}
+
+:host(.magic-button--full-width) {
+  display: block;
+
+  button {
+    width: 100%;
+  }
+}
+
+mat-progress-spinner {
+  --mat-progress-spinner-active-indicator-color: currentColor;
+}
