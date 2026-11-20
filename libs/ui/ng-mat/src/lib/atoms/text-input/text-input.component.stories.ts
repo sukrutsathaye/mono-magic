@@ -14,6 +14,7 @@ import { MagicTextInputComponent } from './text-input.component';
  * - **Forms**: works natively with `[(value)]`, Reactive Forms (`formControl`), Template-driven Forms (`[(ngModel)]`) and Angular Signal Forms (`[formField]`).
  * - **References**:
  *   - [Angular Material Input](https://material.angular.dev/components/input/overview)
+ *   - [Material 3 Text Fields](https://m3.material.io/components/text-fields/overview)
  *   - [Angular Signal Forms](https://angular.dev/guide/forms/signals/custom-controls)
  */
 const meta: Meta<MagicTextInputComponent> = {
@@ -68,6 +69,11 @@ const meta: Meta<MagicTextInputComponent> = {
 export default meta;
 type Story = StoryObj<MagicTextInputComponent>;
 
+/**
+ * Default standalone text `<input>` atom with typing and Enter submission test.
+ *
+ * Inputs: `type="text"`, `ariaLabel="Standalone text input"`, `placeholder="Type something..."`.
+ */
 export const Default: Story = {
   args: {
     ariaLabel: 'Standalone text input',
@@ -84,10 +90,20 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Masked password input atom.
+ *
+ * Inputs: `type="password"`, `placeholder="Enter password"`, `ariaLabel="Password"`.
+ */
 export const Password: Story = {
   args: { type: 'password', placeholder: 'Enter password', ariaLabel: 'Password' },
 };
 
+/**
+ * Email input atom configured with semantic type and browser autofill hint.
+ *
+ * Inputs: `type="email"`, `placeholder="name@example.com"`, `autocomplete="email"`, `ariaLabel="Email"`.
+ */
 export const Email: Story = {
   args: {
     type: 'email',
@@ -97,6 +113,11 @@ export const Email: Story = {
   },
 };
 
+/**
+ * Disabled input state preventing focus and editing.
+ *
+ * Inputs: `disabled=true`, `value="Disabled value"`, `ariaLabel="Disabled input"`.
+ */
 export const Disabled: Story = {
   args: { disabled: true, value: 'Disabled value', ariaLabel: 'Disabled input' },
   play: async ({ canvasElement }) => {
@@ -105,14 +126,29 @@ export const Disabled: Story = {
   },
 };
 
+/**
+ * Read-only input state allowing text selection and copy without editing.
+ *
+ * Inputs: `readOnly=true`, `value="Read-only value"`, `ariaLabel="Read-only input"`.
+ */
 export const ReadOnly: Story = {
   args: { readOnly: true, value: 'Read-only value', ariaLabel: 'Read-only input' },
 };
 
+/**
+ * Invalid state exposing `aria-invalid` and error styling hooks.
+ *
+ * Inputs: `invalid=true`, `value="bad-email"`, `ariaLabel="Invalid input"`.
+ */
 export const Invalid: Story = {
   args: { invalid: true, value: 'bad-email', ariaLabel: 'Invalid input' },
 };
 
+/**
+ * Comparison of all five input size scale tokens.
+ *
+ * Inputs: `size="xs" | "sm" | "md" | "lg" | "xl"`.
+ */
 export const Sizes: Story = {
   render: () => ({
     template: `
@@ -127,6 +163,11 @@ export const Sizes: Story = {
   }),
 };
 
+/**
+ * Recommended composition wrapping `<magic-text-input>` inside `<magic-form-field>` for floating label and hint display.
+ *
+ * Inputs: `type="email"`, `placeholder="alex@company.com"` inside `<magic-form-field label="Email" hint="Use your work address">`.
+ */
 export const InsideFormField: Story = {
   render: () => ({
     template: `
@@ -139,6 +180,11 @@ export const InsideFormField: Story = {
   }),
 };
 
+/**
+ * Angular Reactive Forms integration with `FormControl` validators and dynamic error text.
+ *
+ * Inputs: `[formControl]` (`Validators.required`, `Validators.minLength(3)`), `placeholder="mono-magic"`.
+ */
 export const ReactiveFormsIntegration: Story = {
   render: () => {
     const control = new FormControl('', [

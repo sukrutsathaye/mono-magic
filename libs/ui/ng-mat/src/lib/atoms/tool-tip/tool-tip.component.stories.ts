@@ -12,7 +12,9 @@ import { MagicToolTipComponent } from './tool-tip.component';
  * `MagicToolTipComponent` wraps Material's `matTooltip` around projected
  * trigger content (`<magic-button>`, icons, text) with `label` fallback.
  *
- * @see https://material.angular.dev/components/tooltip/overview
+ * - **References**:
+ *   - [Angular Material Tooltip](https://material.angular.dev/components/tooltip/overview)
+ *   - [Material 3 Tooltips](https://m3.material.io/components/tooltips/overview)
  */
 const meta: Meta<MagicToolTipComponent> = {
   title: 'Atoms/ToolTip',
@@ -53,6 +55,11 @@ const meta: Meta<MagicToolTipComponent> = {
 export default meta;
 type Story = StoryObj<MagicToolTipComponent>;
 
+/**
+ * Default tooltip anchored below a projected `<magic-button>` trigger.
+ *
+ * Inputs: `message="Save changes to workspace"`, `position="below"`, `showDelay=0`, `hideDelay=0`, projected `<magic-button>`.
+ */
 export const Default: Story = {
   render: (args) => ({
     props: args,
@@ -72,6 +79,11 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Comparison of directional tooltip placement options around triggers.
+ *
+ * Inputs: `position="above" | "below" | "left" | "right"`, `message` matching each placement.
+ */
 export const Positions: Story = {
   render: () => ({
     template: `
@@ -85,6 +97,11 @@ export const Positions: Story = {
   }),
 };
 
+/**
+ * Suppressed tooltip state using `label` fallback content that will not open on hover.
+ *
+ * Inputs: `disabled=true`, `label="Hover for tooltip"`, `message="Save changes to workspace"`.
+ */
 export const Disabled: Story = {
   args: { disabled: true },
 };

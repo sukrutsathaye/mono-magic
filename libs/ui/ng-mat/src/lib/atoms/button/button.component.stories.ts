@@ -127,6 +127,11 @@ const meta: Meta<MagicButtonComponent> = {
 export default meta;
 type Story = StoryObj<MagicButtonComponent>;
 
+/**
+ * Default filled primary button with click event verification.
+ *
+ * Inputs: `variant="filled"`, `kind="default"`, `color="primary"`, `size="md"`, `label="Filled Button"`.
+ */
 export const Default: Story = {
   args: {
     label: 'Filled Button',
@@ -141,22 +146,47 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Medium-emphasis tonal button for secondary actions.
+ *
+ * Inputs: `variant="tonal"`, `label="Tonal Button"`.
+ */
 export const Tonal: Story = {
   args: { label: 'Tonal Button', variant: 'tonal' },
 };
 
+/**
+ * Outlined button with a hairline border for lower-emphasis actions.
+ *
+ * Inputs: `variant="outlined"`, `label="Outlined Button"`.
+ */
 export const Outlined: Story = {
   args: { label: 'Outlined Button', variant: 'outlined' },
 };
 
+/**
+ * Elevated button with subtle surface shadow over patterned backgrounds.
+ *
+ * Inputs: `variant="elevated"`, `label="Elevated Button"`.
+ */
 export const Elevated: Story = {
   args: { label: 'Elevated Button', variant: 'elevated' },
 };
 
+/**
+ * Low-emphasis text button without container fill or border.
+ *
+ * Inputs: `variant="text"`, `label="Text Button"`.
+ */
 export const Text: Story = {
   args: { label: 'Text Button', variant: 'text' },
 };
 
+/**
+ * Circular icon-only button using `ariaLabel` for accessible naming.
+ *
+ * Inputs: `kind="icon"`, `leadingIcon="favorite"`, `label=""`, `ariaLabel="Favorite"`.
+ */
 export const IconButton: Story = {
   args: {
     kind: 'icon',
@@ -172,10 +202,20 @@ export const IconButton: Story = {
   },
 };
 
+/**
+ * Standard Floating Action Button (FAB) for primary screen actions.
+ *
+ * Inputs: `kind="fab"`, `leadingIcon="add"`, `label=""`, `ariaLabel="Add item"`.
+ */
 export const Fab: Story = {
   args: { kind: 'fab', leadingIcon: 'add', label: '', ariaLabel: 'Add item' },
 };
 
+/**
+ * Compact Mini FAB for secondary or tighter-space floating actions.
+ *
+ * Inputs: `kind="mini-fab"`, `leadingIcon="edit"`, `label=""`, `ariaLabel="Edit item"`.
+ */
 export const MiniFab: Story = {
   args: {
     kind: 'mini-fab',
@@ -185,6 +225,11 @@ export const MiniFab: Story = {
   },
 };
 
+/**
+ * Extended FAB pairing a leading icon with a descriptive label.
+ *
+ * Inputs: `kind="extended-fab"`, `leadingIcon="navigation"`, `label="Navigate"`.
+ */
 export const ExtendedFab: Story = {
   args: {
     kind: 'extended-fab',
@@ -193,6 +238,11 @@ export const ExtendedFab: Story = {
   },
 };
 
+/**
+ * Button displaying both leading and trailing Material icons around the label.
+ *
+ * Inputs: `label="Continue"`, `leadingIcon="check"`, `trailingIcon="arrow_forward"`.
+ */
 export const WithLeadingAndTrailingIcons: Story = {
   args: {
     label: 'Continue',
@@ -201,6 +251,11 @@ export const WithLeadingAndTrailingIcons: Story = {
   },
 };
 
+/**
+ * Comparison of all five Material 3 size scale tokens.
+ *
+ * Inputs: `size="xs" | "sm" | "md" | "lg" | "xl"`.
+ */
 export const Sizes: Story = {
   render: (args) => ({
     props: args,
@@ -216,6 +271,11 @@ export const Sizes: Story = {
   }),
 };
 
+/**
+ * Comparison of all semantic palette color tokens.
+ *
+ * Inputs: `color="primary" | "secondary" | "tertiary" | "success" | "warning" | "error" | "neutral"`.
+ */
 export const Colors: Story = {
   render: (args) => ({
     props: args,
@@ -233,6 +293,11 @@ export const Colors: Story = {
   }),
 };
 
+/**
+ * Comparison of available corner-radius shape overrides.
+ *
+ * Inputs: `shape="default" | "square" | "rounded" | "pill"`.
+ */
 export const Shapes: Story = {
   render: (args) => ({
     props: args,
@@ -247,6 +312,11 @@ export const Shapes: Story = {
   }),
 };
 
+/**
+ * Natively disabled button that prevents focus and click emission.
+ *
+ * Inputs: `label="Disabled"`, `disabled=true`.
+ */
 export const Disabled: Story = {
   args: { label: 'Disabled', disabled: true },
   play: async ({ args, canvasElement }) => {
@@ -257,6 +327,11 @@ export const Disabled: Story = {
   },
 };
 
+/**
+ * Focusable disabled state using `aria-disabled="true"` for tooltips and screen readers.
+ *
+ * Inputs: `label="Disabled Interactive"`, `disabled=true`, `disabledInteractive=true`.
+ */
 export const DisabledInteractive: Story = {
   args: {
     label: 'Disabled Interactive',
@@ -272,10 +347,20 @@ export const DisabledInteractive: Story = {
   },
 };
 
+/**
+ * Button with Material ripple ink effect suppressed.
+ *
+ * Inputs: `label="No Ripple"`, `disableRipple=true`.
+ */
 export const DisableRipple: Story = {
   args: { label: 'No Ripple', disableRipple: true },
 };
 
+/**
+ * Busy loading state that sets `aria-busy="true"` and disables interaction.
+ *
+ * Inputs: `label="Save"`, `loading=true`.
+ */
 export const Loading: Story = {
   args: { label: 'Save', loading: true },
   play: async ({ args, canvasElement }) => {
@@ -287,14 +372,29 @@ export const Loading: Story = {
   },
 };
 
+/**
+ * Loading state displaying custom progress text via `loadingLabel`.
+ *
+ * Inputs: `label="Save"`, `loading=true`, `loadingLabel="Saving..."`.
+ */
 export const LoadingWithCustomLabel: Story = {
   args: { label: 'Save', loading: true, loadingLabel: 'Saving...' },
 };
 
+/**
+ * Block-level button stretching to 100% of its container width.
+ *
+ * Inputs: `label="Full Width Action"`, `fullWidth=true`.
+ */
 export const FullWidth: Story = {
   args: { label: 'Full Width Action', fullWidth: true },
 };
 
+/**
+ * Rich markup projected via `<ng-content>`, overriding the `label` fallback input.
+ *
+ * Inputs: `label="Ignored Fallback"`, projected `<magic-button>` children.
+ */
 export const ContentProjection: Story = {
   render: (args) => ({
     props: args,
@@ -311,6 +411,11 @@ export const ContentProjection: Story = {
   },
 };
 
+/**
+ * Consolidated showcase across button variants, kinds, disabled, and loading states.
+ *
+ * Inputs: `variant`, `kind`, `disabled=true`, `loading=true`, `loadingLabel="Saving..."`.
+ */
 export const AllStatesGallery: Story = {
   render: () => ({
     template: `

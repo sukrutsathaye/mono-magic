@@ -6,8 +6,10 @@ import { MagicProgressIndicatorComponent } from './progress-indicator.component'
  * `MagicProgressIndicatorComponent` unifies `mat-progress-bar` and
  * `mat-progress-spinner` behind one signal-based atomic API.
  *
- * @see https://material.angular.dev/components/progress-bar/overview
- * @see https://material.angular.dev/components/progress-spinner/overview
+ * - **References**:
+ *   - [Angular Material Progress Bar](https://material.angular.dev/components/progress-bar/overview)
+ *   - [Angular Material Progress Spinner](https://material.angular.dev/components/progress-spinner/overview)
+ *   - [Material 3 Progress Indicators](https://m3.material.io/components/progress-indicators/overview)
  */
 const meta: Meta<MagicProgressIndicatorComponent> = {
   title: 'Atoms/ProgressIndicator',
@@ -60,6 +62,11 @@ const meta: Meta<MagicProgressIndicatorComponent> = {
 export default meta;
 type Story = StoryObj<MagicProgressIndicatorComponent>;
 
+/**
+ * Default indeterminate linear progress bar.
+ *
+ * Inputs: `type="bar"`, `mode="indeterminate"`, `color="primary"`, `size="md"`, `ariaLabel="Loading status"`.
+ */
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -67,26 +74,56 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Determinate linear progress bar displaying a known completion percentage.
+ *
+ * Inputs: `type="bar"`, `mode="determinate"`, `value=65`.
+ */
 export const DeterminateBar: Story = {
   args: { type: 'bar', mode: 'determinate', value: 65 },
 };
 
+/**
+ * Buffer linear progress bar showing primary progress alongside buffered progress.
+ *
+ * Inputs: `type="bar"`, `mode="buffer"`, `value=40`, `bufferValue=75`.
+ */
 export const BufferBar: Story = {
   args: { type: 'bar', mode: 'buffer', value: 40, bufferValue: 75 },
 };
 
+/**
+ * Query linear progress bar indicating a pre-determinate loading phase.
+ *
+ * Inputs: `type="bar"`, `mode="query"`.
+ */
 export const QueryBar: Story = {
   args: { type: 'bar', mode: 'query' },
 };
 
+/**
+ * Circular indeterminate spinner for ongoing background work.
+ *
+ * Inputs: `type="spinner"`, `mode="indeterminate"`.
+ */
 export const IndeterminateSpinner: Story = {
   args: { type: 'spinner', mode: 'indeterminate' },
 };
 
+/**
+ * Large determinate circular spinner showing explicit progress.
+ *
+ * Inputs: `type="spinner"`, `mode="determinate"`, `value=75`, `size="lg"`.
+ */
 export const DeterminateSpinner: Story = {
   args: { type: 'spinner', mode: 'determinate', value: 75, size: 'lg' },
 };
 
+/**
+ * Gallery of bar and spinner indicators across semantic colors and size tokens.
+ *
+ * Inputs: `type="bar" | "spinner"`, `color="primary" | "secondary" | "tertiary" | "success" | "warning" | "error"`, `size="xs".."xl"`.
+ */
 export const ColorsAndSizes: Story = {
   render: () => ({
     template: `

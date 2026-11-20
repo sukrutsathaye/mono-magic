@@ -7,7 +7,9 @@ import { MagicChipComponent } from './chip.component';
  * `input`, `draggable`) with immutable signal updates, accessibility
  * announcements, and single-chip `<ng-content>` projection fallback.
  *
- * @see https://material.angular.dev/components/chips/overview
+ * - **References**:
+ *   - [Angular Material Chip](https://material.angular.dev/components/chips/overview)
+ *   - [Material 3 Chips](https://m3.material.io/components/chips/overview)
  */
 const meta: Meta<MagicChipComponent> = {
   title: 'Atoms/Chip',
@@ -78,6 +80,11 @@ const meta: Meta<MagicChipComponent> = {
 export default meta;
 type Story = StoryObj<MagicChipComponent>;
 
+/**
+ * Default basic chip set displaying items with a leading icon and per-chip removal.
+ *
+ * Inputs: `variant="basic"`, `orientation="horizontal"`, `chips` (Angular, Material, Signals).
+ */
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -86,6 +93,11 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Multi-selectable filter chip listbox with an initially selected option.
+ *
+ * Inputs: `variant="selectable"`, `multiple=true`, `chips` (Small, Medium selected, Large).
+ */
 export const Selectable: Story = {
   args: {
     variant: 'selectable',
@@ -98,6 +110,11 @@ export const Selectable: Story = {
   },
 };
 
+/**
+ * Vertically stacked selectable chip list.
+ *
+ * Inputs: `variant="selectable"`, `orientation="vertical"`, `chips` (Primary, Accent, Warn).
+ */
 export const StackedVertical: Story = {
   args: {
     variant: 'selectable',
@@ -110,6 +127,11 @@ export const StackedVertical: Story = {
   },
 };
 
+/**
+ * Editable and removable chip input grid for adding, editing, and deleting tags.
+ *
+ * Inputs: `variant="input"`, `label="Tags"`, `removable=true`, `editable=true`, `chips` (TypeScript, Nx).
+ */
 export const InputGrid: Story = {
   args: {
     variant: 'input',
@@ -123,6 +145,11 @@ export const InputGrid: Story = {
   },
 };
 
+/**
+ * Reorderable chip set supporting drag-and-drop and chip removal.
+ *
+ * Inputs: `variant="draggable"`, `removable=true`, `chips` (First, Second, Third).
+ */
 export const Draggable: Story = {
   args: {
     variant: 'draggable',
@@ -135,6 +162,11 @@ export const Draggable: Story = {
   },
 };
 
+/**
+ * Single chip rendered from `<ng-content>` projection when `chips` is empty.
+ *
+ * Inputs: `chips=[]`, projected `<magic-chip>` text content.
+ */
 export const SingleProjectedChip: Story = {
   render: (args) => ({
     props: args,

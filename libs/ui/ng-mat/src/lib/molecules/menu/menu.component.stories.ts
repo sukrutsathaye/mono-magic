@@ -7,7 +7,9 @@ import { MagicMenuComponent } from './menu.component';
  * trigger), custom `[magicMenuTrigger]` slot support, link items, ARIA menu
  * roles, and arbitrary-depth nested submenus.
  *
- * @see https://material.angular.dev/components/menu/overview
+ * - **References**:
+ *   - [Angular Material Menu](https://material.angular.dev/components/menu/overview)
+ *   - [Material 3 Menus](https://m3.material.io/components/menus/overview)
  */
 const meta: Meta<MagicMenuComponent> = {
   title: 'Molecules/Menu',
@@ -93,6 +95,11 @@ const meta: Meta<MagicMenuComponent> = {
 export default meta;
 type Story = StoryObj<MagicMenuComponent>;
 
+/**
+ * Default tonal button menu with icons, a disabled option, and selection interaction test.
+ *
+ * Inputs: `triggerLabel="Actions"`, `triggerType="button"`, `triggerVariant="tonal"`, `items` (Edit item, Duplicate, Archive disabled).
+ */
 export const Default: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -105,6 +112,11 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Compact icon-button menu trigger using an accessible label.
+ *
+ * Inputs: `triggerType="icon"`, `triggerIcon="more_vert"`, `triggerLabel="More options"`.
+ */
 export const IconTrigger: Story = {
   args: {
     triggerType: 'icon',
@@ -113,6 +125,11 @@ export const IconTrigger: Story = {
   },
 };
 
+/**
+ * Multi-level cascading submenu tree demonstrating arbitrary-depth nested `children`.
+ *
+ * Inputs: `triggerLabel="Share & Export"`, `triggerIcon="ios_share"`, nested `items` tree (3 levels).
+ */
 export const NestedSubmenu: Story = {
   args: {
     triggerLabel: 'Share & Export',
@@ -140,6 +157,11 @@ export const NestedSubmenu: Story = {
   },
 };
 
+/**
+ * Menu combining anchor link items with `menuitemradio` and `menuitemcheckbox` ARIA roles.
+ *
+ * Inputs: `triggerLabel="Resources"`, `triggerIcon="menu_book"`, `items` with `link` and `role` overrides.
+ */
 export const WithLinksAndIcons: Story = {
   args: {
     triggerLabel: 'Resources',
@@ -167,6 +189,11 @@ export const WithLinksAndIcons: Story = {
   },
 };
 
+/**
+ * Custom overlay alignment opening above and before the trigger without a backdrop.
+ *
+ * Inputs: `triggerLabel="Positioned Menu"`, `xPosition="before"`, `yPosition="above"`, `overlapTrigger=true`, `hasBackdrop=false`.
+ */
 export const Positions: Story = {
   args: {
     triggerLabel: 'Positioned Menu',
@@ -177,6 +204,11 @@ export const Positions: Story = {
   },
 };
 
+/**
+ * Disabled menu trigger preventing the menu overlay from opening.
+ *
+ * Inputs: `disabled=true`.
+ */
 export const Disabled: Story = {
   args: {
     disabled: true,

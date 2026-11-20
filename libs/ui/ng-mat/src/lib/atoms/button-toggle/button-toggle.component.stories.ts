@@ -7,7 +7,10 @@ import { MagicButtonToggleComponent } from './button-toggle.component';
  * single and multiple selection, icons, vertical orientation, Signal Forms
  * (`FormValueControl`) and Reactive/Template Forms.
  *
- * @see https://material.angular.dev/components/button-toggle/overview
+ * - **References**:
+ *   - [Angular Material Button Toggle](https://material.angular.dev/components/button-toggle/overview)
+ *   - [Material 3 Segmented Buttons](https://m3.material.io/components/segmented-buttons/overview)
+ *   - [Angular Signal Forms](https://angular.dev/guide/forms/signals/custom-controls)
  */
 const meta: Meta<MagicButtonToggleComponent> = {
   title: 'Atoms/ButtonToggle',
@@ -72,6 +75,11 @@ const meta: Meta<MagicButtonToggleComponent> = {
 export default meta;
 type Story = StoryObj<MagicButtonToggleComponent>;
 
+/**
+ * Default single-select horizontal toggle group with icons and a disabled option.
+ *
+ * Inputs: `selectionMode="single"`, `value="left"`, `vertical=false`, `options` (4 alignment items).
+ */
 export const Default: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -81,6 +89,11 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Multi-select toggle group allowing any combination of active formatting options.
+ *
+ * Inputs: `selectionMode="multiple"`, `value=['bold']`, `ariaLabel="Formatting"`, `options` (Bold, Italic, Underline).
+ */
 export const Multiple: Story = {
   args: {
     ariaLabel: 'Formatting',
@@ -94,10 +107,20 @@ export const Multiple: Story = {
   },
 };
 
+/**
+ * Vertically stacked toggle group layout.
+ *
+ * Inputs: `vertical=true` (inherits default `options` and `value="left"`).
+ */
 export const Vertical: Story = {
   args: { vertical: true },
 };
 
+/**
+ * Disabled toggle group preventing selection changes across all options.
+ *
+ * Inputs: `disabled=true`.
+ */
 export const Disabled: Story = {
   args: { disabled: true },
 };

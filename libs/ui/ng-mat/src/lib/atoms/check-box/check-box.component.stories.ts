@@ -7,7 +7,10 @@ import { MagicCheckBoxComponent } from './check-box.component';
  * Reactive/Template Forms support, indeterminate state, and optional immutable
  * parent/subtask checklists.
  *
- * @see https://material.angular.dev/components/checkbox/overview
+ * - **References**:
+ *   - [Angular Material Checkbox](https://material.angular.dev/components/checkbox/overview)
+ *   - [Material 3 Checkbox](https://m3.material.io/components/checkbox/overview)
+ *   - [Angular Signal Forms](https://angular.dev/guide/forms/signals/custom-controls)
  */
 const meta: Meta<MagicCheckBoxComponent> = {
   title: 'Atoms/CheckBox',
@@ -67,6 +70,11 @@ const meta: Meta<MagicCheckBoxComponent> = {
 export default meta;
 type Story = StoryObj<MagicCheckBoxComponent>;
 
+/**
+ * Default unchecked checkbox with toggle interaction verification.
+ *
+ * Inputs: `label="Accept terms and conditions"`, `checked=false`, `indeterminate=false`, `color="primary"`, `size="md"`.
+ */
 export const Default: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -78,22 +86,47 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Pre-checked checkbox state.
+ *
+ * Inputs: `label="Subscribed"`, `checked=true`.
+ */
 export const Checked: Story = {
   args: { label: 'Subscribed', checked: true },
 };
 
+/**
+ * Mixed/indeterminate state typically used for partial parent selections.
+ *
+ * Inputs: `label="Select all"`, `indeterminate=true`.
+ */
 export const Indeterminate: Story = {
   args: { label: 'Select all', indeterminate: true },
 };
 
+/**
+ * Checkbox with its label positioned before the control box.
+ *
+ * Inputs: `label="Label before box"`, `labelPosition="before"`.
+ */
 export const LabelBefore: Story = {
   args: { label: 'Label before box', labelPosition: 'before' },
 };
 
+/**
+ * Disabled checked checkbox that cannot be toggled.
+ *
+ * Inputs: `label="Disabled checkbox"`, `disabled=true`, `checked=true`.
+ */
 export const Disabled: Story = {
   args: { label: 'Disabled checkbox', disabled: true, checked: true },
 };
 
+/**
+ * Comparison of checked checkboxes across semantic palette colors.
+ *
+ * Inputs: `checked=true`, `color="primary" | "secondary" | "tertiary" | "success" | "warning" | "error"`.
+ */
 export const Colors: Story = {
   render: () => ({
     template: `
@@ -109,6 +142,11 @@ export const Colors: Story = {
   }),
 };
 
+/**
+ * Hierarchical parent/subtask checklist mode with automatic indeterminate aggregation and locked items.
+ *
+ * Inputs: `ariaLabel="Release checklist"`, `tasks` (2 parent tasks, 1 with 3 subtasks and 1 disabled).
+ */
 export const NestedTaskList: Story = {
   args: {
     ariaLabel: 'Release checklist',
@@ -133,6 +171,11 @@ export const NestedTaskList: Story = {
   },
 };
 
+/**
+ * Custom HTML label projected through `<ng-content>`.
+ *
+ * Inputs: projected `<magic-check-box>` child markup (inherits default `checked=false`).
+ */
 export const ContentProjection: Story = {
   render: (args) => ({
     props: args,

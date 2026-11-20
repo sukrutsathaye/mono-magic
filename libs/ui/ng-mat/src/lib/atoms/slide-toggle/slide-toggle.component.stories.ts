@@ -6,7 +6,10 @@ import { MagicSlideToggleComponent } from './slide-toggle.component';
  * `MagicSlideToggleComponent` wraps `mat-slide-toggle` with Signal Forms
  * (`FormCheckboxControl`), Reactive/Template Forms support, and `<ng-content>` projection.
  *
- * @see https://material.angular.dev/components/slide-toggle/overview
+ * - **References**:
+ *   - [Angular Material Slide Toggle](https://material.angular.dev/components/slide-toggle/overview)
+ *   - [Material 3 Switch](https://m3.material.io/components/switch/overview)
+ *   - [Angular Signal Forms](https://angular.dev/guide/forms/signals/custom-controls)
  */
 const meta: Meta<MagicSlideToggleComponent> = {
   title: 'Atoms/SlideToggle',
@@ -60,6 +63,11 @@ const meta: Meta<MagicSlideToggleComponent> = {
 export default meta;
 type Story = StoryObj<MagicSlideToggleComponent>;
 
+/**
+ * Default off-state slide toggle with switch interaction test.
+ *
+ * Inputs: `label="Enable notifications"`, `checked=false`, `hideIcon=false`, `color="primary"`, `size="md"`.
+ */
 export const Default: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -71,22 +79,47 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Pre-enabled slide toggle state.
+ *
+ * Inputs: `label="Enabled"`, `checked=true`.
+ */
 export const Checked: Story = {
   args: { label: 'Enabled', checked: true },
 };
 
+/**
+ * Slide toggle with the checkmark/cross thumb icon hidden.
+ *
+ * Inputs: `label="No thumb icon"`, `hideIcon=true`, `checked=true`.
+ */
 export const HideIcon: Story = {
   args: { label: 'No thumb icon', hideIcon: true, checked: true },
 };
 
+/**
+ * Slide toggle with its text label placed before the switch track.
+ *
+ * Inputs: `label="Label before switch"`, `labelPosition="before"`.
+ */
 export const LabelBefore: Story = {
   args: { label: 'Label before switch', labelPosition: 'before' },
 };
 
+/**
+ * Disabled checked slide toggle preventing state changes.
+ *
+ * Inputs: `label="Locked setting"`, `disabled=true`, `checked=true`.
+ */
 export const Disabled: Story = {
   args: { label: 'Locked setting', disabled: true, checked: true },
 };
 
+/**
+ * Comparison of checked slide toggles across semantic palette colors.
+ *
+ * Inputs: `checked=true`, `color="primary" | "secondary" | "tertiary" | "success" | "warning" | "error"`.
+ */
 export const Colors: Story = {
   render: () => ({
     template: `
@@ -102,6 +135,11 @@ export const Colors: Story = {
   }),
 };
 
+/**
+ * Custom HTML label projected via `<ng-content>`.
+ *
+ * Inputs: projected `<magic-slide-toggle>` child markup (inherits default `checked=false`).
+ */
 export const ContentProjection: Story = {
   render: (args) => ({
     props: args,

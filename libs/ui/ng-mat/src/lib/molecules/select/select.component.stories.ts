@@ -7,7 +7,11 @@ import { MagicSelectComponent } from './select.component';
  * flat and grouped options, multiple selection, compact trigger summaries,
  * Signal Forms (`FormValueControl`) and Reactive/Template Forms support.
  *
- * @see https://material.angular.dev/components/select/overview
+ * - **References**:
+ *   - [Angular Material Select](https://material.angular.dev/components/select/overview)
+ *   - [Material 3 Menus](https://m3.material.io/components/menus/overview)
+ *   - [Material 3 Text Fields](https://m3.material.io/components/text-fields/overview)
+ *   - [Angular Signal Forms](https://angular.dev/guide/forms/signals/custom-controls)
  */
 const meta: Meta<MagicSelectComponent<string>> = {
   title: 'Molecules/Select',
@@ -94,6 +98,11 @@ const meta: Meta<MagicSelectComponent<string>> = {
 export default meta;
 type Story = StoryObj<MagicSelectComponent<string>>;
 
+/**
+ * Default single-select outlined dropdown with a disabled option and selection test.
+ *
+ * Inputs: `appearance="outlined"`, `multiple=false`, `value=null`, `options` (Apple, Banana, Cherry, Durian disabled).
+ */
 export const Default: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -105,6 +114,11 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Categorized dropdown options rendered with `<mat-optgroup>` headings.
+ *
+ * Inputs: `label="Produce"`, `options=[]`, `optionGroups` (Citrus, Stone fruit), `value="orange"`.
+ */
 export const Grouped: Story = {
   args: {
     label: 'Produce',
@@ -129,6 +143,11 @@ export const Grouped: Story = {
   },
 };
 
+/**
+ * Multi-select dropdown displaying comma-separated selected labels.
+ *
+ * Inputs: `label="Toppings"`, `multiple=true`, `value=['apple', 'cherry']`.
+ */
 export const Multiple: Story = {
   args: {
     label: 'Toppings',
@@ -137,6 +156,11 @@ export const Multiple: Story = {
   },
 };
 
+/**
+ * Multi-select dropdown using a condensed "+N others" trigger summary for long selections.
+ *
+ * Inputs: `label="Selected items"`, `multiple=true`, `customTriggerSummary=true`, `value=['apple', 'banana', 'cherry']`.
+ */
 export const CustomTriggerSummary: Story = {
   args: {
     label: 'Selected items',
@@ -146,6 +170,11 @@ export const CustomTriggerSummary: Story = {
   },
 };
 
+/**
+ * Required invalid select state rendering `errorText` below the field.
+ *
+ * Inputs: `label="Country"`, `required=true`, `invalid=true`, `errorText="Please choose a country"`, `hint=""`.
+ */
 export const WithErrorAndHint: Story = {
   args: {
     label: 'Country',
@@ -156,6 +185,11 @@ export const WithErrorAndHint: Story = {
   },
 };
 
+/**
+ * Filled Material 3 form field variant with a preselected option.
+ *
+ * Inputs: `appearance="filled"`, `value="apple"`.
+ */
 export const Filled: Story = {
   args: {
     appearance: 'filled',
@@ -163,6 +197,11 @@ export const Filled: Story = {
   },
 };
 
+/**
+ * Disabled select control exposing `aria-disabled="true"`.
+ *
+ * Inputs: `disabled=true`, `value="apple"`.
+ */
 export const Disabled: Story = {
   args: {
     disabled: true,
@@ -177,6 +216,11 @@ export const Disabled: Story = {
   },
 };
 
+/**
+ * Comparison of all five select field size scale tokens.
+ *
+ * Inputs: `size="xs" | "sm" | "md" | "lg" | "xl"`, `value="apple"`.
+ */
 export const Sizes: Story = {
   render: (args) => ({
     props: args,

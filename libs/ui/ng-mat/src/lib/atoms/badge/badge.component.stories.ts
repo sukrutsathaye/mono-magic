@@ -11,8 +11,9 @@ import { MagicBadgeComponent } from './badge.component';
 /**
  * `MagicBadgeComponent` wraps Material's `matBadge` around projected content
  * (e.g. a `magic-button` or icon) with `icon` and `label` fallbacks.
- *
- * @see https://material.angular.dev/components/badge/overview
+ * - **References**:
+ *   - [Angular Material Badge](https://material.angular.dev/components/badge/overview)
+ *   - [MD3 Badge](https://m3.material.io/components/badges/overview)
  */
 const meta: Meta<MagicBadgeComponent> = {
   title: 'Atoms/Badge',
@@ -80,6 +81,11 @@ const meta: Meta<MagicBadgeComponent> = {
 export default meta;
 type Story = StoryObj<MagicBadgeComponent>;
 
+/**
+ * Default icon badge displaying a numeric unread count.
+ *
+ * Inputs: `content=7`, `icon="mail"`, `label="Inbox"`, `color="primary"`, `size="md"`, `position="above after"`, `overlap=true`.
+ */
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -87,6 +93,11 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Badge anchored outside a projected `<magic-button>` without overlapping it.
+ *
+ * Inputs: `icon=undefined`, `content=12`, `color="error"`, `overlap=false`, projected `<magic-button>`.
+ */
 export const WrappingButton: Story = {
   render: (args) => ({
     props: args,
@@ -99,6 +110,11 @@ export const WrappingButton: Story = {
   args: { icon: undefined, content: 12, color: 'error', overlap: false },
 };
 
+/**
+ * Comparison of hidden (`hidden=true`) and muted (`disabled=true`) badge states.
+ *
+ * Inputs: `content=3`, `icon="notifications"`, `hidden=true` vs. `disabled=true`.
+ */
 export const HiddenAndDisabled: Story = {
   render: () => ({
     template: `
@@ -110,6 +126,11 @@ export const HiddenAndDisabled: Story = {
   }),
 };
 
+/**
+ * Gallery of badge size tokens paired with semantic status colors.
+ *
+ * Inputs: `size="sm" | "md" | "lg" | "xl"`, `color="primary" | "success" | "warning" | "error"`.
+ */
 export const SizesAndColors: Story = {
   render: () => ({
     template: `

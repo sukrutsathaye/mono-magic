@@ -19,7 +19,9 @@ import {
  * `magic-select`) and provides floating labels, hints, validation error display
  * and `[magicPrefix]` / `[magicSuffix]` slots.
  *
- * @see https://material.angular.dev/components/form-field/overview
+ * - **References**:
+ *   - [Angular Material Form Field](https://material.angular.dev/components/form-field/overview)
+ *   - [Material 3 Text Fields](https://m3.material.io/components/text-fields/overview)
  */
 const meta: Meta<MagicFormFieldComponent> = {
   title: 'Molecules/FormField',
@@ -87,6 +89,11 @@ const meta: Meta<MagicFormFieldComponent> = {
 export default meta;
 type Story = StoryObj<MagicFormFieldComponent>;
 
+/**
+ * Default outlined form field wrapping `<magic-text-input>` with label and hint text.
+ *
+ * Inputs: `appearance="outlined"`, `label="Email address"`, `hint="We never share your email"`, `size="md"`, `floatLabel="auto"`.
+ */
 export const Outlined: Story = {
   args: { appearance: 'outlined' },
   play: async ({ canvasElement }) => {
@@ -98,10 +105,20 @@ export const Outlined: Story = {
   },
 };
 
+/**
+ * Filled Material 3 form field appearance.
+ *
+ * Inputs: `appearance="filled"`.
+ */
 export const Filled: Story = {
   args: { appearance: 'filled' },
 };
 
+/**
+ * Validation error state displaying `errorText` in place of the hint.
+ *
+ * Inputs: `label="Username"`, `hint=undefined`, `errorText="This username is already taken"`.
+ */
 export const WithError: Story = {
   args: {
     label: 'Username',
@@ -116,10 +133,20 @@ export const WithError: Story = {
   },
 };
 
+/**
+ * Form field with its floating label pinned in the raised position at all times.
+ *
+ * Inputs: `floatLabel="always"`, `label="Always Floating"`.
+ */
 export const AlwaysFloatLabel: Story = {
   args: { floatLabel: 'always', label: 'Always Floating' },
 };
 
+/**
+ * Form field with projected `[magicPrefix]` and `[magicSuffix]` Material icons.
+ *
+ * Inputs: default `meta.args` plus projected `<mat-icon magicPrefix>` and `<mat-icon magicSuffix>`.
+ */
 export const WithPrefixAndSuffix: Story = {
   render: (args) => ({
     props: args,
@@ -135,6 +162,11 @@ export const WithPrefixAndSuffix: Story = {
   }),
 };
 
+/**
+ * Comparison of all five form field density/size scale tokens.
+ *
+ * Inputs: `size="xs" | "sm" | "md" | "lg" | "xl"`.
+ */
 export const Sizes: Story = {
   render: () => ({
     template: `

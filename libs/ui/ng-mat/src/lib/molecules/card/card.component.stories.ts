@@ -18,7 +18,9 @@ const SAMPLE_AVATAR =
  * action buttons (`magic-button`), and footer chips (`magic-chip`), plus
  * typed content-projection directives.
  *
- * @see https://material.angular.dev/components/card/overview
+ * - **References**:
+ *   - [Angular Material Card](https://material.angular.dev/components/card/overview)
+ *   - [Material 3 Cards](https://m3.material.io/components/cards/overview)
  */
 const meta: Meta<MagicCardComponent> = {
   title: 'Molecules/Card',
@@ -78,6 +80,11 @@ const meta: Meta<MagicCardComponent> = {
 export default meta;
 type Story = StoryObj<MagicCardComponent>;
 
+/**
+ * Basic raised card featuring an avatar, title, subtitle, full-bleed media, and body copy.
+ *
+ * Inputs: `appearance="raised"`, `variant="basic"`, `imageSize="full"`, `avatarSrc`, `imageSrc`, `title`, `subtitle`, `content`.
+ */
 export const Basic: Story = {
   args: {
     avatarSrc: SAMPLE_AVATAR,
@@ -87,6 +94,11 @@ export const Basic: Story = {
   },
 };
 
+/**
+ * Card with media and end-aligned action buttons emitting `actionClicked`.
+ *
+ * Inputs: `variant="with-actions"`, `alignActions="end"`, `imageSrc`, `actions` (Preview, Install).
+ */
 export const WithActions: Story = {
   args: {
     variant: 'with-actions',
@@ -107,6 +119,11 @@ export const WithActions: Story = {
   },
 };
 
+/**
+ * Card displaying metadata chips in the footer region.
+ *
+ * Inputs: `variant="with-chips"`, `chips` (Atomic Design, Signal Forms, WCAG AA).
+ */
 export const WithChips: Story = {
   args: {
     variant: 'with-chips',
@@ -118,6 +135,11 @@ export const WithChips: Story = {
   },
 };
 
+/**
+ * Outlined card variant with a single text action button.
+ *
+ * Inputs: `appearance="outlined"`, `variant="with-actions"`, `actions` (Learn more).
+ */
 export const Outlined: Story = {
   args: {
     appearance: 'outlined',
@@ -126,6 +148,11 @@ export const Outlined: Story = {
   },
 };
 
+/**
+ * Responsive grid comparing Material card thumbnail image sizes.
+ *
+ * Inputs: `imageSize="small" | "medium" | "large" | "extra-large"`, `imageSrc`.
+ */
 export const ImageSizes: Story = {
   render: (args) => ({
     props: { ...args, sampleMedia: SAMPLE_MEDIA },
@@ -140,6 +167,11 @@ export const ImageSizes: Story = {
   }),
 };
 
+/**
+ * Custom slot composition using `[magicCardHeader]`, default body, `[magicCardActions]`, and `[magicCardFooter]` directives.
+ *
+ * Inputs: `width="380px"`, `appearance="outlined"`, projected slot directives.
+ */
 export const ProjectedSlots: Story = {
   render: (args) => ({
     props: args,

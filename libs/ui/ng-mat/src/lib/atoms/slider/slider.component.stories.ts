@@ -6,7 +6,10 @@ import { MagicSliderComponent } from './slider.component';
  * `MagicSliderComponent` wraps `mat-slider` for single-value and range
  * selection, with Signal Forms (`FormValueControl`) and Reactive/Template Forms.
  *
- * @see https://material.angular.dev/components/slider/overview
+ * - **References**:
+ *   - [Angular Material Slider](https://material.angular.dev/components/slider/overview)
+ *   - [Material 3 Sliders](https://m3.material.io/components/sliders/overview)
+ *   - [Angular Signal Forms](https://angular.dev/guide/forms/signals/custom-controls)
  */
 const meta: Meta<MagicSliderComponent> = {
   title: 'Atoms/Slider',
@@ -66,6 +69,11 @@ const meta: Meta<MagicSliderComponent> = {
 export default meta;
 type Story = StoryObj<MagicSliderComponent>;
 
+/**
+ * Default continuous single-thumb slider initialized to `40`.
+ *
+ * Inputs: `min=0`, `max=100`, `step=1`, `value=40`, `range=false`, `discrete=false`, `ariaLabel="Volume"`.
+ */
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -74,14 +82,29 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Discrete stepped slider showing value indicator bubbles and track tick marks.
+ *
+ * Inputs: `min=0`, `max=100`, `step=10`, `value=50`, `discrete=true`, `showTickMarks=true`.
+ */
 export const DiscreteWithTicks: Story = {
   args: { min: 0, max: 100, step: 10, value: 50, discrete: true, showTickMarks: true },
 };
 
+/**
+ * Dual-thumb range slider selecting start and end bounds.
+ *
+ * Inputs: `range=true`, `startValue=25`, `endValue=75`, `discrete=true`.
+ */
 export const Range: Story = {
   args: { range: true, startValue: 25, endValue: 75, discrete: true },
 };
 
+/**
+ * Disabled slider preventing thumb interaction.
+ *
+ * Inputs: `disabled=true`, `value=60`.
+ */
 export const Disabled: Story = {
   args: { disabled: true, value: 60 },
   play: async ({ canvasElement }) => {
@@ -90,6 +113,11 @@ export const Disabled: Story = {
   },
 };
 
+/**
+ * Comparison of sliders across semantic palette colors.
+ *
+ * Inputs: `value=50`, `color="primary" | "secondary" | "tertiary" | "success" | "warning" | "error"`.
+ */
 export const Colors: Story = {
   render: () => ({
     template: `

@@ -6,7 +6,10 @@ import { MagicRadioButtonComponent } from './radio-button.component';
  * `MagicRadioButtonComponent` wraps `mat-radio-group` and `mat-radio-button`
  * with Signal Forms (`FormValueControl`) and Reactive/Template Forms support.
  *
- * @see https://material.angular.dev/components/radio/overview
+ * - **References**:
+ *   - [Angular Material Radio Button](https://material.angular.dev/components/radio/overview)
+ *   - [Material 3 Radio Button](https://m3.material.io/components/radio-button/overview)
+ *   - [Angular Signal Forms](https://angular.dev/guide/forms/signals/custom-controls)
  */
 const meta: Meta<MagicRadioButtonComponent> = {
   title: 'Atoms/RadioButton',
@@ -65,6 +68,11 @@ const meta: Meta<MagicRadioButtonComponent> = {
 export default meta;
 type Story = StoryObj<MagicRadioButtonComponent>;
 
+/**
+ * Default vertical radio group with an initially selected option and one disabled item.
+ *
+ * Inputs: `vertical=true`, `value="starter"`, `labelPosition="after"`, `options` (Starter, Pro, Enterprise disabled).
+ */
 export const Default: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -75,18 +83,38 @@ export const Default: Story = {
   },
 };
 
+/**
+ * Radio options arranged horizontally in a single row.
+ *
+ * Inputs: `vertical=false`.
+ */
 export const Horizontal: Story = {
   args: { vertical: false },
 };
 
+/**
+ * Radio group with option labels placed before the radio circles.
+ *
+ * Inputs: `labelPosition="before"`.
+ */
 export const LabelBefore: Story = {
   args: { labelPosition: 'before' },
 };
 
+/**
+ * Entire radio group disabled so no option can be selected.
+ *
+ * Inputs: `disabled=true`.
+ */
 export const Disabled: Story = {
   args: { disabled: true },
 };
 
+/**
+ * Comparison of selected radio buttons across semantic palette colors.
+ *
+ * Inputs: `color="primary" | "secondary" | "tertiary" | "success" | "error"`, `value="a"`.
+ */
 export const Colors: Story = {
   render: () => ({
     template: `
