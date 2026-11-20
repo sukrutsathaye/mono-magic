@@ -60,7 +60,10 @@ export default defineConfig(() => ({
             api: { allowWrite: true },
             provider: playwright(),
             instances: [
-              { browser: 'chromium', viewport: { width: 1280, height: 720 } },
+              {
+                browser: 'chromium' as const,
+                viewport: { width: 1280, height: 720 },
+              },
             ],
           },
           setupFiles: ['./.storybook/vitest.setup.ts'],
