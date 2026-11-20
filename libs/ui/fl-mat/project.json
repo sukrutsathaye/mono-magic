@@ -25,6 +25,14 @@
         "cwd": "libs/ui/fl-mat",
         "command": "flutter run -d chrome -t lib/widgetbook.dart"
       }
+    },
+    "build-widgetbook": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/build/web"],
+      "options": {
+        "cwd": "libs/ui/fl-mat",
+        "command": "flutter build web --release -t lib/widgetbook.dart"
+      }
     }
   }
 }

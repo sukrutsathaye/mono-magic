@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  width: 100%;
+  --mat-progress-bar-active-indicator-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-progress-bar-track-color: var(--magic-intent-container, var(--mat-sys-surface-container-highest));
+  --mat-progress-spinner-active-indicator-color: var(--magic-intent, var(--mat-sys-primary));
+}
+
+:host(.magic-progress-indicator--spinner) {
+  display: inline-block;
+  width: auto;
+}

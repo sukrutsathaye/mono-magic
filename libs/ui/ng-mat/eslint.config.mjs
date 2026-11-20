@@ -14,7 +14,7 @@ export default [
                 "error",
                 {
                     type: "attribute",
-                    prefix: "mm",
+                    prefix: "magic",
                     style: "camelCase"
                 }
             ],
@@ -22,7 +22,7 @@ export default [
                 "error",
                 {
                     type: "element",
-                    prefix: "mm",
+                    prefix: "magic",
                     style: "kebab-case"
                 }
             ]
@@ -32,7 +32,6 @@ export default [
         files: [
             "**/*.html"
         ],
-        // Override or add rules here
         rules: {}
     }
 ];

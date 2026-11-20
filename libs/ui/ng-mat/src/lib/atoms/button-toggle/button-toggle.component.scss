@@ -1,0 +1,7 @@
+:host {
+  display: inline-block;
+  --mat-standard-button-toggle-height: var(--magic-control-height, 40px);
+  --mat-standard-button-toggle-label-text-size: var(--magic-font-size, 0.875rem);
+  --mat-standard-button-toggle-selected-state-background-color: var(--magic-intent-container, var(--mat-sys-secondary-container));
+  --mat-standard-button-toggle-selected-state-text-color: var(--magic-on-intent-container, var(--mat-sys-on-secondary-container));
+}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import type { SearchBarMoleculeProps } from '@mono-magic/interfaces';
+import type { SearchBarMoleculeProps } from '@mono-magic/atomic-design-interfaces';
 import { MagicButton } from '../../atoms/button/button';
 import { MagicTextInput } from '../../atoms/text-input/text-input';
 

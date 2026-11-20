@@ -1,0 +1,64 @@
+@if (tasks().length) {
+  <div
+    class="magic-check-box__group"
+    role="group"
+    [attr.id]="id() || null"
+    [attr.data-testid]="testId() || null"
+    [attr.aria-label]="ariaLabel() || label() || null"
+  >
+    @for (task of tasks(); track task.id ?? task.name; let i = $index) {
+      <div class="magic-check-box__task">
+        <mat-checkbox
+          [checked]="!!task.checked"
+          [indeterminate]="isPartiallyComplete(i)"
+          [disabled]="isDisabled() || !!task.disabled"
+          [labelPosition]="labelPosition()"
+          [disableRipple]="disableRipple()"
+          [disabledInteractive]="disabledInteractive()"
+          [required]="required()"
+          (change)="toggleTask(i, undefined, $event.checked)"
+        >
+          {{ task.name }}
+        </mat-checkbox>
+        @if (task.subtasks?.length) {
+          <ul class="magic-check-box__subtasks">
+            @for (subtask of task.subtasks; track subtask.id ?? subtask.name; let j = $index) {
+              <li>
+                <mat-checkbox
+                  [checked]="!!subtask.checked"
+                  [disabled]="isDisabled() || !!task.disabled || !!subtask.disabled"
+                  [labelPosition]="labelPosition()"
+                  [disableRipple]="disableRipple()"
+                  [disabledInteractive]="disabledInteractive()"
+                  [required]="required()"
+                  (change)="toggleTask(i, j, $event.checked)"
+                >
+                  {{ subtask.name }}
+                </mat-checkbox>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  </div>
+} @else {
+  <mat-checkbox
+    [id]="id() || ''"
+    [attr.data-testid]="testId() || null"
+    [aria-label]="ariaLabel() || label() || null"
+    [checked]="checked()"
+    [indeterminate]="indeterminate()"
+    [disabled]="isDisabled()"
+    [required]="required()"
+    [labelPosition]="labelPosition()"
+    [disableRipple]="disableRipple()"
+    [disabledInteractive]="disabledInteractive()"
+    [name]="name() || null"
+    [value]="checkboxValue() || ''"
+    (change)="onSingleChange($event)"
+    (focusout)="touch.emit()"
+  >
+    <ng-content>{{ label() }}</ng-content>
+  </mat-checkbox>
+}

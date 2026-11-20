@@ -1,0 +1,30 @@
+<mat-form-field
+  [appearance]="matAppearance()"
+  [floatLabel]="floatLabel()"
+  [subscriptSizing]="subscriptSizing()"
+  [hideRequiredMarker]="hideRequiredMarker()"
+  [attr.id]="id() || null"
+  [attr.aria-label]="ariaLabel() || null"
+  [attr.data-testid]="testId() || null"
+>
+  @if (label()) {
+    <mat-label>{{ label() }}</mat-label>
+  }
+  @if (hasPrefix()) {
+    <span matIconPrefix class="magic-form-field__affix">
+      <ng-content select="[magicPrefix]" />
+    </span>
+  }
+  <ng-content />
+  @if (hasSuffix()) {
+    <span matIconSuffix class="magic-form-field__affix">
+      <ng-content select="[magicSuffix]" />
+    </span>
+  }
+  @if (errorText()) {
+    <mat-error>{{ errorText() }}</mat-error>
+  }
+  @if (hint()) {
+    <mat-hint>{{ hint() }}</mat-hint>
+  }
+</mat-form-field>

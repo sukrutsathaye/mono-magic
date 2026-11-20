@@ -30,3 +30,8 @@ out-tsc/
 *.tsbuildinfo
 test-output/
 coverage/
+
+# Visual testing (storybook-addon-vis)
+**/__vis__/**/__diffs__
+**/__vis__/**/__results__
+**/__vis__/local

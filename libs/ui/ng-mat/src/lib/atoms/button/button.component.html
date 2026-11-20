@@ -1,0 +1,119 @@
+<ng-template #body>
+  @if (loading() && loadingLabel()) {
+    {{ loadingLabel() }}
+  } @else {
+    <ng-content>
+      @if (isIconOnly()) {
+        <mat-icon aria-hidden="true">{{ leadingIcon() }}</mat-icon>
+      } @else {
+        {{ label() }}
+      }
+    </ng-content>
+  }
+</ng-template>
+
+@switch (kind()) {
+  @case ('icon') {
+    <button
+      matIconButton
+      magicButtonBinding
+      [disabled]="isDisabled()"
+      [disableRipple]="disableRipple()"
+      [disabledInteractive]="disabledInteractive()"
+      [showProgress]="loading()"
+    >
+      @if (loading()) {
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          [diameter]="spinnerDiameter()"
+        />
+      }
+      <ng-container [ngTemplateOutlet]="body" />
+    </button>
+  }
+  @case ('fab') {
+    <button
+      matFab
+      magicButtonBinding
+      [disabled]="isDisabled()"
+      [disableRipple]="disableRipple()"
+      [disabledInteractive]="disabledInteractive()"
+      [showProgress]="loading()"
+    >
+      @if (loading()) {
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          [diameter]="spinnerDiameter()"
+        />
+      }
+      <ng-container [ngTemplateOutlet]="body" />
+    </button>
+  }
+  @case ('mini-fab') {
+    <button
+      matMiniFab
+      magicButtonBinding
+      [disabled]="isDisabled()"
+      [disableRipple]="disableRipple()"
+      [disabledInteractive]="disabledInteractive()"
+      [showProgress]="loading()"
+    >
+      @if (loading()) {
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          [diameter]="spinnerDiameter()"
+        />
+      }
+      <ng-container [ngTemplateOutlet]="body" />
+    </button>
+  }
+  @case ('extended-fab') {
+    <button
+      matFab
+      extended
+      magicButtonBinding
+      [disabled]="isDisabled()"
+      [disableRipple]="disableRipple()"
+      [disabledInteractive]="disabledInteractive()"
+      [showProgress]="loading()"
+    >
+      @if (loading()) {
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          [diameter]="spinnerDiameter()"
+        />
+      } @else if (leadingIcon()) {
+        <mat-icon aria-hidden="true">{{ leadingIcon() }}</mat-icon>
+      }
+      <ng-container [ngTemplateOutlet]="body" />
+    </button>
+  }
+  @default {
+    <button
+      [matButton]="variant()"
+      magicButtonBinding
+      [disabled]="isDisabled()"
+      [disableRipple]="disableRipple()"
+      [disabledInteractive]="disabledInteractive()"
+      [showProgress]="loading()"
+    >
+      @if (loading()) {
+        <mat-progress-spinner
+          progressIndicator
+          mode="indeterminate"
+          [diameter]="spinnerDiameter()"
+        />
+      } @else if (leadingIcon()) {
+        <mat-icon aria-hidden="true">{{ leadingIcon() }}</mat-icon>
+      }
+      <ng-container [ngTemplateOutlet]="body" />
+      @if (trailingIcon()) {
+        <mat-icon iconPositionEnd aria-hidden="true">{{ trailingIcon() }}</mat-icon>
+      }
+    </button>
+  }
+}

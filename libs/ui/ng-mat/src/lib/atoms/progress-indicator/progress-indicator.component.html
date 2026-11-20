@@ -1,0 +1,23 @@
+@switch (type()) {
+  @case ('spinner') {
+    <mat-progress-spinner
+      [attr.id]="id() || null"
+      [attr.data-testid]="testId() || null"
+      [attr.aria-label]="ariaLabel() || null"
+      [mode]="spinnerMode()"
+      [value]="value()"
+      [diameter]="resolvedDiameter()"
+      [strokeWidth]="resolvedStrokeWidth()"
+    />
+  }
+  @default {
+    <mat-progress-bar
+      [attr.id]="id() || null"
+      [attr.data-testid]="testId() || null"
+      [attr.aria-label]="ariaLabel() || null"
+      [mode]="mode()"
+      [value]="value()"
+      [bufferValue]="bufferValue()"
+    />
+  }
+}

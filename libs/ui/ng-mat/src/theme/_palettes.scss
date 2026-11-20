@@ -1,0 +1,39 @@
+@use 'sass:list';
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+// Shared typography for every palette class.
+$typography: (
+  plain-family: Roboto,
+  brand-family: 'Open Sans',
+  bold-weight: 700,
+  medium-weight: 500,
+  regular-weight: 400,
+);
+
+// name -> (theme-type, primary palette, tertiary palette)
+$palettes: (
+  'light-theme': (light, mat.$violet-palette, mat.$orange-palette),
+  'dark-theme': (dark, mat.$green-palette, mat.$orange-palette),
+  'rose-red': (light, mat.$rose-palette, mat.$red-palette),
+  'cyan-orange': (dark, mat.$cyan-palette, mat.$orange-palette),
+  'orange-red': (light, mat.$orange-palette, mat.$red-palette),
+  'azure-blue': (light, mat.$azure-palette, mat.$blue-palette),
+  'magenta-violet': (dark, mat.$magenta-palette, mat.$violet-palette),
+);
+
+/// Emits the Material 3 system tokens for one palette under the current selector.
+@mixin palette($name) {
+  $def: map.get($palettes, $name);
+  @include mat.theme(
+    (
+      color: (
+        theme-type: list.nth($def, 1),
+        primary: list.nth($def, 2),
+        tertiary: list.nth($def, 3),
+      ),
+      typography: $typography,
+      density: 0,
+    )
+  );
+}

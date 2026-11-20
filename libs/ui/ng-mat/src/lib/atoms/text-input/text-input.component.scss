@@ -1,0 +1,43 @@
+:host {
+  display: block;
+  width: 100%;
+  font-size: var(--magic-font-size, inherit);
+}
+
+.magic-text-input__native {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  color: inherit;
+  min-height: var(--magic-control-height, 40px);
+  padding-inline: 12px;
+  border: 1px solid var(--mat-sys-outline, #74777f);
+  border-radius: var(--magic-shape, 4px);
+  background: var(--mat-sys-surface, transparent);
+  outline: none;
+  margin: 0;
+
+  &:focus {
+    border-color: var(--mat-sys-primary, #005cbb);
+    outline: 1px solid var(--mat-sys-primary, #005cbb);
+  }
+
+  &:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+  }
+}
+
+// Inside <magic-form-field>, Material owns the outline/fill container and focus ring.
+:host-context(magic-form-field) .magic-text-input__native {
+  min-height: 0;
+  padding-inline: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
+}

@@ -1,0 +1,13 @@
+:host {
+  display: inline-block;
+  --mat-switch-label-text-size: var(--magic-font-size, 0.875rem);
+  --mat-switch-selected-track-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-switch-selected-hover-track-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-switch-selected-focus-track-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-switch-selected-pressed-track-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-switch-selected-handle-color: var(--magic-on-intent, var(--mat-sys-on-primary));
+  --mat-switch-selected-hover-handle-color: var(--magic-on-intent, var(--mat-sys-on-primary));
+  --mat-switch-selected-focus-handle-color: var(--magic-on-intent, var(--mat-sys-on-primary));
+  --mat-switch-selected-pressed-handle-color: var(--magic-on-intent, var(--mat-sys-on-primary));
+  --mat-switch-selected-icon-color: var(--magic-intent, var(--mat-sys-primary));
+}

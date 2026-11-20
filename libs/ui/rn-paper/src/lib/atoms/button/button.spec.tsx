@@ -21,13 +21,13 @@ describe('MagicButton (React Native Paper)', () => {
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('prevents interaction when disabled or loading', () => {
+  it('prevents interaction when loading', () => {
     const onPress = vi.fn();
     render(
       <MagicPaperProvider>
         <MagicButton
           label="Saving"
-          loading
+          loading={true}
           testId="rn-loading-btn"
           onPress={onPress}
         />
@@ -35,6 +35,24 @@ describe('MagicButton (React Native Paper)', () => {
     );
 
     const btn = screen.getByTestId('rn-loading-btn');
+    fireEvent.click(btn);
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it('prevents interaction when disabled', () => {
+    const onPress = vi.fn();
+    render(
+      <MagicPaperProvider>
+        <MagicButton
+          label="Disabled"
+          disabled={true}
+          testId="rn-disabled-btn"
+          onPress={onPress}
+        />
+      </MagicPaperProvider>
+    );
+
+    const btn = screen.getByTestId('rn-disabled-btn');
     fireEvent.click(btn);
     expect(onPress).not.toHaveBeenCalled();
   });

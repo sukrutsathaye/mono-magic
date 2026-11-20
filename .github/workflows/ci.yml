@@ -17,13 +17,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: nrwl/nx-set-shas@v4
-      - uses: actions/setup-node@v6
-      - uses: pnpm/setup@v1
-        with:
-          version: 12.18.0
-          runtime: node@22
-          cache: true
-      - run: pnpm ci
+      - uses: ./.github/actions/setup-pnpm
+      - uses: ./.github/actions/setup-flutter
       - run: pnpm nx-cloud start-workers
 
       - run: pnpm nx affected -t lint test build

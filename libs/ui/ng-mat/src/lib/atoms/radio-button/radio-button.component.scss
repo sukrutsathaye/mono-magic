@@ -1,0 +1,21 @@
+:host {
+  display: inline-block;
+  --mat-radio-label-text-size: var(--magic-font-size, 0.875rem);
+  --mat-radio-selected-icon-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-radio-selected-hover-icon-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-radio-selected-focus-icon-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-radio-selected-pressed-icon-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-radio-checked-ripple-color: var(--magic-intent, var(--mat-sys-primary));
+}
+
+.magic-radio-button__group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.magic-radio-button__group--vertical {
+  flex-direction: column;
+  gap: 4px;
+}

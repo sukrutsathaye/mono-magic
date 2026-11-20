@@ -1,0 +1,149 @@
+@switch (variant()) {
+  @case ('input') {
+    <magic-form-field
+      [label]="label()"
+      [size]="size()"
+      [attr.id]="id() || null"
+      [attr.data-testid]="testId() || null"
+    >
+      <mat-chip-grid
+        #chipGrid
+        [disabled]="disabled()"
+        [attr.aria-label]="ariaLabel() || label() || 'Chip list'"
+      >
+        @for (chip of chips(); track chip.id ?? chip.label; let i = $index) {
+          <mat-chip-row
+            [removable]="chip.removable ?? removable()"
+            [editable]="chip.editable ?? editable()"
+            [disabled]="disabled() || !!chip.disabled"
+            [disableRipple]="disableRipple()"
+            (removed)="removeChip(i)"
+            (edited)="editChip(i, $event)"
+          >
+            @if (chip.avatarSrc) {
+              <img matChipAvatar [src]="chip.avatarSrc" [alt]="chip.avatarAlt || chip.label" />
+            } @else if (chip.leadingIcon) {
+              <mat-icon matChipAvatar aria-hidden="true">{{ chip.leadingIcon }}</mat-icon>
+            }
+            <span>{{ chip.label }}</span>
+            @if (chip.removable ?? removable()) {
+              <button matChipRemove [attr.aria-label]="'Remove ' + chip.label">
+                <mat-icon aria-hidden="true">cancel</mat-icon>
+              </button>
+            }
+          </mat-chip-row>
+        }
+        <input
+          [placeholder]="inputPlaceholder()"
+          [matChipInputFor]="chipGrid"
+          [disabled]="disabled()"
+          (matChipInputTokenEnd)="addChip($event)"
+        />
+      </mat-chip-grid>
+    </magic-form-field>
+  }
+
+  @case ('selectable') {
+    <mat-chip-listbox
+      [class.mat-mdc-chip-set-stacked]="orientation() === 'vertical'"
+      [attr.id]="id() || null"
+      [attr.data-testid]="testId() || null"
+      [attr.aria-label]="ariaLabel() || label() || null"
+      [multiple]="multiple()"
+      [selectable]="selectable()"
+      [hideSingleSelectionIndicator]="hideSelectionIndicator()"
+    >
+      @for (chip of chips(); track chip.id ?? chip.label; let i = $index) {
+        <mat-chip-option
+          [selected]="!!chip.selected"
+          [selectable]="chip.selectable ?? selectable()"
+          [removable]="chip.removable ?? removable()"
+          [disabled]="disabled() || !!chip.disabled"
+          [disableRipple]="disableRipple()"
+          (removed)="removeChip(i)"
+          (selectionChange)="onChipSelection(chip, i, $event)"
+        >
+          @if (chip.avatarSrc) {
+            <img matChipAvatar [src]="chip.avatarSrc" [alt]="chip.avatarAlt || chip.label" />
+          } @else if (chip.leadingIcon) {
+            <mat-icon matChipAvatar aria-hidden="true">{{ chip.leadingIcon }}</mat-icon>
+          }
+          <span>{{ chip.label }}</span>
+          @if (chip.removable ?? removable()) {
+            <button matChipRemove [attr.aria-label]="'Remove ' + chip.label">
+              <mat-icon aria-hidden="true">cancel</mat-icon>
+            </button>
+          }
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
+  }
+
+  @case ('draggable') {
+    <mat-chip-set
+      cdkDropList
+      [cdkDropListOrientation]="orientation()"
+      [attr.id]="id() || null"
+      [attr.data-testid]="testId() || null"
+      [attr.aria-label]="ariaLabel() || label() || null"
+      (cdkDropListDropped)="onDrop($event)"
+    >
+      @for (chip of chips(); track chip.id ?? chip.label; let i = $index) {
+        <mat-chip-row
+          cdkDrag
+          [removable]="chip.removable ?? removable()"
+          [disabled]="disabled() || !!chip.disabled"
+          [disableRipple]="disableRipple()"
+          (removed)="removeChip(i)"
+        >
+          @if (chip.avatarSrc) {
+            <img matChipAvatar [src]="chip.avatarSrc" [alt]="chip.avatarAlt || chip.label" />
+          } @else if (chip.leadingIcon) {
+            <mat-icon matChipAvatar aria-hidden="true">{{ chip.leadingIcon }}</mat-icon>
+          }
+          <span>{{ chip.label }}</span>
+          @if (chip.removable ?? removable()) {
+            <button matChipRemove [attr.aria-label]="'Remove ' + chip.label">
+              <mat-icon aria-hidden="true">cancel</mat-icon>
+            </button>
+          }
+        </mat-chip-row>
+      }
+    </mat-chip-set>
+  }
+
+  @default {
+    <mat-chip-set
+      [attr.id]="id() || null"
+      [attr.data-testid]="testId() || null"
+      [attr.aria-label]="ariaLabel() || label() || null"
+    >
+      @if (chips().length) {
+        @for (chip of chips(); track chip.id ?? chip.label; let i = $index) {
+          <mat-chip
+            [removable]="chip.removable ?? removable()"
+            [disabled]="disabled() || !!chip.disabled"
+            [disableRipple]="disableRipple()"
+            (removed)="removeChip(i)"
+          >
+            @if (chip.avatarSrc) {
+              <img matChipAvatar [src]="chip.avatarSrc" [alt]="chip.avatarAlt || chip.label" />
+            } @else if (chip.leadingIcon) {
+              <mat-icon matChipAvatar aria-hidden="true">{{ chip.leadingIcon }}</mat-icon>
+            }
+            <span>{{ chip.label }}</span>
+            @if (chip.removable ?? removable()) {
+              <button matChipRemove [attr.aria-label]="'Remove ' + chip.label">
+                <mat-icon aria-hidden="true">cancel</mat-icon>
+              </button>
+            }
+          </mat-chip>
+        }
+      } @else {
+        <mat-chip [disabled]="disabled()" [disableRipple]="disableRipple()">
+          <ng-content>{{ label() }}</ng-content>
+        </mat-chip>
+      }
+    </mat-chip-set>
+  }
+}

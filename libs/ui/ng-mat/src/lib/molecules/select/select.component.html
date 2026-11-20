@@ -1,0 +1,56 @@
+<magic-form-field
+  class="magic-select__field"
+  [label]="label()"
+  [hint]="hint()"
+  [errorText]="errorText()"
+  [appearance]="appearance()"
+  [size]="size()"
+  [floatLabel]="floatLabel()"
+  [subscriptSizing]="subscriptSizing()"
+  [hideRequiredMarker]="hideRequiredMarker()"
+  [testId]="testId() ? testId() + '-field' : undefined"
+>
+  <mat-select
+    [id]="id() || ''"
+    [attr.data-testid]="testId() || null"
+    [aria-label]="ariaLabel() ?? ''"
+    [aria-labelledby]="ariaLabelledby() ?? ''"
+    [multiple]="multiple()"
+    [value]="value()"
+    [placeholder]="placeholder() ?? ''"
+    [required]="required()"
+    [disabled]="isDisabled()"
+    [disableRipple]="disableRipple()"
+    [hideSingleSelectionIndicator]="hideSingleSelectionIndicator()"
+    [disableOptionCentering]="disableOptionCentering()"
+    [typeaheadDebounceInterval]="typeaheadDebounceInterval()"
+    [sortComparator]="sortComparator()!"
+    [panelClass]="panelClass() ?? ''"
+    [panelWidth]="panelWidth()"
+    [canSelectNullableOptions]="canSelectNullableOptions()"
+    [tabIndex]="tabIndex()"
+    [compareWith]="compareWith()"
+    [errorStateMatcher]="errorStateMatcher"
+    (selectionChange)="onSelectionChange($event)"
+    (openedChange)="onOpenedChange($event)"
+    (blur)="onBlur()"
+  >
+    <mat-select-trigger>{{ triggerSummary() }}</mat-select-trigger>
+
+    @for (group of optionGroups(); track group.label) {
+      <mat-optgroup [label]="group.label" [disabled]="group.disabled ?? false">
+        @for (option of group.options; track option.value) {
+          <mat-option [value]="option.value" [disabled]="option.disabled ?? false">
+            {{ option.label }}
+          </mat-option>
+        }
+      </mat-optgroup>
+    }
+
+    @for (option of options(); track option.value) {
+      <mat-option [value]="option.value" [disabled]="option.disabled ?? false">
+        {{ option.label }}
+      </mat-option>
+    }
+  </mat-select>
+</magic-form-field>

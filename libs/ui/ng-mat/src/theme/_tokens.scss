@@ -1,0 +1,85 @@
+// Semantic + intent + size + shape tokens. These are plain CSS custom properties
+// so atoms never need inline styles or per-component maths.
+@use 'sass:list';
+
+/// Semantic roles Material 3 does not define. Values adapt to light/dark via
+/// `light-dark()`, driven by the `color-scheme` that `mat.theme` sets.
+@mixin semantic-tokens {
+  --magic-success: light-dark(#1b6e3a, #7fdc99);
+  --magic-on-success: light-dark(#ffffff, #00391a);
+  --magic-success-container: light-dark(#a0f5b4, #00522a);
+  --magic-on-success-container: light-dark(#00210c, #a0f5b4);
+
+  --magic-warning: light-dark(#8a5100, #ffb870);
+  --magic-on-warning: light-dark(#ffffff, #4a2800);
+  --magic-warning-container: light-dark(#ffdcbd, #693c00);
+  --magic-on-warning-container: light-dark(#2d1600, #ffdcbd);
+}
+
+/// `.magic-color-*` maps a ColorIntent onto four generic roles that atoms use.
+@mixin intent-classes {
+  $intents: (
+    'primary': (primary, on-primary, primary-container, on-primary-container),
+    'secondary': (secondary, on-secondary, secondary-container, on-secondary-container),
+    'tertiary': (tertiary, on-tertiary, tertiary-container, on-tertiary-container),
+    'error': (error, on-error, error-container, on-error-container),
+  );
+
+  @each $name, $roles in $intents {
+    .magic-color-#{$name} {
+      --magic-intent: var(--mat-sys-#{list.nth($roles, 1)});
+      --magic-on-intent: var(--mat-sys-#{list.nth($roles, 2)});
+      --magic-intent-container: var(--mat-sys-#{list.nth($roles, 3)});
+      --magic-on-intent-container: var(--mat-sys-#{list.nth($roles, 4)});
+    }
+  }
+
+  @each $name in ('success', 'warning') {
+    .magic-color-#{$name} {
+      --magic-intent: var(--magic-#{$name});
+      --magic-on-intent: var(--magic-on-#{$name});
+      --magic-intent-container: var(--magic-#{$name}-container);
+      --magic-on-intent-container: var(--magic-on-#{$name}-container);
+    }
+  }
+
+  .magic-color-neutral {
+    --magic-intent: var(--mat-sys-on-surface-variant);
+    --magic-on-intent: var(--mat-sys-surface);
+    --magic-intent-container: var(--mat-sys-surface-container-highest);
+    --magic-on-intent-container: var(--mat-sys-on-surface);
+  }
+}
+
+/// `.magic-size-*` maps AtomicSize onto control metrics consumed by atoms.
+@mixin size-classes {
+  $sizes: (
+    'xs': (28px, 0.75rem, 16px, 12px),
+    'sm': (32px, 0.8125rem, 18px, 14px),
+    'md': (40px, 0.875rem, 18px, 24px),
+    'lg': (48px, 1rem, 22px, 28px),
+    'xl': (56px, 1.125rem, 24px, 32px),
+  );
+
+  @each $name, $m in $sizes {
+    .magic-size-#{$name} {
+      --magic-control-height: #{list.nth($m, 1)};
+      --magic-font-size: #{list.nth($m, 2)};
+      --magic-icon-size: #{list.nth($m, 3)};
+      --magic-control-padding: #{list.nth($m, 4)};
+    }
+  }
+}
+
+/// `.magic-shape-*` exposes corner shape as a custom property.
+@mixin shape-classes {
+  .magic-shape-square {
+    --magic-shape: 0;
+  }
+  .magic-shape-rounded {
+    --magic-shape: 8px;
+  }
+  .magic-shape-pill {
+    --magic-shape: 999px;
+  }
+}

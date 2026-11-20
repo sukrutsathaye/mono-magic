@@ -1,0 +1,16 @@
+:host {
+  display: inline-block;
+  width: 100%;
+  --mat-slider-active-track-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-slider-handle-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-slider-focus-handle-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-slider-hover-handle-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-slider-ripple-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-slider-label-container-color: var(--magic-intent, var(--mat-sys-primary));
+  --mat-slider-label-label-text-color: var(--magic-on-intent, var(--mat-sys-on-primary));
+  --mat-slider-with-tick-marks-active-container-color: var(--magic-on-intent, var(--mat-sys-on-primary));
+}
+
+.magic-slider__control {
+  width: 100%;
+}

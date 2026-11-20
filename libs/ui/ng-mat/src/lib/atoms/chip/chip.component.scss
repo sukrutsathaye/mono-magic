@@ -1,0 +1,7 @@
+:host {
+  display: block;
+  --mat-chip-label-text-size: var(--magic-font-size, 0.875rem);
+  --mat-chip-selected-label-text-color: var(--magic-on-intent-container, var(--mat-sys-on-secondary-container));
+  --mat-chip-elevated-selected-container-color: var(--magic-intent-container, var(--mat-sys-secondary-container));
+  --mat-chip-selected-trailing-icon-color: var(--magic-on-intent-container, var(--mat-sys-on-secondary-container));
+}

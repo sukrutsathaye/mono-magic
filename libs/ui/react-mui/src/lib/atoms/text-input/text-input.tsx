@@ -5,7 +5,7 @@ import type {
   AtomicSize,
   TextInputAtomProps,
   TextInputVariant,
-} from '@mono-magic/interfaces';
+} from '@mono-magic/atomic-design-interfaces';
 
 export interface MagicTextInputProps extends TextInputAtomProps {
   onChange?: (value: string) => void;

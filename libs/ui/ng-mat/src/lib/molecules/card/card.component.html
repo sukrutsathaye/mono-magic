@@ -1,0 +1,66 @@
+<mat-card
+  class="magic-card"
+  [appearance]="appearance()"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || null"
+>
+  <ng-content select="[magicCardHeader], [card-header]" />
+  @if (hasHeader()) {
+    <mat-card-header>
+      @if (avatarSrc()) {
+        <img mat-card-avatar [src]="avatarSrc()" [alt]="avatarAlt()" />
+      }
+      @if (title()) {
+        <mat-card-title>{{ title() }}</mat-card-title>
+      }
+      @if (subtitle()) {
+        <mat-card-subtitle>{{ subtitle() }}</mat-card-subtitle>
+      }
+    </mat-card-header>
+  }
+
+  @if (imageSrc()) {
+    <img
+      mat-card-image
+      [class]="'magic-card__image magic-card__image--' + imageSize()"
+      [src]="imageSrc()"
+      [alt]="imageAlt()"
+    />
+  }
+
+  <mat-card-content class="magic-card__content">
+    <ng-content />
+    @if (content()) {
+      <p class="magic-card__text">{{ content() }}</p>
+    }
+  </mat-card-content>
+
+  @if (showActions()) {
+    <mat-card-actions class="magic-card__actions" [align]="alignActions()">
+      <ng-content select="[magicCardActions]" />
+      @for (action of actions(); track action.id ?? action.label) {
+        <magic-button
+          [id]="action.id"
+          [label]="action.label"
+          [variant]="action.variant ?? 'text'"
+          [color]="action.color ?? 'primary'"
+          [leadingIcon]="action.icon"
+          [disabled]="action.disabled ?? false"
+          (clicked)="onActionClick(action)"
+        />
+      }
+    </mat-card-actions>
+  }
+  <ng-content select="[card-actions]" />
+
+  @if (showFooter()) {
+    <mat-card-footer class="magic-card__footer">
+      <ng-content select="[magicCardFooter]" />
+      @if (chips().length > 0) {
+        <magic-chip class="magic-card__chips" [chips]="chips()" />
+      }
+    </mat-card-footer>
+  }
+  <ng-content select="[card-footer]" />
+</mat-card>

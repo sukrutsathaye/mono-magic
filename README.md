@@ -37,7 +37,7 @@ Each UI library follows **Atomic Design** (`atoms/`, `molecules/`, `organisms/`,
 
 | Nx Project | Package / Location | Framework & Design System | Component Catalog |
 | --- | --- | --- | --- |
-| `ui-interfaces` | `@mono-magic/ui-interfaces` (`libs/ui/interfaces`) | Framework-agnostic TypeScript | — |
+| `atomic-design-interfaces` | `@mono-magic/atomic-design-interfaces` (`libs/ui/atomic-design-interfaces`) | Framework-agnostic TypeScript | — |
 | `ui-react-mui` | `@mono-magic/ui-react-mui` (`libs/ui/react-mui`) | React 19 + MUI Material | Storybook (`@storybook/react-vite`) |
 | `ui-ng-mat` | `@mono-magic/ui-ng-mat` (`libs/ui/ng-mat`) | Angular 22 + Angular Material | Storybook (`@storybook/angular`) |
 | `ui-rn-paper` | `@mono-magic/ui-rn-paper` (`libs/ui/rn-paper`) | Expo / React Native + RN Paper | Storybook (`@storybook/react-vite` + `react-native-web`) |

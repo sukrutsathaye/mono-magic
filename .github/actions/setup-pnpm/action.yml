@@ -1,0 +1,17 @@
+name: Setup Node and pnpm workspace
+description: Installs Node.js 22, pnpm 12.18.0 with cache, and frozen workspace dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+    - name: Setup pnpm
+      uses: pnpm/setup@v1
+      with:
+        version: 12.18.0
+        runtime: node@22
+        cache: true
+    - name: Install dependencies
+      shell: bash
+      run: pnpm ci

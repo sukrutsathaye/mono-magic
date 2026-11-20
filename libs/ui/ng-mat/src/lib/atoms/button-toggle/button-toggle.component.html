@@ -1,0 +1,31 @@
+<mat-button-toggle-group
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || null"
+  [name]="name() || ''"
+  [multiple]="isMultiple()"
+  [value]="value()"
+  [vertical]="vertical()"
+  [appearance]="appearance()"
+  [disabled]="isDisabled()"
+  [disabledInteractive]="disabledInteractive()"
+  [hideSingleSelectionIndicator]="hideSelectionIndicator()"
+  [hideMultipleSelectionIndicator]="hideSelectionIndicator()"
+  (change)="onGroupChange($event)"
+  (focusout)="touch.emit()"
+>
+  @for (option of options(); track option.value) {
+    <mat-button-toggle
+      [value]="option.value"
+      [disabled]="!!option.disabled"
+      [attr.aria-label]="option.ariaLabel || option.label"
+    >
+      @if (option.icon) {
+        <mat-icon aria-hidden="true">{{ option.icon }}</mat-icon>
+      }
+      @if (option.label) {
+        <span>{{ option.label }}</span>
+      }
+    </mat-button-toggle>
+  }
+</mat-button-toggle-group>
