@@ -1,15 +1,12 @@
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { setCompodocJson } from '@storybook/addon-docs/angular';
 import {
   applicationConfig,
   type Decorator,
   type Preview,
-} from '@storybook/angular';
+} from '@storybook/angular-vite';
+import { visAnnotations } from 'storybook-addon-vis';
 import DocumentationTemplate from './DocumentationTemplate.mdx';
-import docJson from './documentation.json';
-
-setCompodocJson(docJson);
 
 const ensureMaterialIconsFont = (): void => {
   if (typeof document === 'undefined') {
@@ -47,7 +44,8 @@ const withTheme: Decorator = (storyFn, context) => {
 };
 
 const preview: Preview = {
-  tags: ['autodocs'],
+  tags: ['autodocs', 'snapshot'],
+  beforeEach: visAnnotations.beforeEach,
   decorators: [
     applicationConfig({
       providers: [provideAnimationsAsync(), provideNativeDateAdapter()],
@@ -75,6 +73,10 @@ const preview: Preview = {
     },
   },
   parameters: {
+    a11y: {
+      // Switch to 'error' once existing component axe-core violations are resolved
+      test: 'todo',
+    },
     controls: {
       expanded: true,
       matchers: {

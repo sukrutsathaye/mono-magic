@@ -83,7 +83,7 @@ type Story = StoryObj<MagicButtonToggleComponent>;
 export const Default: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
-    const centerBtn = canvas.getByRole('button', { name: 'Center' });
+    const centerBtn = canvas.getByRole('radio', { name: 'Center' });
     await userEvent.click(centerBtn);
     await expect(args.changed).toHaveBeenCalledWith('center');
   },
