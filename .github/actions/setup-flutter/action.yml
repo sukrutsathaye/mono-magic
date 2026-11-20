@@ -1,0 +1,30 @@
+name: Setup Flutter SDK
+description: Installs and caches the Flutter SDK and resolves Dart/Flutter package dependencies
+
+inputs:
+  flutter-version:
+    description: Flutter SDK version to install
+    required: false
+    default: '3.50.0'
+  channel:
+    description: Flutter release channel
+    required: false
+    default: 'stable'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ inputs.flutter-version }}
+        channel: ${{ inputs.channel }}
+        cache: true
+    - name: Resolve Flutter workspace dependencies
+      shell: bash
+      run: |
+        while IFS= read -r pubspec; do
+          dir=$(dirname "$pubspec")
+          echo "Running flutter pub get in $dir"
+          (cd "$dir" && flutter pub get)
+        done < <(find apps libs -maxdepth 4 -name "pubspec.yaml" -not -path "*/.*/*" -not -path "*/build/*" 2>/dev/null || true)
