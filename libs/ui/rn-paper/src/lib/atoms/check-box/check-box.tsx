@@ -27,6 +27,8 @@ export type { CheckBoxTask };
 export interface MagicCheckBoxProps extends CheckBoxAtomProps {
   /** Initial checked state when rendered in uncontrolled mode. */
   defaultChecked?: boolean;
+  /** Initial task hierarchy when rendered in uncontrolled mode. */
+  defaultTasks?: readonly CheckBoxTask[];
   /** Emits the updated checked boolean when the checkbox toggles. */
   onChange?: (checked: boolean) => void;
   /** Emits when the indeterminate state transitions (e.g. cleared on user toggle). */
@@ -317,6 +319,7 @@ export function MagicCheckBox({
   name,
   checkboxValue,
   tasks,
+  defaultTasks,
   onChange,
   onIndeterminateChange,
   onTasksChange,
@@ -332,7 +335,7 @@ export function MagicCheckBox({
   const [taskList, setTaskList] = useControllableState<readonly CheckBoxTask[]>(
     {
       value: tasks,
-      defaultValue: [],
+      defaultValue: defaultTasks ?? [],
       onChange: (next) => onTasksChange?.([...next]),
     }
   );
@@ -395,7 +398,7 @@ export function MagicCheckBox({
     [setTaskList, taskList]
   );
 
-  if (tasks && tasks.length > 0) {
+  if (taskList && taskList.length > 0) {
     return (
       <View
         nativeID={id}

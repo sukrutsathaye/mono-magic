@@ -83,6 +83,10 @@ const meta: Meta<typeof MagicChip> = {
       control: 'object',
       table: { category: 'Content' },
     },
+    defaultChips: {
+      control: 'object',
+      table: { category: 'Content' },
+    },
     label: {
       control: 'text',
       table: { category: 'Content' },
@@ -158,7 +162,7 @@ type Story = StoryObj<typeof MagicChip>;
  */
 export const Playground: Story = {
   args: {
-    chips: SAMPLE_CHIPS,
+    defaultChips: SAMPLE_CHIPS,
     removable: true,
   },
   play: async ({ args, canvasElement }) => {
@@ -179,7 +183,7 @@ export const Selectable: Story = {
   args: {
     variant: 'selectable',
     multiple: true,
-    chips: SAMPLE_CHIPS,
+    defaultChips: SAMPLE_CHIPS,
   },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -198,7 +202,7 @@ export const InputChips: Story = {
     removable: true,
     editable: true,
     inputPlaceholder: 'Add skill...',
-    chips: [
+    defaultChips: [
       { id: 'react', label: 'React' },
       { id: 'paper', label: 'Paper' },
     ],
@@ -217,7 +221,7 @@ export const InputChips: Story = {
 export const Draggable: Story = {
   args: {
     variant: 'draggable',
-    chips: [
+    defaultChips: [
       { id: 'step-1', label: 'Design' },
       { id: 'step-2', label: 'Develop' },
       { id: 'step-3', label: 'Ship' },
@@ -254,7 +258,7 @@ export const Colors: Story = {
           key={color}
           variant="selectable"
           color={color}
-          chips={[
+          defaultChips={[
             { id: `${color}-1`, label: `${color} selected`, selected: true },
             { id: `${color}-2`, label: `${color} default`, selected: false },
           ]}
@@ -295,7 +299,7 @@ export const OrientationAndDisabled: Story = {
       <MagicChip
         orientation="vertical"
         variant="selectable"
-        chips={[
+        defaultChips={[
           { id: 'v1', label: 'Vertical One', selected: true },
           { id: 'v2', label: 'Vertical Two' },
         ]}
@@ -304,7 +308,7 @@ export const OrientationAndDisabled: Story = {
         disabled
         variant="selectable"
         removable
-        chips={[
+        defaultChips={[
           { id: 'd1', label: 'Disabled Selected', selected: true },
           { id: 'd2', label: 'Disabled Default' },
         ]}
@@ -330,7 +334,7 @@ export const DarkTheme: Story = {
         <MagicChip
           variant="selectable"
           removable
-          chips={SAMPLE_CHIPS}
+          defaultChips={SAMPLE_CHIPS}
         />
       </View>
     </MagicPaperProvider>

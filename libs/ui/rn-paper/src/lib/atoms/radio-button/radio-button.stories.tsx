@@ -163,43 +163,43 @@ export const SizesAndColors: Story = {
         <MagicRadioButton
           size="xs"
           color="primary"
-          value="a"
+          defaultValue="a"
           options={[{ value: 'a', label: 'XS Primary' }]}
         />
         <MagicRadioButton
           size="sm"
           color="secondary"
-          value="a"
+          defaultValue="a"
           options={[{ value: 'a', label: 'SM Secondary' }]}
         />
         <MagicRadioButton
           size="md"
           color="tertiary"
-          value="a"
+          defaultValue="a"
           options={[{ value: 'a', label: 'MD Tertiary' }]}
         />
         <MagicRadioButton
           size="lg"
           color="success"
-          value="a"
+          defaultValue="a"
           options={[{ value: 'a', label: 'LG Success' }]}
         />
         <MagicRadioButton
           size="xl"
           color="error"
-          value="a"
+          defaultValue="a"
           options={[{ value: 'a', label: 'XL Error' }]}
         />
       </View>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
         <MagicRadioButton
           color="warning"
-          value="a"
+          defaultValue="a"
           options={[{ value: 'a', label: 'Warning' }]}
         />
         <MagicRadioButton
           color="neutral"
-          value="a"
+          defaultValue="a"
           options={[{ value: 'a', label: 'Neutral' }]}
         />
       </View>

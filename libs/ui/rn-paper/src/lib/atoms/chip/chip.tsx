@@ -25,6 +25,8 @@ import {
 export type { ChipItem };
 
 export interface MagicChipProps extends ChipAtomProps {
+  /** Initial chip items when rendered in uncontrolled mode. */
+  defaultChips?: readonly ChipItem[];
   /** Emits the updated immutable chip list on add, remove, edit, selection, or reorder. */
   onChipsChange?: (chips: ChipItem[]) => void;
   /** Emits the removed chip item when deleted. */
@@ -154,6 +156,7 @@ export function MagicChip({
   testId,
   ariaLabel,
   chips,
+  defaultChips,
   label = 'Chip',
   variant = 'basic',
   color = 'primary',
@@ -182,7 +185,7 @@ export function MagicChip({
 
   const [chipList, setChipList] = useControllableState<readonly ChipItem[]>({
     value: chips,
-    defaultValue: [],
+    defaultValue: defaultChips ? [...defaultChips] : [],
     onChange: (next) => onChipsChange?.([...next]),
   });
 

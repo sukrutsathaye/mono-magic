@@ -78,6 +78,10 @@ const meta: Meta<typeof MagicCheckBox> = {
       control: 'object',
       table: { category: 'Content' },
     },
+    defaultTasks: {
+      control: 'object',
+      table: { category: 'Content' },
+    },
     children: {
       control: false,
       table: { category: 'Content' },
@@ -203,7 +207,7 @@ export const IndeterminateAndRequired: Story = {
  */
 export const TaskHierarchy: Story = {
   args: {
-    tasks: SAMPLE_TASKS,
+    defaultTasks: SAMPLE_TASKS,
   },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

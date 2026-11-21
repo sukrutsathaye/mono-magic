@@ -23,6 +23,10 @@ import {
 export interface MagicSliderProps extends SliderAtomProps {
   /** Initial slider value when rendered in uncontrolled single-thumb mode. */
   defaultValue?: number;
+  /** Initial range start value when rendered in uncontrolled dual-thumb mode. */
+  defaultStartValue?: number;
+  /** Initial range end value when rendered in uncontrolled dual-thumb mode. */
+  defaultEndValue?: number;
   /** Emits the updated numeric value in single-thumb mode (`range === false`). */
   onChange?: (value: number) => void;
   /** Emits `{ start, end }` when either thumb moves in dual-thumb range mode (`range === true`). */
@@ -178,7 +182,9 @@ export function MagicSlider({
   defaultValue = 0,
   range = false,
   startValue,
+  defaultStartValue,
   endValue,
+  defaultEndValue,
   discrete = false,
   showTickMarks = false,
   disableRipple = false,
@@ -208,7 +214,7 @@ export function MagicSlider({
   const [rangeStart, setRangeStart] = useControllableState<number>({
     value: startValue,
     defaultValue: clampAndSnap(
-      startValue ?? safeMin,
+      defaultStartValue ?? safeMin,
       safeMin,
       safeMax,
       safeStep
@@ -218,7 +224,7 @@ export function MagicSlider({
   const [rangeEnd, setRangeEnd] = useControllableState<number>({
     value: endValue,
     defaultValue: clampAndSnap(
-      endValue ?? safeMax,
+      defaultEndValue ?? safeMax,
       safeMin,
       safeMax,
       safeStep

@@ -89,7 +89,15 @@ const meta: Meta<typeof MagicSlider> = {
       control: 'number',
       table: { category: 'Range & Value' },
     },
+    defaultStartValue: {
+      control: 'number',
+      table: { category: 'Range & Value' },
+    },
     endValue: {
+      control: 'number',
+      table: { category: 'Range & Value' },
+    },
+    defaultEndValue: {
       control: 'number',
       table: { category: 'Range & Value' },
     },
@@ -161,8 +169,8 @@ export const Playground: Story = {
 export const RangeMode: Story = {
   args: {
     range: true,
-    startValue: 25,
-    endValue: 75,
+    defaultStartValue: 25,
+    defaultEndValue: 75,
     discrete: true,
     ariaLabel: 'Price range',
   },
@@ -260,8 +268,8 @@ export const Disabled: Story = {
       <MagicSlider
         disabled
         range
-        startValue={20}
-        endValue={80}
+        defaultStartValue={20}
+        defaultEndValue={80}
         showTickMarks
         step={20}
         ariaLabel="Disabled range"
@@ -297,8 +305,8 @@ export const DarkTheme: Story = {
         <MagicSlider
           range
           color="tertiary"
-          startValue={30}
-          endValue={70}
+          defaultStartValue={30}
+          defaultEndValue={70}
           showTickMarks
           step={10}
           ariaLabel="Dark tertiary range"
