@@ -1,24 +1,44 @@
-import 'package:flutter/material.dart';
+/// Widgetbook 3.25 catalog shell for `fl_mat` configured with all 7 Material 3
+/// palettes, ViewportAddon, TextScaleAddon, AlignmentAddon, and InspectorAddon.
+library;
+
 import 'package:fl_mat/fl_mat.dart';
+import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
+
+import 'widgetbook/molecules/card_use_cases.dart';
+import 'widgetbook/molecules/form_field_use_cases.dart';
+import 'widgetbook/molecules/menu_use_cases.dart';
+import 'widgetbook/molecules/search_bar_use_cases.dart';
+import 'widgetbook/molecules/select_use_cases.dart';
+import 'widgetbook/widgetbook_helpers.dart';
 
 void main() {
   runApp(const MagicWidgetbookApp());
 }
 
+/// Root Widgetbook 3.25 Material application for the `fl_mat` UI library.
 class MagicWidgetbookApp extends StatelessWidget {
+  /// Creates a [MagicWidgetbookApp].
   const MagicWidgetbookApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Widgetbook.material(
-      directories: [
+      addons: <WidgetbookAddon<dynamic>>[
+        MaterialThemeAddon(themes: magicWidgetbookThemes),
+        ViewportAddon(magicWidgetbookViewports),
+        TextScaleAddon(min: 0.75, max: 2.0, initialScale: 1.0),
+        AlignmentAddon(),
+        InspectorAddon(),
+      ],
+      directories: <WidgetbookNode>[
         WidgetbookCategory(
           name: 'Atoms',
-          children: [
+          children: <WidgetbookNode>[
             WidgetbookComponent(
               name: 'MagicButton',
-              useCases: [
+              useCases: <WidgetbookUseCase>[
                 WidgetbookUseCase(
                   name: 'Filled Primary',
                   builder: (context) => Center(
@@ -35,7 +55,7 @@ class MagicWidgetbookApp extends StatelessWidget {
                   builder: (context) => Center(
                     child: Wrap(
                       spacing: 12,
-                      children: [
+                      children: <Widget>[
                         MagicButton(
                           label: 'Tonal',
                           variant: ButtonVariant.tonal,
@@ -64,7 +84,7 @@ class MagicWidgetbookApp extends StatelessWidget {
             ),
             WidgetbookComponent(
               name: 'MagicTextInput',
-              useCases: [
+              useCases: <WidgetbookUseCase>[
                 WidgetbookUseCase(
                   name: 'Outlined',
                   builder: (context) => const Center(
@@ -101,62 +121,12 @@ class MagicWidgetbookApp extends StatelessWidget {
         ),
         WidgetbookCategory(
           name: 'Molecules',
-          children: [
-            WidgetbookComponent(
-              name: 'MagicFormField',
-              useCases: [
-                WidgetbookUseCase(
-                  name: 'Outlined',
-                  builder: (context) => const Center(
-                    child: SizedBox(
-                      width: 320,
-                      child: MagicFormField(
-                        label: 'Full Name',
-                        hint: 'Enter your legal name',
-                        requiredField: true,
-                        child: MagicTextInput(placeholder: 'Ada Lovelace'),
-                      ),
-                    ),
-                  ),
-                ),
-                WidgetbookUseCase(
-                  name: 'Filled',
-                  builder: (context) => const Center(
-                    child: SizedBox(
-                      width: 320,
-                      child: MagicFormField(
-                        label: 'Search',
-                        appearance: FormFieldAppearance.filled,
-                        prefix: Icon(Icons.search),
-                        child: MagicTextInput(
-                          type: TextInputTypeKind.search,
-                          placeholder: 'Filter components...',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            WidgetbookComponent(
-              name: 'MagicSearchBar',
-              useCases: [
-                WidgetbookUseCase(
-                  name: 'Default',
-                  builder: (context) => Center(
-                    child: SizedBox(
-                      width: 420,
-                      child: MagicSearchBar(
-                        label: 'Search components',
-                        placeholder: 'Type an atom or molecule...',
-                        submitLabel: 'Search',
-                        onSubmitted: (_) {},
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          children: <WidgetbookNode>[
+            buildMagicCardComponent(),
+            buildMagicFormFieldComponent(),
+            buildMagicMenuComponent(),
+            buildMagicSearchBarComponent(),
+            buildMagicSelectComponent(),
           ],
         ),
       ],
