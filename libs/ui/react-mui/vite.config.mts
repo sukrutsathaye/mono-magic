@@ -40,6 +40,11 @@ export default defineConfig(() => ({
   root: dirname,
   cacheDir: '../../../node_modules/.vite/libs/ui/react-mui',
   plugins: [react()],
+  server: {
+    fs: {
+      allow: [resolve(dirname, '../../../..')],
+    },
+  },
   test: {
     coverage: {
       provider: 'v8' as const,
