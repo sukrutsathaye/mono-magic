@@ -224,8 +224,10 @@ export function MagicToolTip({
       />
     );
 
+  const enableHover = touchGestures !== 'on';
+
   const webMouseProps =
-    Platform.OS === 'web'
+    Platform.OS === 'web' && enableHover
       ? {
           onMouseEnter: openTooltip,
           onMouseLeave: closeTooltip,
@@ -244,10 +246,10 @@ export function MagicToolTip({
         accessibilityLabel={ariaLabel}
         accessibilityHint={!isSuppressed ? message : undefined}
         aria-describedby={visible && tooltipId ? tooltipId : undefined}
-        onHoverIn={openTooltip}
-        onHoverOut={closeTooltip}
-        onFocus={openTooltip}
-        onBlur={closeTooltip}
+        onHoverIn={enableHover ? openTooltip : undefined}
+        onHoverOut={enableHover ? closeTooltip : undefined}
+        onFocus={enableHover ? openTooltip : undefined}
+        onBlur={enableHover ? closeTooltip : undefined}
         onLongPress={handleLongPress}
         onPress={handlePress}
         {...webMouseProps}

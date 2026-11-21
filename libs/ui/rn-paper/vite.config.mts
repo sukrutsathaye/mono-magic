@@ -126,6 +126,14 @@ export default defineConfig(() => ({
     },
     extensions: webExtensions,
   },
+  server: {
+    fs: {
+      allow: [
+        resolve(projectDir, '../../..'),
+        resolve(projectDir, '../../../../mono-magic'),
+      ],
+    },
+  },
   test: {
     watch: false,
     reporters: ['default'],
