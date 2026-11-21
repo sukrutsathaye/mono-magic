@@ -8,10 +8,49 @@ on:
     event: PUSH
     branches: [main]
 
+launch-templates:
+  linux-large-flutter:
+    resource-class: 'docker_linux_amd64/large'
+    image: 'ubuntu22.04-node24.14-v1'
+    init-steps:
+      - name: Checkout
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/checkout/main.yaml'
+      - name: Restore Node Modules Cache
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/cache/main.yaml'
+        inputs:
+          key: 'pnpm-lock.yaml'
+          paths: |
+            ~/.local/share/pnpm/store
+          base-branch: 'main'
+      - name: Install Node Modules
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/install-node-modules/main.yaml'
+      - name: Restore Flutter SDK & Pub Cache
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/cache/main.yaml'
+        inputs:
+          key: 'libs/ui/fl-mat/pubspec.yaml|"flutter-3.50.0"'
+          paths: |
+            ~/flutter
+            ~/.pub-cache
+          base-branch: 'main'
+      - name: Setup Flutter 3.50.0
+        script: |
+          if [ ! -x "$HOME/flutter/bin/flutter" ]; then
+            mkdir -p "$HOME/flutter"
+            curl -fSL https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.50.0-stable.tar.xz | tar -xJf - -C "$HOME"
+          fi
+          export PATH="$HOME/flutter/bin:$PATH"
+          echo "PATH=$HOME/flutter/bin:$PATH" >> "$NX_CLOUD_ENV"
+          flutter config --no-analytics --enable-web
+          while IFS= read -r pubspec; do
+            dir=$(dirname "$pubspec")
+            echo "Running flutter pub get in $dir"
+            (cd "$dir" && flutter pub get)
+          done < <(find apps libs -maxdepth 4 -name "pubspec.yaml" -not -path "*/.*/*" -not -path "*/build/*" 2>/dev/null || true)
+
 worker-templates:
   default:
-    # Distribute across 3 workers using the linux-large-js launch template
-    workers: 3 linux-large-js
+    # Distribute across 3 workers using the linux-large-flutter launch template
+    workers: 3 linux-large-flutter
     # Shut idle workers down once every build task has been requested
     stop-after:
       - build

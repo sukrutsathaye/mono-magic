@@ -7,6 +7,7 @@
   "targets": {
     "lint": {
       "executor": "nx:run-commands",
+      "cache": true,
       "options": {
         "cwd": "libs/ui/fl-mat",
         "command": "flutter analyze"
@@ -28,6 +29,7 @@
     },
     "build-widgetbook": {
       "executor": "nx:run-commands",
+      "cache": true,
       "outputs": ["{projectRoot}/build/web"],
       "options": {
         "cwd": "libs/ui/fl-mat",
