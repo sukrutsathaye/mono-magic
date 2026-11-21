@@ -16,6 +16,7 @@ export 'src/atoms/slide_toggle/magic_slide_toggle.dart';
 export 'src/atoms/slider/magic_slider.dart';
 export 'src/atoms/text_input/magic_text_input.dart';
 export 'src/atoms/tool_tip/magic_tool_tip.dart';
+export 'src/molecules/card/magic_card.dart';
 export 'src/molecules/form_field/magic_form_field.dart';
 export 'src/molecules/search_bar/magic_search_bar.dart';
 export 'src/organisms/organisms.dart';
