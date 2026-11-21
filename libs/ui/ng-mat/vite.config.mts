@@ -1,11 +1,39 @@
 /// <reference types="vitest/config" />
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import angular from '@analogjs/vite-plugin-angular';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { storybookAngularVitest } from '@storybook/angular-vite/vitest';
 import { playwright } from '@vitest/browser-playwright';
+import { chromium } from 'playwright';
 import { storybookVis } from 'storybook-addon-vis/vitest-plugin';
 import { defineConfig } from 'vite';
+
+function resolvePlaywrightOptions() {
+  const envPath = process.env['PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH'];
+  if (envPath && existsSync(envPath)) {
+    return { launchOptions: { executablePath: envPath } };
+  }
+
+  let bundledPath: string | undefined;
+  try {
+    bundledPath = chromium.executablePath();
+  } catch {
+    bundledPath = undefined;
+  }
+
+  if (bundledPath && existsSync(bundledPath)) {
+    return {};
+  }
+
+  if (existsSync('/usr/bin/chromium')) {
+    return { launchOptions: { executablePath: '/usr/bin/chromium' } };
+  }
+
+  return {};
+}
+
+const playwrightOptions = resolvePlaywrightOptions();
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -58,7 +86,7 @@ export default defineConfig(() => ({
             enabled: true,
             headless: true,
             api: { allowWrite: true },
-            provider: playwright(),
+            provider: playwright(playwrightOptions),
             instances: [
               {
                 browser: 'chromium' as const,

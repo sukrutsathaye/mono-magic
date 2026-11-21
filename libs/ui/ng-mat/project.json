@@ -65,6 +65,13 @@
         }
       }
     },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/ui/ng-mat",
+        "command": "vitest run --project=ng-mat"
+      }
+    },
     "test-storybook": {
       "executor": "nx:run-commands",
       "options": {
