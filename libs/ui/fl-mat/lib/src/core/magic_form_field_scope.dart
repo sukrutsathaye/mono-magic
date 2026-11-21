@@ -76,13 +76,20 @@ class MagicFormFieldScope extends InheritedWidget {
   /// Builds a Material 3 [InputDecoration] reflecting this scope's appearance,
   /// label, hint, error state, size metrics, and affixes.
   InputDecoration buildDecoration({
+    BuildContext? context,
     String? placeholder,
+    String? hintText,
     bool? requiredOverride,
     bool? disabledOverride,
+    bool isInvalid = false,
+    AtomicSize? sizeOverride,
+    Widget? prefixOverride,
     Widget? suffixOverride,
   }) {
-    final metrics = MagicTheme.metricsFor(size);
-    final isDense = size == AtomicSize.xs || size == AtomicSize.sm;
+    final effectiveSize = sizeOverride ?? size;
+    final metrics = MagicTheme.metricsFor(effectiveSize);
+    final isDense =
+        effectiveSize == AtomicSize.xs || effectiveSize == AtomicSize.sm;
     final showRequiredMarker =
         (requiredOverride ?? requiredField) && !hideRequiredMarker;
     final resolvedLabel = label != null && label!.isNotEmpty
@@ -91,10 +98,14 @@ class MagicFormFieldScope extends InheritedWidget {
     final isFilled = appearance == FormFieldAppearance.filled;
     final maxSubscriptLines =
         subscriptSizing == FormFieldSubscriptSizing.dynamic ? 3 : 1;
+    final errorColor = context != null
+        ? Theme.of(context).colorScheme.error
+        : null;
+    final showInvalidBorder = isInvalid && !hasError && errorColor != null;
 
     return InputDecoration(
       labelText: resolvedLabel,
-      hintText: placeholder,
+      hintText: hintText ?? placeholder,
       helperText: hasError ? null : hint,
       errorText: hasError ? errorText : null,
       helperMaxLines: maxSubscriptLines,
@@ -105,7 +116,7 @@ class MagicFormFieldScope extends InheritedWidget {
       floatingLabelBehavior: floatLabel == FormFieldFloatLabel.always
           ? FloatingLabelBehavior.always
           : FloatingLabelBehavior.auto,
-      prefixIcon: prefix,
+      prefixIcon: prefixOverride ?? prefix,
       suffixIcon: suffixOverride ?? suffix,
       contentPadding: EdgeInsets.symmetric(
         horizontal: metrics.horizontalPadding * 0.6,
@@ -114,6 +125,20 @@ class MagicFormFieldScope extends InheritedWidget {
       border: isFilled
           ? const UnderlineInputBorder()
           : const OutlineInputBorder(),
+      enabledBorder: showInvalidBorder
+          ? (isFilled
+                ? UnderlineInputBorder(borderSide: BorderSide(color: errorColor))
+                : OutlineInputBorder(borderSide: BorderSide(color: errorColor)))
+          : null,
+      focusedBorder: showInvalidBorder
+          ? (isFilled
+                ? UnderlineInputBorder(
+                    borderSide: BorderSide(color: errorColor, width: 2),
+                  )
+                : OutlineInputBorder(
+                    borderSide: BorderSide(color: errorColor, width: 2),
+                  ))
+          : null,
     );
   }
 

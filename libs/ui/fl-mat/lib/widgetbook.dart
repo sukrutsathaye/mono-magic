@@ -70,11 +70,14 @@ class MagicWidgetbookApp extends StatelessWidget {
                   builder: (context) => const Center(
                     child: SizedBox(
                       width: 320,
-                      child: MagicTextInput(
+                      child: MagicFormField(
                         label: 'Email Address',
-                        placeholder: 'you@example.com',
-                        helperText: 'We will never share your email.',
-                        variant: TextInputVariant.outlined,
+                        hint: 'We will never share your email.',
+                        appearance: FormFieldAppearance.outlined,
+                        child: MagicTextInput(
+                          type: TextInputTypeKind.email,
+                          placeholder: 'you@example.com',
+                        ),
                       ),
                     ),
                   ),
@@ -84,10 +87,10 @@ class MagicWidgetbookApp extends StatelessWidget {
                   builder: (context) => const Center(
                     child: SizedBox(
                       width: 320,
-                      child: MagicTextInput(
+                      child: MagicFormField(
                         label: 'Username',
-                        value: 'ab',
                         errorText: 'Must be at least 3 characters.',
+                        child: MagicTextInput(value: 'ab'),
                       ),
                     ),
                   ),
@@ -99,6 +102,42 @@ class MagicWidgetbookApp extends StatelessWidget {
         WidgetbookCategory(
           name: 'Molecules',
           children: [
+            WidgetbookComponent(
+              name: 'MagicFormField',
+              useCases: [
+                WidgetbookUseCase(
+                  name: 'Outlined',
+                  builder: (context) => const Center(
+                    child: SizedBox(
+                      width: 320,
+                      child: MagicFormField(
+                        label: 'Full Name',
+                        hint: 'Enter your legal name',
+                        requiredField: true,
+                        child: MagicTextInput(placeholder: 'Ada Lovelace'),
+                      ),
+                    ),
+                  ),
+                ),
+                WidgetbookUseCase(
+                  name: 'Filled',
+                  builder: (context) => const Center(
+                    child: SizedBox(
+                      width: 320,
+                      child: MagicFormField(
+                        label: 'Search',
+                        appearance: FormFieldAppearance.filled,
+                        prefix: Icon(Icons.search),
+                        child: MagicTextInput(
+                          type: TextInputTypeKind.search,
+                          placeholder: 'Filter components...',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             WidgetbookComponent(
               name: 'MagicSearchBar',
               useCases: [

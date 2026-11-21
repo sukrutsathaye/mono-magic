@@ -112,15 +112,6 @@ enum ButtonShape {
   pill,
 }
 
-/// Legacy text input decoration variant (retained temporarily for compatibility).
-enum TextInputVariant {
-  /// Outlined border decoration.
-  outlined,
-
-  /// Filled container with underline decoration.
-  filled,
-}
-
 /// Anchor placement of a badge relative to its child widget.
 enum BadgePosition {
   /// Positioned above and at the trailing edge.
@@ -864,29 +855,57 @@ class MagicTextInputControlProps implements BaseAtomicProps {
   final String? ariaLabel;
 }
 
-/// Legacy composite text input contract retained temporarily until `MagicTextInput`
-/// is refactored to [MagicTextInputControlProps] + `MagicFormField`.
+/// Property contract for `MagicFormField`.
+///
+/// Mirrors `FormFieldMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
 @immutable
-class MagicTextInputProps implements BaseAtomicProps {
-  /// Creates a legacy composite text input property contract instance.
-  const MagicTextInputProps({
-    required this.label,
+class MagicFormFieldProps implements BaseAtomicProps {
+  /// Creates a form-field property contract instance.
+  const MagicFormFieldProps({
+    this.label,
+    this.hint,
+    this.errorText,
+    this.appearance = FormFieldAppearance.outlined,
+    this.size = AtomicSize.md,
+    this.floatLabel = FormFieldFloatLabel.auto,
+    this.subscriptSizing = FormFieldSubscriptSizing.fixed,
+    this.hideRequiredMarker = false,
+    this.requiredField = false,
+    this.disabled = false,
     this.id,
     this.testId,
     this.ariaLabel,
-    this.disabled = false,
-    this.value,
-    this.placeholder,
-    this.helperText,
-    this.errorText,
-    this.variant = TextInputVariant.outlined,
-    this.size = AtomicSize.md,
-    this.requiredField = false,
-    this.readOnly = false,
   });
 
-  /// Field label text.
-  final String label;
+  /// Floating field label text.
+  final String? label;
+
+  /// Helper hint text displayed beneath the field when no error is active.
+  final String? hint;
+
+  /// Validation error message replacing [hint] when non-empty.
+  final String? errorText;
+
+  /// Material 3 container appearance (`outlined` or `filled`).
+  final FormFieldAppearance appearance;
+
+  /// Standardized component size.
+  final AtomicSize size;
+
+  /// Floating label behavior (`auto` or `always`).
+  final FormFieldFloatLabel floatLabel;
+
+  /// Subscript space sizing strategy (`fixed` or `dynamic`).
+  final FormFieldSubscriptSizing subscriptSizing;
+
+  /// Whether to suppress the trailing `*` marker on required fields.
+  final bool hideRequiredMarker;
+
+  /// Whether the associated form control is marked as required.
+  final bool requiredField;
+
+  @override
+  final bool disabled;
 
   @override
   final String? id;
@@ -896,33 +915,6 @@ class MagicTextInputProps implements BaseAtomicProps {
 
   @override
   final String? ariaLabel;
-
-  @override
-  final bool disabled;
-
-  /// Input text value.
-  final String? value;
-
-  /// Placeholder hint text.
-  final String? placeholder;
-
-  /// Helper message displayed beneath the field.
-  final String? helperText;
-
-  /// Error message displayed beneath the field.
-  final String? errorText;
-
-  /// Visual decoration variant.
-  final TextInputVariant variant;
-
-  /// Standardized component size.
-  final AtomicSize size;
-
-  /// Whether the field is required.
-  final bool requiredField;
-
-  /// Whether the field is read-only.
-  final bool readOnly;
 }
 
 /// Property contract for `MagicSearchBar`.

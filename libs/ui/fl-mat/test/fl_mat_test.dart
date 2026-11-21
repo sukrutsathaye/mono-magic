@@ -49,18 +49,23 @@ void main() {
     });
   });
 
-  group('MagicTextInput', () {
-    testWidgets('renders helperText and emits onChanged', (tester) async {
+  group('MagicTextInput + MagicFormField', () {
+    testWidgets('renders hint via MagicFormField and emits onChanged', (
+      tester,
+    ) async {
       String? captured;
 
       await tester.pumpWidget(
         wrapWithMaterial(
-          MagicTextInput(
+          MagicFormField(
             label: 'Email',
-            placeholder: 'you@example.com',
-            helperText: 'Work email preferred',
-            testId: 'fl-input',
-            onChanged: (value) => captured = value,
+            hint: 'Work email preferred',
+            child: MagicTextInput(
+              type: TextInputTypeKind.email,
+              placeholder: 'you@example.com',
+              testId: 'fl-input',
+              onChanged: (value) => captured = value,
+            ),
           ),
         ),
       );
@@ -73,14 +78,16 @@ void main() {
       expect(captured, 'ada@example.com');
     });
 
-    testWidgets('prefers errorText over helperText', (tester) async {
+    testWidgets('prefers errorText over hint on MagicFormField', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         wrapWithMaterial(
-          const MagicTextInput(
+          const MagicFormField(
             label: 'Username',
-            helperText: 'Choose a handle',
+            hint: 'Choose a handle',
             errorText: 'Handle is required',
-            testId: 'fl-err-input',
+            child: MagicTextInput(testId: 'fl-err-input'),
           ),
         ),
       );
