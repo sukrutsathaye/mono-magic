@@ -1,0 +1,25 @@
+{
+  "name": "rn-paper",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/ui/rn-paper/src",
+  "projectType": "library",
+  "tags": ["scope:ui", "framework:expo", "ds:paper"],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "options": {
+        "cwd": "libs/ui/rn-paper",
+        "command": "vitest run --project=rn-paper"
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "cwd": "libs/ui/rn-paper",
+        "command": "vitest run --project=rn-paper-storybook"
+      }
+    }
+  }
+}
