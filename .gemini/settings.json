@@ -9,5 +9,8 @@
       ]
     }
   },
-  "contextFileName": "AGENTS.md"
+  "contextFileName": [
+    "GEMINI.md",
+    "AGENTS.md"
+  ]
 }

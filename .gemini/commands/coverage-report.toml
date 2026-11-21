@@ -1,0 +1,15 @@
+description = "Run and inspect unit test coverage, Storybook browser test coverage, lint, and typecheck across JS/TS, Flutter, and Python projects."
+prompt = """
+# Coverage & Quality Report
+
+Follow the `coverage-and-quality` skill (`.gemini/skills/coverage-and-quality/SKILL.md`) to run unit test coverage, Storybook test coverage, linting, and typechecking across the workspace.
+
+## User Request
+{{args}}
+
+## Key Commands
+- JS/TS Unit Coverage: `pnpm nx run-many -t test -p atomic-design-interfaces,react-mui,ng-mat,rn-paper -- --coverage`
+- Storybook Browser Coverage: `pnpm nx test-storybook <project> -- --coverage.enabled=true --coverage.reportsDirectory=./test-output/storybook/coverage`
+- Flutter Coverage: `cd libs/ui/fl-mat && flutter test --coverage`
+- Lint & Typecheck: `pnpm nx run-many -t lint -p atomic-design-interfaces,react-mui,ng-mat,rn-paper,fl-mat` and `pnpm nx run-many -t typecheck -p atomic-design-interfaces,react-mui,ng-mat,rn-paper`
+"""

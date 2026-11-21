@@ -1,0 +1,15 @@
+description = "Design and scaffold contract-first data-access interfaces or concrete BaaS/backend wrappers (Firebase, Supabase, NestJS, Spring Boot + Keycloak + Postgres, AWS, GCP, Azure)."
+prompt = """
+# Add Contract-First Data-Access Module
+
+Follow the `data-access-provider` skill (`.gemini/skills/data-access-provider/SKILL.md`) to design or implement contract-first `libs/data-access/*` libraries.
+
+## User Request
+{{args}}
+
+## Execution Steps
+1. Ensure vendor-agnostic interfaces, abstract base classes, and contract compliance tests exist in `libs/data-access/data-access-interfaces`.
+2. Reuse pure functional error/result primitives from `libs/utils/core`.
+3. Scaffold new libraries using the `nx-generate` skill and wire workspace dependencies with `link-workspace-packages`.
+4. Implement the concrete provider adapter and verify it passes the shared contract compliance test suite, `lint`, and `typecheck`.
+"""

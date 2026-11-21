@@ -1,0 +1,14 @@
+description = "Run Storybook visual regression tests (storybook-addon-vis), generate or update baseline images (-u), review visual diffs, or assemble the GitHub Pages showcase portal."
+prompt = """
+# Storybook Visual Testing & Showcase Portal
+
+Follow the `storybook-visual-testing` skill (`.gemini/skills/storybook-visual-testing/SKILL.md`) to manage visual regression tests and showcases.
+
+## User Request
+{{args}}
+
+## Key Commands
+- Update baselines: `pnpm nx test-storybook <project> -- -u` (for `react-mui`, `ng-mat`, `rn-paper`)
+- Run visual tests: `pnpm nx run-many -t test-storybook -p react-mui,ng-mat,rn-paper`
+- Build & assemble GitHub Pages portal: `node tools/ci/storybook-pages.mjs discover | build <project> | assemble`
+"""

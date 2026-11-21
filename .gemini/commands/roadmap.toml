@@ -1,0 +1,9 @@
+description = "Inspect ROADMAP.md status, recommend or plan the next unblocked task, or update milestone checkboxes upon completion."
+prompt = """
+# Roadmap Status & Task Planner
+
+Follow the `roadmap-tracker` skill (`.gemini/skills/roadmap-tracker/SKILL.md`) and read `ROADMAP.md` to inspect current progress, plan the next unblocked deliverable, or verify acceptance criteria and update checkboxes.
+
+## User Request
+{{args}}
+"""

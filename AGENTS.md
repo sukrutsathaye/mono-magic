@@ -22,3 +22,9 @@
 
 
 <!-- nx configuration end-->
+
+# mono-magic AI Orchestration & Workspace Guide
+
+- Read [GEMINI.md](GEMINI.md) for the complete architecture rules, domain boundaries (`libs/ui`, `libs/data-access`, `libs/utils`, `libs/features`, `apps`), and Storybook visual testing conventions.
+- Check [ROADMAP.md](ROADMAP.md) for the chronological phase timeline and domain deliverable checklists.
+- Repository-specific skills live in `.gemini/skills/` (registered via `.agents/skills.json`), custom commands live in `.gemini/commands/`, and specialist agent profiles live in `.gemini/agents/`.
