@@ -68,63 +68,81 @@ WidgetbookComponent buildSlideToggleComponent() {
       ),
       WidgetbookUseCase(
         name: 'Sizes, Colors & Label Positions Gallery',
-        builder: (context) => Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Wrap(
-                  spacing: 20,
-                  runSpacing: 12,
-                  children: <Widget>[
-                    for (final sz in AtomicSize.values)
+        builder: (context) {
+          final hideIcon = context.knobs.boolean(
+            label: 'Hide Icon',
+            initialValue: false,
+          );
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Wrap(
+                    spacing: 20,
+                    runSpacing: 12,
+                    children: <Widget>[
+                      for (final sz in AtomicSize.values)
+                        MagicSlideToggle(
+                          label: sz.name.toUpperCase(),
+                          size: sz,
+                          checked: true,
+                          hideIcon: hideIcon,
+                          disabled: disabled,
+                          onChanged: (_) {},
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Wrap(
+                    spacing: 20,
+                    runSpacing: 12,
+                    children: <Widget>[
+                      for (final intent in ColorIntent.values)
+                        MagicSlideToggle(
+                          label: intent.name,
+                          color: intent,
+                          checked: true,
+                          hideIcon: hideIcon,
+                          disabled: disabled,
+                          onChanged: (_) {},
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Wrap(
+                    spacing: 24,
+                    runSpacing: 12,
+                    children: <Widget>[
                       MagicSlideToggle(
-                        label: sz.name.toUpperCase(),
-                        size: sz,
+                        label: 'Label Before',
+                        labelPosition: SlideToggleLabelPosition.before,
                         checked: true,
+                        hideIcon: hideIcon,
+                        disabled: disabled,
                         onChanged: (_) {},
                       ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Wrap(
-                  spacing: 20,
-                  runSpacing: 12,
-                  children: <Widget>[
-                    for (final intent in ColorIntent.values)
                       MagicSlideToggle(
-                        label: intent.name,
-                        color: intent,
-                        checked: true,
+                        label: 'No Thumb Icon',
+                        hideIcon: true,
+                        checked: false,
+                        disabled: disabled,
                         onChanged: (_) {},
                       ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Wrap(
-                  spacing: 24,
-                  runSpacing: 12,
-                  children: <Widget>[
-                    MagicSlideToggle(
-                      label: 'Label Before',
-                      labelPosition: SlideToggleLabelPosition.before,
-                      checked: true,
-                      onChanged: (_) {},
-                    ),
-                    MagicSlideToggle(
-                      label: 'No Thumb Icon',
-                      hideIcon: true,
-                      checked: false,
-                      onChanged: (_) {},
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     ],
   );

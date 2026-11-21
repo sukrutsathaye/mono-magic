@@ -70,61 +70,93 @@ WidgetbookComponent buildTextInputComponent() {
       ),
       WidgetbookUseCase(
         name: 'Bare Standalone & Input Types Gallery',
-        builder: (context) => Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: SizedBox(
-              width: 340,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  const Text('Bare Standalone Controls'),
-                  const SizedBox(height: 8),
-                  const MagicTextInput(
-                    type: TextInputTypeKind.text,
-                    placeholder: 'Standalone text control',
-                  ),
-                  const SizedBox(height: 12),
-                  const MagicTextInput(
-                    type: TextInputTypeKind.search,
-                    placeholder: 'Standalone search control',
-                    size: AtomicSize.sm,
-                  ),
-                  const SizedBox(height: 20),
-                  const Text('Input Types inside MagicFormField'),
-                  const SizedBox(height: 8),
-                  const MagicFormField(
-                    label: 'Password',
-                    appearance: FormFieldAppearance.filled,
-                    child: MagicTextInput(
-                      type: TextInputTypeKind.password,
-                      value: 'secret123',
+        builder: (context) {
+          final size = atomicSizeKnob(context);
+          final readOnly = context.knobs.boolean(
+            label: 'Read Only',
+            initialValue: false,
+          );
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: SizedBox(
+                width: 340,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    const Text('Bare Standalone Controls'),
+                    const SizedBox(height: 8),
+                    MagicTextInput(
+                      type: TextInputTypeKind.text,
+                      placeholder: 'Standalone text control',
+                      size: size,
+                      readOnly: readOnly,
+                      disabled: disabled,
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  const MagicFormField(
-                    label: 'Phone',
-                    child: MagicTextInput(
-                      type: TextInputTypeKind.tel,
-                      placeholder: '+1 (555) 010-9988',
+                    const SizedBox(height: 12),
+                    MagicTextInput(
+                      type: TextInputTypeKind.search,
+                      placeholder: 'Standalone search control',
+                      size: AtomicSize.sm,
+                      readOnly: readOnly,
+                      disabled: disabled,
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  const MagicFormField(
-                    label: 'Quantity',
-                    errorText: 'Must be greater than 0',
-                    child: MagicTextInput(
-                      type: TextInputTypeKind.number,
-                      value: '0',
-                      invalid: true,
+                    const SizedBox(height: 20),
+                    const Text('Input Types inside MagicFormField'),
+                    const SizedBox(height: 8),
+                    MagicFormField(
+                      label: 'Password',
+                      appearance: FormFieldAppearance.filled,
+                      size: size,
+                      disabled: disabled,
+                      child: MagicTextInput(
+                        type: TextInputTypeKind.password,
+                        value: 'secret123',
+                        size: size,
+                        readOnly: readOnly,
+                        disabled: disabled,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 12),
+                    MagicFormField(
+                      label: 'Phone',
+                      size: size,
+                      disabled: disabled,
+                      child: MagicTextInput(
+                        type: TextInputTypeKind.tel,
+                        placeholder: '+1 (555) 010-9988',
+                        size: size,
+                        readOnly: readOnly,
+                        disabled: disabled,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    MagicFormField(
+                      label: 'Quantity',
+                      errorText: 'Must be greater than 0',
+                      size: size,
+                      disabled: disabled,
+                      child: MagicTextInput(
+                        type: TextInputTypeKind.number,
+                        value: '0',
+                        invalid: true,
+                        size: size,
+                        readOnly: readOnly,
+                        disabled: disabled,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     ],
   );

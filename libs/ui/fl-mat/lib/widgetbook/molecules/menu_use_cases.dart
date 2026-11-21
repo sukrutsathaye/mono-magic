@@ -81,22 +81,38 @@ WidgetbookComponent buildMagicMenuComponent() {
       ),
       WidgetbookUseCase(
         name: 'Icon Trigger',
-        builder: (context) => Center(
-          child: MagicMenu(
-            triggerType: MenuTriggerType.icon,
-            triggerIcon: 'more_vert',
-            triggerLabel: 'More options',
-            items: const <MenuItemData>[
-              MenuItemData(id: 'refresh', label: 'Refresh', iconName: 'refresh'),
-              MenuItemData(
-                id: 'settings',
-                label: 'Settings',
-                iconName: 'settings',
-              ),
-            ],
-            onItemSelect: (_) {},
-          ),
-        ),
+        builder: (context) {
+          final color = colorIntentKnob(context);
+          final size = atomicSizeKnob(context);
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: MagicMenu(
+              triggerType: MenuTriggerType.icon,
+              triggerIcon: 'more_vert',
+              triggerLabel: 'More options',
+              color: color,
+              size: size,
+              disabled: disabled,
+              items: const <MenuItemData>[
+                MenuItemData(
+                  id: 'refresh',
+                  label: 'Refresh',
+                  iconName: 'refresh',
+                ),
+                MenuItemData(
+                  id: 'settings',
+                  label: 'Settings',
+                  iconName: 'settings',
+                ),
+              ],
+              onItemSelect: (_) {},
+            ),
+          );
+        },
       ),
     ],
   );

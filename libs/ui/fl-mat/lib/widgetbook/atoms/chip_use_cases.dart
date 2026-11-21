@@ -130,6 +130,12 @@ WidgetbookComponent buildChipComponent() {
       WidgetbookUseCase(
         name: 'Basic & Selectable Variants',
         builder: (context) {
+          final size = atomicSizeKnob(context);
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
           var selectableItems = const <ChipItem>[
             ChipItem(id: 'dart', label: 'Dart 3', selected: true),
             ChipItem(id: 'ts', label: 'TypeScript'),
@@ -145,10 +151,12 @@ WidgetbookComponent buildChipComponent() {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      const MagicChip(
+                      MagicChip(
                         variant: ChipVariant.basic,
                         color: ColorIntent.primary,
-                        chips: <ChipItem>[
+                        size: size,
+                        disabled: disabled,
+                        chips: const <ChipItem>[
                           ChipItem(label: 'Verified', leadingIconName: 'verified'),
                           ChipItem(label: 'Stable', leadingIconName: 'check_circle'),
                           ChipItem(label: 'Removable', removable: true),
@@ -159,6 +167,8 @@ WidgetbookComponent buildChipComponent() {
                         variant: ChipVariant.selectable,
                         multiple: true,
                         color: ColorIntent.secondary,
+                        size: size,
+                        disabled: disabled,
                         chips: selectableItems,
                         onSelectionChanged: (chip, selected) {
                           setState(() {
@@ -182,6 +192,13 @@ WidgetbookComponent buildChipComponent() {
       WidgetbookUseCase(
         name: 'Input & Draggable Variants',
         builder: (context) {
+          final color = colorIntentKnob(context);
+          final size = atomicSizeKnob(context);
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
           var inputChips = const <ChipItem>[
             ChipItem(id: 'ui', label: 'UI Kit'),
             ChipItem(id: 'm3', label: 'M3 Tokens'),
@@ -206,6 +223,9 @@ WidgetbookComponent buildChipComponent() {
                         MagicChip(
                           variant: ChipVariant.input,
                           label: 'Skills',
+                          color: color,
+                          size: size,
+                          disabled: disabled,
                           removable: true,
                           editable: true,
                           chips: inputChips,
@@ -230,6 +250,8 @@ WidgetbookComponent buildChipComponent() {
                         MagicChip(
                           variant: ChipVariant.draggable,
                           color: ColorIntent.tertiary,
+                          size: size,
+                          disabled: disabled,
                           chips: draggableChips,
                           onChipReordered: (next) =>
                               setState(() => draggableChips = next),

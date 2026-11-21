@@ -73,46 +73,58 @@ WidgetbookComponent buildMagicSelectComponent() {
       ),
       WidgetbookUseCase(
         name: 'Multi-Select with Groups & Summary',
-        builder: (context) => Center(
-          child: SizedBox(
-            width: 340,
-            child: MagicSelect<String>(
-              label: 'Enabled Palettes',
-              multiple: true,
-              customTriggerSummary: true,
-              values: const <String>['azure-blue', 'dark-theme'],
-              optionGroups: const <SelectOptionGroup<String>>[
-                SelectOptionGroup<String>(
-                  label: 'Light Palettes',
-                  options: <SelectOption<String>>[
-                    SelectOption<String>(
-                      value: 'azure-blue',
-                      label: 'Azure Blue',
-                    ),
-                    SelectOption<String>(
-                      value: 'rose-red',
-                      label: 'Rose Red',
-                    ),
-                  ],
-                ),
-                SelectOptionGroup<String>(
-                  label: 'Dark Palettes',
-                  options: <SelectOption<String>>[
-                    SelectOption<String>(
-                      value: 'dark-theme',
-                      label: 'Green / Orange',
-                    ),
-                    SelectOption<String>(
-                      value: 'cyan-orange',
-                      label: 'Cyan Orange',
-                    ),
-                  ],
-                ),
-              ],
-              onMultiChanged: (_) {},
+        builder: (context) {
+          final appearance = formFieldAppearanceKnob(context);
+          final size = atomicSizeKnob(context);
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: SizedBox(
+              width: 340,
+              child: MagicSelect<String>(
+                label: 'Enabled Palettes',
+                appearance: appearance,
+                size: size,
+                disabled: disabled,
+                multiple: true,
+                customTriggerSummary: true,
+                values: const <String>['azure-blue', 'dark-theme'],
+                optionGroups: const <SelectOptionGroup<String>>[
+                  SelectOptionGroup<String>(
+                    label: 'Light Palettes',
+                    options: <SelectOption<String>>[
+                      SelectOption<String>(
+                        value: 'azure-blue',
+                        label: 'Azure Blue',
+                      ),
+                      SelectOption<String>(
+                        value: 'rose-red',
+                        label: 'Rose Red',
+                      ),
+                    ],
+                  ),
+                  SelectOptionGroup<String>(
+                    label: 'Dark Palettes',
+                    options: <SelectOption<String>>[
+                      SelectOption<String>(
+                        value: 'dark-theme',
+                        label: 'Green / Orange',
+                      ),
+                      SelectOption<String>(
+                        value: 'cyan-orange',
+                        label: 'Cyan Orange',
+                      ),
+                    ],
+                  ),
+                ],
+                onMultiChanged: (_) {},
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     ],
   );

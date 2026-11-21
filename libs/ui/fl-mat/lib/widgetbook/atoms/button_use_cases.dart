@@ -66,157 +66,218 @@ WidgetbookComponent buildButtonComponent() {
       ),
       WidgetbookUseCase(
         name: 'Variants & Kinds Gallery',
-        builder: (context) => Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  alignment: WrapAlignment.center,
-                  children: <Widget>[
-                    for (final variant in ButtonVariant.values)
+        builder: (context) {
+          final color = colorIntentKnob(context);
+          final size = atomicSizeKnob(context);
+          final loading = context.knobs.boolean(
+            label: 'Loading',
+            initialValue: false,
+          );
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    alignment: WrapAlignment.center,
+                    children: <Widget>[
+                      for (final variant in ButtonVariant.values)
+                        MagicButton(
+                          label: variant.name,
+                          variant: variant,
+                          color: color,
+                          size: size,
+                          loading: loading,
+                          disabled: disabled,
+                          onPressed: () {},
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 12,
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: <Widget>[
                       MagicButton(
-                        label: variant.name,
-                        variant: variant,
+                        label: 'Icon',
+                        kind: ButtonKind.icon,
+                        variant: ButtonVariant.tonal,
+                        color: color,
+                        size: size,
+                        loading: loading,
+                        disabled: disabled,
+                        leadingIcon: Icons.favorite,
                         onPressed: () {},
                       ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Wrap(
-                  spacing: 16,
-                  runSpacing: 12,
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: <Widget>[
-                    MagicButton(
-                      label: 'Icon',
-                      kind: ButtonKind.icon,
-                      variant: ButtonVariant.tonal,
-                      leadingIcon: Icons.favorite,
-                      onPressed: () {},
-                    ),
-                    MagicButton(
-                      label: 'Mini FAB',
-                      kind: ButtonKind.miniFab,
-                      leadingIcon: Icons.edit,
-                      onPressed: () {},
-                    ),
-                    MagicButton(
-                      label: 'FAB',
-                      kind: ButtonKind.fab,
-                      leadingIcon: Icons.add,
-                      onPressed: () {},
-                    ),
-                    MagicButton(
-                      label: 'Extended FAB',
-                      kind: ButtonKind.extendedFab,
-                      leadingIcon: Icons.navigation,
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
+                      MagicButton(
+                        label: 'Mini FAB',
+                        kind: ButtonKind.miniFab,
+                        color: color,
+                        size: size,
+                        loading: loading,
+                        disabled: disabled,
+                        leadingIcon: Icons.edit,
+                        onPressed: () {},
+                      ),
+                      MagicButton(
+                        label: 'FAB',
+                        kind: ButtonKind.fab,
+                        color: color,
+                        size: size,
+                        loading: loading,
+                        disabled: disabled,
+                        leadingIcon: Icons.add,
+                        onPressed: () {},
+                      ),
+                      MagicButton(
+                        label: 'Extended FAB',
+                        kind: ButtonKind.extendedFab,
+                        color: color,
+                        size: size,
+                        loading: loading,
+                        disabled: disabled,
+                        leadingIcon: Icons.navigation,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
       WidgetbookUseCase(
         name: 'Shapes, Sizes & Colors Gallery',
-        builder: (context) => Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  alignment: WrapAlignment.center,
-                  children: <Widget>[
-                    for (final shape in ButtonShape.values)
-                      MagicButton(
-                        label: shape.name,
-                        shape: shape,
-                        onPressed: () {},
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: <Widget>[
-                    for (final size in AtomicSize.values)
-                      MagicButton(
-                        label: size.name.toUpperCase(),
-                        size: size,
-                        variant: ButtonVariant.outlined,
-                        onPressed: () {},
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  alignment: WrapAlignment.center,
-                  children: <Widget>[
-                    for (final intent in ColorIntent.values)
-                      MagicButton(
-                        label: intent.name,
-                        color: intent,
-                        onPressed: () {},
-                      ),
-                  ],
-                ),
-              ],
+        builder: (context) {
+          final variant = buttonVariantKnob(context);
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    alignment: WrapAlignment.center,
+                    children: <Widget>[
+                      for (final shape in ButtonShape.values)
+                        MagicButton(
+                          label: shape.name,
+                          shape: shape,
+                          variant: variant,
+                          disabled: disabled,
+                          onPressed: () {},
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: <Widget>[
+                      for (final size in AtomicSize.values)
+                        MagicButton(
+                          label: size.name.toUpperCase(),
+                          size: size,
+                          variant: ButtonVariant.outlined,
+                          disabled: disabled,
+                          onPressed: () {},
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    alignment: WrapAlignment.center,
+                    children: <Widget>[
+                      for (final intent in ColorIntent.values)
+                        MagicButton(
+                          label: intent.name,
+                          color: intent,
+                          variant: variant,
+                          disabled: disabled,
+                          onPressed: () {},
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
       WidgetbookUseCase(
         name: 'Loading & Icons Gallery',
-        builder: (context) => Center(
-          child: Wrap(
-            spacing: 16,
-            runSpacing: 16,
-            alignment: WrapAlignment.center,
-            children: <Widget>[
-              MagicButton(
-                label: 'Upload',
-                leadingIconName: 'cloud_upload',
-                onPressed: () {},
-              ),
-              MagicButton(
-                label: 'Next Step',
-                variant: ButtonVariant.tonal,
-                trailingIconName: 'arrow_forward',
-                onPressed: () {},
-              ),
-              const MagicButton(
-                label: 'Submit',
-                loading: true,
-                loadingLabel: 'Submitting...',
-              ),
-              const MagicButton(
-                label: 'Disabled',
-                disabled: true,
-              ),
-              const MagicButton(
-                label: 'Interactive Disabled',
-                disabled: true,
-                disabledInteractive: true,
-                variant: ButtonVariant.outlined,
-              ),
-            ],
-          ),
-        ),
+        builder: (context) {
+          final color = colorIntentKnob(context);
+          final size = atomicSizeKnob(context);
+
+          return Center(
+            child: Wrap(
+              spacing: 16,
+              runSpacing: 16,
+              alignment: WrapAlignment.center,
+              children: <Widget>[
+                MagicButton(
+                  label: 'Upload',
+                  leadingIconName: 'cloud_upload',
+                  color: color,
+                  size: size,
+                  onPressed: () {},
+                ),
+                MagicButton(
+                  label: 'Next Step',
+                  variant: ButtonVariant.tonal,
+                  trailingIconName: 'arrow_forward',
+                  color: color,
+                  size: size,
+                  onPressed: () {},
+                ),
+                MagicButton(
+                  label: 'Submit',
+                  loading: true,
+                  loadingLabel: 'Submitting...',
+                  color: color,
+                  size: size,
+                ),
+                MagicButton(
+                  label: 'Disabled',
+                  disabled: true,
+                  color: color,
+                  size: size,
+                ),
+                MagicButton(
+                  label: 'Interactive Disabled',
+                  disabled: true,
+                  disabledInteractive: true,
+                  variant: ButtonVariant.outlined,
+                  color: color,
+                  size: size,
+                ),
+              ],
+            ),
+          );
+        },
       ),
     ],
   );

@@ -66,21 +66,37 @@ WidgetbookComponent buildMagicFormFieldComponent() {
       ),
       WidgetbookUseCase(
         name: 'Filled with Prefix & Error',
-        builder: (context) => const Center(
-          child: SizedBox(
-            width: 340,
-            child: MagicFormField(
-              label: 'Work Email',
-              errorText: 'Please enter a valid company domain.',
-              appearance: FormFieldAppearance.filled,
-              prefix: Icon(Icons.email_outlined),
-              child: MagicTextInput(
-                type: TextInputTypeKind.email,
-                value: 'ada@personal.org',
+        builder: (context) {
+          final appearance = formFieldAppearanceKnob(
+            context,
+            initialValue: FormFieldAppearance.filled,
+          );
+          final size = atomicSizeKnob(context);
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: SizedBox(
+              width: 340,
+              child: MagicFormField(
+                label: 'Work Email',
+                errorText: 'Please enter a valid company domain.',
+                appearance: appearance,
+                size: size,
+                disabled: disabled,
+                prefix: const Icon(Icons.email_outlined),
+                child: MagicTextInput(
+                  type: TextInputTypeKind.email,
+                  value: 'ada@personal.org',
+                  size: size,
+                  disabled: disabled,
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     ],
   );

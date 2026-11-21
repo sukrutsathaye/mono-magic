@@ -56,29 +56,44 @@ WidgetbookComponent buildToolTipComponent() {
       ),
       WidgetbookUseCase(
         name: 'All 6 Positions Gallery',
-        builder: (context) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              alignment: WrapAlignment.center,
-              children: <Widget>[
-                for (final pos in ToolTipPosition.values)
-                  MagicToolTip(
-                    message: 'Tooltip positioned ${pos.name}',
-                    position: pos,
-                    touchGestures: ToolTipTouchGestures.on,
-                    child: MagicButton(
-                      label: pos.name,
-                      variant: ButtonVariant.outlined,
-                      onPressed: () {},
+        builder: (context) {
+          final touchGestures =
+              context.knobs.object.dropdown<ToolTipTouchGestures>(
+                label: 'Touch Gestures',
+                options: ToolTipTouchGestures.values,
+                initialOption: ToolTipTouchGestures.on,
+                labelBuilder: (value) => value.name,
+              );
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                alignment: WrapAlignment.center,
+                children: <Widget>[
+                  for (final pos in ToolTipPosition.values)
+                    MagicToolTip(
+                      message: 'Tooltip positioned ${pos.name}',
+                      position: pos,
+                      touchGestures: touchGestures,
+                      disabled: disabled,
+                      child: MagicButton(
+                        label: pos.name,
+                        variant: ButtonVariant.outlined,
+                        onPressed: () {},
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     ],
   );

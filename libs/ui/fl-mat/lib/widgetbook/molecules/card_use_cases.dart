@@ -84,21 +84,35 @@ WidgetbookComponent buildMagicCardComponent() {
       ),
       WidgetbookUseCase(
         name: 'Raised with Chips & Custom Footer',
-        builder: (context) => const Center(
-          child: MagicCard(
-            title: 'Release v3.50',
-            subtitle: 'Production Ready',
-            content: 'Includes all 11 atoms and 5 molecules.',
-            appearance: CardAppearance.raised,
-            variant: CardVariant.withChips,
-            width: 360,
-            chips: <ChipItem>[
-              ChipItem(label: 'Verified', leadingIconName: 'verified'),
-              ChipItem(label: 'Stable', leadingIconName: 'check_circle'),
-            ],
-            footerSlot: Text('Last updated today'),
-          ),
-        ),
+        builder: (context) {
+          final appearance = context.knobs.object.dropdown<CardAppearance>(
+            label: 'Appearance',
+            options: CardAppearance.values,
+            initialOption: CardAppearance.raised,
+            labelBuilder: (v) => v.name,
+          );
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: MagicCard(
+              title: 'Release v3.50',
+              subtitle: 'Production Ready',
+              content: 'Includes all 11 atoms and 5 molecules.',
+              appearance: appearance,
+              variant: CardVariant.withChips,
+              disabled: disabled,
+              width: 360,
+              chips: const <ChipItem>[
+                ChipItem(label: 'Verified', leadingIconName: 'verified'),
+                ChipItem(label: 'Stable', leadingIconName: 'check_circle'),
+              ],
+              footerSlot: const Text('Last updated today'),
+            ),
+          );
+        },
       ),
     ],
   );

@@ -69,75 +69,99 @@ WidgetbookComponent buildProgressIndicatorComponent() {
       ),
       WidgetbookUseCase(
         name: 'Bar Modes & Spinner Sizes Gallery',
-        builder: (context) => Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: SizedBox(
-              width: 380,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Text('Determinate (65%)'),
-                  const SizedBox(height: 6),
-                  const MagicProgressIndicator(
-                    type: ProgressIndicatorType.bar,
-                    mode: ProgressIndicatorMode.determinate,
-                    value: 65,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text('Indeterminate'),
-                  const SizedBox(height: 6),
-                  const MagicProgressIndicator(
-                    type: ProgressIndicatorType.bar,
-                    mode: ProgressIndicatorMode.indeterminate,
-                    color: ColorIntent.secondary,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text('Buffer (45% / 78%)'),
-                  const SizedBox(height: 6),
-                  const MagicProgressIndicator(
-                    type: ProgressIndicatorType.bar,
-                    mode: ProgressIndicatorMode.buffer,
-                    value: 45,
-                    bufferValue: 78,
-                    color: ColorIntent.tertiary,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text('Query'),
-                  const SizedBox(height: 6),
-                  const MagicProgressIndicator(
-                    type: ProgressIndicatorType.bar,
-                    mode: ProgressIndicatorMode.query,
-                    color: ColorIntent.success,
-                  ),
-                  const SizedBox(height: 24),
-                  Wrap(
-                    spacing: 20,
-                    runSpacing: 16,
-                    crossAxisAlignment: WrapCrossAlignment.center,
+        builder: (context) {
+          final size = atomicSizeKnob(context);
+          final color = colorIntentKnob(context);
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: Opacity(
+              opacity: disabled ? 0.38 : 1.0,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: SizedBox(
+                  width: 380,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      for (final sz in AtomicSize.values)
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            MagicProgressIndicator(
-                              type: ProgressIndicatorType.spinner,
-                              mode: ProgressIndicatorMode.determinate,
-                              value: 72,
-                              size: sz,
+                      const Text('Determinate (65%)'),
+                      const SizedBox(height: 6),
+                      MagicProgressIndicator(
+                        type: ProgressIndicatorType.bar,
+                        mode: ProgressIndicatorMode.determinate,
+                        value: 65,
+                        color: disabled ? ColorIntent.neutral : color,
+                        size: size,
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('Indeterminate'),
+                      const SizedBox(height: 6),
+                      MagicProgressIndicator(
+                        type: ProgressIndicatorType.bar,
+                        mode: ProgressIndicatorMode.indeterminate,
+                        color: disabled
+                            ? ColorIntent.neutral
+                            : ColorIntent.secondary,
+                        size: size,
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('Buffer (45% / 78%)'),
+                      const SizedBox(height: 6),
+                      MagicProgressIndicator(
+                        type: ProgressIndicatorType.bar,
+                        mode: ProgressIndicatorMode.buffer,
+                        value: 45,
+                        bufferValue: 78,
+                        color: disabled
+                            ? ColorIntent.neutral
+                            : ColorIntent.tertiary,
+                        size: size,
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('Query'),
+                      const SizedBox(height: 6),
+                      MagicProgressIndicator(
+                        type: ProgressIndicatorType.bar,
+                        mode: ProgressIndicatorMode.query,
+                        color: disabled
+                            ? ColorIntent.neutral
+                            : ColorIntent.success,
+                        size: size,
+                      ),
+                      const SizedBox(height: 24),
+                      Wrap(
+                        spacing: 20,
+                        runSpacing: 16,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: <Widget>[
+                          for (final sz in AtomicSize.values)
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                MagicProgressIndicator(
+                                  type: ProgressIndicatorType.spinner,
+                                  mode: ProgressIndicatorMode.determinate,
+                                  value: 72,
+                                  color: disabled ? ColorIntent.neutral : color,
+                                  size: sz,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(sz.name),
+                              ],
                             ),
-                            const SizedBox(height: 8),
-                            Text(sz.name),
-                          ],
-                        ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     ],
   );

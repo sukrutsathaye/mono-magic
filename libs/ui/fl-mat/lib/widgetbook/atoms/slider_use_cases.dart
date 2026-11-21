@@ -86,6 +86,16 @@ WidgetbookComponent buildSliderComponent() {
       WidgetbookUseCase(
         name: 'Range Slider & Tick Marks',
         builder: (context) {
+          final color = colorIntentKnob(
+            context,
+            initialValue: ColorIntent.secondary,
+          );
+          final size = atomicSizeKnob(context);
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
           var budget = const RangeValues(2500, 7500);
           var stepValue = 50.0;
 
@@ -112,7 +122,9 @@ WidgetbookComponent buildSliderComponent() {
                           endValue: budget.end,
                           discrete: true,
                           showTickMarks: true,
-                          color: ColorIntent.secondary,
+                          color: color,
+                          size: size,
+                          disabled: disabled,
                           onRangeChanged: (next) =>
                               setState(() => budget = next),
                         ),
@@ -126,7 +138,8 @@ WidgetbookComponent buildSliderComponent() {
                           discrete: true,
                           showTickMarks: true,
                           color: ColorIntent.tertiary,
-                          size: AtomicSize.lg,
+                          size: size,
+                          disabled: disabled,
                           onChanged: (next) =>
                               setState(() => stepValue = next),
                         ),

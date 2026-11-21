@@ -76,6 +76,12 @@ WidgetbookComponent buildRadioButtonComponent() {
       WidgetbookUseCase(
         name: 'Horizontal vs Vertical & Colors Gallery',
         builder: (context) {
+          final size = atomicSizeKnob(context);
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
           String? horizontalChoice = 'email';
           String? verticalChoice = 'dark';
 
@@ -91,6 +97,8 @@ WidgetbookComponent buildRadioButtonComponent() {
                       MagicRadioButton<String>(
                         vertical: false,
                         color: ColorIntent.secondary,
+                        size: size,
+                        disabled: disabled,
                         value: horizontalChoice,
                         options: const <RadioOption<String>>[
                           RadioOption<String>(value: 'email', label: 'Email'),
@@ -104,6 +112,8 @@ WidgetbookComponent buildRadioButtonComponent() {
                       MagicRadioButton<String>(
                         vertical: true,
                         color: ColorIntent.tertiary,
+                        size: size,
+                        disabled: disabled,
                         labelPosition: RadioLabelPosition.before,
                         value: verticalChoice,
                         options: const <RadioOption<String>>[

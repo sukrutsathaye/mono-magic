@@ -91,6 +91,17 @@ WidgetbookComponent buildButtonToggleComponent() {
       WidgetbookUseCase(
         name: 'Single vs Multiple & Vertical Gallery',
         builder: (context) {
+          final color = colorIntentKnob(context);
+          final size = atomicSizeKnob(context);
+          final hideSelectionIndicator = context.knobs.boolean(
+            label: 'Hide Selection Indicator',
+            initialValue: false,
+          );
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
           String? viewMode = 'grid';
           Set<String> formatting = <String>{'bold'};
 
@@ -116,6 +127,10 @@ WidgetbookComponent buildButtonToggleComponent() {
                           ),
                         ],
                         value: viewMode,
+                        color: color,
+                        size: size,
+                        hideSelectionIndicator: hideSelectionIndicator,
+                        disabled: disabled,
                         onChanged: (next) => setState(() => viewMode = next),
                       ),
                       const SizedBox(height: 20),
@@ -140,6 +155,9 @@ WidgetbookComponent buildButtonToggleComponent() {
                         selectionMode: ButtonToggleSelectionMode.multiple,
                         selectedValues: formatting,
                         color: ColorIntent.secondary,
+                        size: size,
+                        hideSelectionIndicator: hideSelectionIndicator,
+                        disabled: disabled,
                         onMultiChanged: (next) =>
                             setState(() => formatting = next),
                       ),
@@ -150,6 +168,9 @@ WidgetbookComponent buildButtonToggleComponent() {
                         vertical: true,
                         appearance: ButtonToggleAppearance.legacy,
                         color: ColorIntent.tertiary,
+                        size: size,
+                        hideSelectionIndicator: hideSelectionIndicator,
+                        disabled: disabled,
                         onChanged: (_) {},
                       ),
                     ],

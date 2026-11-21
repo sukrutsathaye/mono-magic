@@ -69,6 +69,13 @@ WidgetbookComponent buildCheckBoxComponent() {
       WidgetbookUseCase(
         name: 'Subtasks Hierarchy',
         builder: (context) {
+          final color = colorIntentKnob(context);
+          final size = atomicSizeKnob(context);
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
           var tasks = const <CheckBoxTask>[
             CheckBoxTask(
               id: 'release',
@@ -98,7 +105,9 @@ WidgetbookComponent buildCheckBoxComponent() {
               builder: (context, setState) {
                 return MagicCheckBox(
                   tasks: tasks,
-                  color: ColorIntent.primary,
+                  color: color,
+                  size: size,
+                  disabled: disabled,
                   onTasksChanged: (next) => setState(() => tasks = next),
                 );
               },
@@ -108,44 +117,59 @@ WidgetbookComponent buildCheckBoxComponent() {
       ),
       WidgetbookUseCase(
         name: 'Sizes & Colors Gallery',
-        builder: (context) => Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Wrap(
-                  spacing: 20,
-                  runSpacing: 12,
-                  children: <Widget>[
-                    for (final sz in AtomicSize.values)
-                      MagicCheckBox(
-                        label: 'Size ${sz.name}',
-                        size: sz,
-                        checked: true,
-                        onChanged: (_) {},
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Wrap(
-                  spacing: 20,
-                  runSpacing: 12,
-                  children: <Widget>[
-                    for (final intent in ColorIntent.values)
-                      MagicCheckBox(
-                        label: intent.name,
-                        color: intent,
-                        checked: true,
-                        onChanged: (_) {},
-                      ),
-                  ],
-                ),
-              ],
+        builder: (context) {
+          final indeterminate = context.knobs.boolean(
+            label: 'Indeterminate',
+            initialValue: false,
+          );
+          final disabled = context.knobs.boolean(
+            label: 'Disabled',
+            initialValue: false,
+          );
+
+          return Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Wrap(
+                    spacing: 20,
+                    runSpacing: 12,
+                    children: <Widget>[
+                      for (final sz in AtomicSize.values)
+                        MagicCheckBox(
+                          label: 'Size ${sz.name}',
+                          size: sz,
+                          checked: true,
+                          indeterminate: indeterminate,
+                          disabled: disabled,
+                          onChanged: (_) {},
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Wrap(
+                    spacing: 20,
+                    runSpacing: 12,
+                    children: <Widget>[
+                      for (final intent in ColorIntent.values)
+                        MagicCheckBox(
+                          label: intent.name,
+                          color: intent,
+                          checked: true,
+                          indeterminate: indeterminate,
+                          disabled: disabled,
+                          onChanged: (_) {},
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     ],
   );
