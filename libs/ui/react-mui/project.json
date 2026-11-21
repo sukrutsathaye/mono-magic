@@ -1,0 +1,24 @@
+{
+  "name": "react-mui",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "root": "libs/ui/react-mui",
+  "sourceRoot": "libs/ui/react-mui/src",
+  "projectType": "library",
+  "tags": ["scope:ui", "framework:react", "ds:material"],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/ui/react-mui",
+        "command": "vitest run --project=react-mui"
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/ui/react-mui",
+        "command": "vitest run --project=react-mui-storybook"
+      }
+    }
+  }
+}

@@ -3,9 +3,10 @@
   "compilerOptions": {
     "outDir": "out-tsc/storybook",
     "lib": ["es2022", "dom", "dom.iterable"],
+    "types": ["node"],
     "module": "esnext",
     "moduleResolution": "bundler",
-    "jsx": "preserve"
+    "jsx": "react-jsx"
   },
   "exclude": [
     "src/**/*.spec.ts",
@@ -15,7 +16,7 @@
     "src/**/*.spec.tsx",
     "src/**/*.test.tsx",
     "src/**/*.spec.jsx",
-    "src/**/*.test.js"
+    "src/**/*.test.jsx"
   ],
   "include": [
     "src/**/*.stories.ts",
@@ -23,6 +24,7 @@
     "src/**/*.stories.jsx",
     "src/**/*.stories.tsx",
     "src/**/*.stories.mdx",
+    ".storybook/*.d.ts",
     ".storybook/*.js",
     ".storybook/*.ts",
     ".storybook/*.tsx"
