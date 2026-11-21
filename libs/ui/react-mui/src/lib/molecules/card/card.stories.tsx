@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
+import type { ChipItem } from '@mono-magic/atomic-design-interfaces';
 import { MagicCard } from './card';
 
 /**
@@ -127,6 +129,27 @@ export const WithActions: Story = {
   },
 };
 
+function StatefulChipsCard(args: React.ComponentProps<typeof MagicCard>) {
+  const [chips, setChips] = useState<readonly ChipItem[]>(args.chips ?? []);
+
+  return (
+    <MagicCard
+      {...args}
+      chips={chips}
+      onChipSelect={(clicked) => {
+        args.onChipSelect?.(clicked);
+        setChips((prev) =>
+          prev.map((chip) =>
+            chip.id === clicked.id
+              ? { ...chip, selected: !chip.selected }
+              : chip,
+          ),
+        );
+      }}
+    />
+  );
+}
+
 /**
  * Card displaying interactive status and category chips in the footer.
  */
@@ -139,6 +162,7 @@ export const WithChips: Story = {
       { id: 'a11y', label: 'WCAG AA', selectable: true },
     ],
   },
+  render: (args) => <StatefulChipsCard {...args} />,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     const reactChip = canvas.getByRole('button', { name: 'React 19' });

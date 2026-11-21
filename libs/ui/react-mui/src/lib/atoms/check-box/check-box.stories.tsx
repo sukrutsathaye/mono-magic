@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -68,6 +69,10 @@ const meta: Meta<typeof MagicCheckBox> = {
       table: { category: 'Content' },
     },
     tasks: {
+      control: 'object',
+      table: { category: 'Content' },
+    },
+    defaultTasks: {
       control: 'object',
       table: { category: 'Content' },
     },
@@ -212,13 +217,16 @@ export const Sizes: Story = {
   ),
 };
 
-/**
- * Indeterminate, required, and label position (`before` vs `after`) variations.
- */
-export const IndeterminateAndLabelPositions: Story = {
-  render: () => (
+function StatefulIndeterminateCheckboxes() {
+  const [indeterminate, setIndeterminate] = useState(true);
+
+  return (
     <Stack spacing={1.5}>
-      <MagicCheckBox label="Indeterminate state" indeterminate />
+      <MagicCheckBox
+        label="Indeterminate state"
+        indeterminate={indeterminate}
+        onIndeterminateChange={setIndeterminate}
+      />
       <MagicCheckBox label="Required agreement" required />
       <MagicCheckBox
         label="Label positioned before"
@@ -231,7 +239,14 @@ export const IndeterminateAndLabelPositions: Story = {
         defaultChecked
       />
     </Stack>
-  ),
+  );
+}
+
+/**
+ * Indeterminate, required, and label position (`before` vs `after`) variations.
+ */
+export const IndeterminateAndLabelPositions: Story = {
+  render: () => <StatefulIndeterminateCheckboxes />,
 };
 
 /**
@@ -240,7 +255,7 @@ export const IndeterminateAndLabelPositions: Story = {
 export const HierarchicalTasks: Story = {
   args: {
     ariaLabel: 'Release checklist',
-    tasks: [
+    defaultTasks: [
       {
         id: 'ci',
         name: 'CI Pipeline',
@@ -259,6 +274,7 @@ export const HierarchicalTasks: Story = {
     await expect(parentBox).toHaveAttribute('data-indeterminate', 'true');
 
     await userEvent.click(parentBox);
+    await expect(parentBox).toBeChecked();
     await expect(args.onTasksChange).toHaveBeenCalled();
     await expect(args.onChange).toHaveBeenCalledWith(true);
   },

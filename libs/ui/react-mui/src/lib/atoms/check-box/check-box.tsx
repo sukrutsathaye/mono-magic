@@ -32,6 +32,8 @@ export type { CheckBoxLabelPosition, CheckBoxTask };
 export interface MagicCheckBoxProps extends CheckBoxAtomProps {
   /** Initial checked state when used in uncontrolled single-checkbox mode. Defaults to `false`. */
   defaultChecked?: boolean;
+  /** Initial tasks array when used in uncontrolled hierarchical tasks mode. */
+  defaultTasks?: readonly CheckBoxTask[];
   /** Rich React label content; takes precedence over `label` in single-checkbox mode. */
   children?: ReactNode;
   /** Called whenever the checked boolean toggles in single mode or when a parent task toggles. */
@@ -109,6 +111,7 @@ export function MagicCheckBox({
   name,
   checkboxValue,
   tasks,
+  defaultTasks,
   onChange,
   onIndeterminateChange,
   onTasksChange,
@@ -131,7 +134,7 @@ export function MagicCheckBox({
 
   const [currentTasks, setCurrentTasks] = useControllableState<CheckBoxTask[]>({
     value: tasks ? [...tasks] : undefined,
-    defaultValue: tasks ? [...tasks] : [],
+    defaultValue: defaultTasks ? [...defaultTasks] : [],
     onChange: onTasksChange,
   });
 

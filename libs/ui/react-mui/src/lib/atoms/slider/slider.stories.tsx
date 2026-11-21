@@ -87,6 +87,14 @@ const meta: Meta<typeof MagicSlider> = {
       control: 'number',
       table: { category: 'Value' },
     },
+    defaultStartValue: {
+      control: 'number',
+      table: { category: 'Value' },
+    },
+    defaultEndValue: {
+      control: 'number',
+      table: { category: 'Value' },
+    },
     discrete: {
       control: 'boolean',
       table: { category: 'Appearance' },
@@ -157,14 +165,14 @@ export const Default: Story = {
 };
 
 /**
- * Dual-thumb range slider (`range={true}`) with `startValue` and `endValue`.
+ * Dual-thumb range slider (`range={true}`) with `defaultStartValue` and `defaultEndValue`.
  */
 export const Range: Story = {
   args: {
     ariaLabel: 'Price range',
     range: true,
-    startValue: 20,
-    endValue: 80,
+    defaultStartValue: 20,
+    defaultEndValue: 80,
     discrete: true,
   },
   render: (args) => (
