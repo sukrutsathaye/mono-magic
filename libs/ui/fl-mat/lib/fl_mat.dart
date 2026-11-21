@@ -18,6 +18,8 @@ export 'src/atoms/text_input/magic_text_input.dart';
 export 'src/atoms/tool_tip/magic_tool_tip.dart';
 export 'src/molecules/card/magic_card.dart';
 export 'src/molecules/form_field/magic_form_field.dart';
+export 'src/molecules/menu/magic_menu.dart';
 export 'src/molecules/search_bar/magic_search_bar.dart';
+export 'src/molecules/select/magic_select.dart';
 export 'src/organisms/organisms.dart';
 export 'src/templates/templates.dart';
