@@ -1,0 +1,18 @@
+description = "Design and implement an Atomic Design component (Atom, Molecule, Organism, or Template) across atomic-design-interfaces, react-mui, ng-mat, rn-paper, and fl-mat."
+prompt = """
+# Add Polyglot UI Component
+
+Follow the `polyglot-ui-component` skill (`.gemini/skills/polyglot-ui-component/SKILL.md`) to design, implement, test, and baseline the requested UI component across all 4 core UI libraries.
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Verify bottom-up tier dependencies (`Atoms -> Molecules -> Core Organisms -> Domain Organisms -> Templates`).
+2. Define TypeScript contract in `libs/ui/atomic-design-interfaces/src/lib/<tier>/<component>.interface.ts` + contract tests.
+3. Implement in `libs/ui/react-mui` (Component + Vitest unit tests + CSF3 Storybook stories).
+4. Implement in `libs/ui/ng-mat` (Standalone Angular component + Vitest/Analog unit tests + Storybook stories).
+5. Implement in `libs/ui/rn-paper` (React Native Paper component + Vitest unit tests + Storybook stories).
+6. Implement in `libs/ui/fl-mat` (Dart model + Material 3 widget + Widgetbook use-cases + `flutter test` widget tests).
+7. Generate visual baselines (`pnpm nx test-storybook <project> -- -u`) and run `lint`, `typecheck`, `test`, and `test-storybook`.
+"""

@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "path": ".gemini/skills"
+    },
+    {
+      "path": ".agents/skills"
+    },
+    {
+      "path": "node_modules/storybook-addon-vis/skills"
+    }
+  ]
+}
