@@ -26,6 +26,10 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
      - `apps/*` (`scope:app`): Thin deployable end-user apps and polyglot microservices (`apps/api-*`).
 4. **MCP Server Configuration**:
    - Local zero-secret stdio MCPs (`nx-mcp`, `playwright`, `context7`) are enabled in `.gemini/settings.json`. See [.gemini/MCP.md](.gemini/MCP.md) for usage and opt-in credentialed MCPs (`supabase`, `firebase`, `storybook`, `github`)—never commit tokens or secrets.
+5. **Token-Budget & `/teamwork` Guardrails (Mandatory)**:
+   - **Index-First**: Always read [REPO_INDEX.md](REPO_INDEX.md) first; never run full-repo `find`/`ls -R`/root `grep`. Scope `rg -n` to a single project and read `<=150`-line slices.
+   - **Parallel `/teamwork` Discipline**: Follow [.gemini/skills/token-budget-guardrails/SKILL.md](.gemini/skills/token-budget-guardrails/SKILL.md) — coordinator pre-reads shared contracts once and embeds exact paths/symbols in briefs; cap parallel waves to `3–4` workers (or 1:1 UI library sharding) with disjoint file ownership; tier models (`flash` for mechanical/verification, `inherit`/`pro` for architecture); never poll; run `pnpm nx affected` or targeted `pnpm nx test <project>` instead of repo-wide `run-many`.
+   - **Keep Index Fresh**: After adding/removing projects, components, protos, or skills, run `node tools/ci/generate-repo-index.mjs` once at the end.
 
 ---
 
@@ -50,6 +54,7 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 
 ### Custom Skills (`.gemini/skills/`)
 - **`engineering-standards`** *(Mandatory)* ([.gemini/skills/engineering-standards/SKILL.md](.gemini/skills/engineering-standards/SKILL.md)): Concrete SOLID principles, clean code & performance hygiene, documentation gates, unit/E2E coverage thresholds, and `libs/<domain>/<lang>-<name>` naming/tagging.
+- **`token-budget-guardrails`** *(Mandatory for `/teamwork` & Subagents)* ([.gemini/skills/token-budget-guardrails/SKILL.md](.gemini/skills/token-budget-guardrails/SKILL.md)): Index-first discovery via [REPO_INDEX.md](REPO_INDEX.md), scoped searches, bounded parallel fan-out, disjoint file ownership, model tiering, and affected-only verification.
 - **`python-uv-service`** *(Mandatory for Python)* ([.gemini/skills/python-uv-service/SKILL.md](.gemini/skills/python-uv-service/SKILL.md)): `uv` workspace standards for `libs/*/py-*` & `apps/api-*`, Nx `ruff`/`pyright`/`pytest --cov` targets, FastAPI `lifespan` singletons, Pydantic v2, and SOLID `Protocol`s.
 - **`polyglot-ui-component`** ([.gemini/skills/polyglot-ui-component/SKILL.md](.gemini/skills/polyglot-ui-component/SKILL.md)): End-to-end workflow for adding or updating an Atomic Design component across `atomic-design-interfaces`, `react-mui`, `ng-mat`, `rn-paper`, and `fl-mat`.
 - **`storybook-visual-testing`** ([.gemini/skills/storybook-visual-testing/SKILL.md](.gemini/skills/storybook-visual-testing/SKILL.md)): Runbook for `storybook-addon-vis` baselines (`-- -u`), diff triage, and assembling the GitHub Pages showcase portal (`tools/ci/storybook-pages.mjs`).
