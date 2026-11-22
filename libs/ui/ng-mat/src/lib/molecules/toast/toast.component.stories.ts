@@ -1,6 +1,56 @@
+import { signal } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
+import { moduleMetadata } from '@storybook/angular';
 import { expect, fn, userEvent, within } from 'storybook/test';
+import { MagicButtonComponent } from '../../atoms/button/button.component';
 import { MagicToastComponent } from './toast.component';
+
+const renderStatefulToast: Story['render'] = (args) => {
+  const isOpen = signal(Boolean(args.open));
+
+  return {
+    props: {
+      ...args,
+      isOpen,
+      handleOpen() {
+        isOpen.set(true);
+      },
+      handleDismiss() {
+        isOpen.set(false);
+        args.dismissed?.();
+      },
+      handleAction() {
+        args.actionClicked?.();
+      },
+    },
+    template: `
+      @if (!isOpen()) {
+        <magic-button
+          [label]="open ? 'Reopen Toast' : 'Show Toast'"
+          [variant]="open ? 'tonal' : 'filled'"
+          color="primary"
+          leadingIcon="notifications"
+          (clicked)="handleOpen()"
+        />
+      }
+      <magic-toast
+        [open]="isOpen()"
+        [severity]="severity"
+        [title]="title"
+        [message]="message"
+        [duration]="duration"
+        [position]="position"
+        [dismissible]="dismissible"
+        [actionLabel]="actionLabel"
+        [id]="id"
+        [testId]="testId"
+        [ariaLabel]="ariaLabel"
+        (dismissed)="handleDismiss()"
+        (actionClicked)="handleAction()"
+      />
+    `,
+  };
+};
 
 /**
  * `MagicToastComponent` renders Material 3 transient notifications with
@@ -13,6 +63,11 @@ import { MagicToastComponent } from './toast.component';
 const meta: Meta<MagicToastComponent> = {
   title: 'Molecules/Toast',
   component: MagicToastComponent,
+  decorators: [
+    moduleMetadata({
+      imports: [MagicButtonComponent],
+    }),
+  ],
   args: {
     open: true,
     severity: 'info',
@@ -55,13 +110,14 @@ const meta: Meta<MagicToastComponent> = {
     dismissed: { action: 'dismissed', table: { category: 'Events' } },
     actionClicked: { action: 'actionClicked', table: { category: 'Events' } },
   },
+  render: renderStatefulToast,
 };
 
 export default meta;
 type Story = StoryObj<MagicToastComponent>;
 
 /**
- * Persistent open toast with action and dismiss buttons verified by play assertions.
+ * Persistent open toast with action, dismiss, and reopen interactions verified by play assertions.
  *
  * Inputs: `open=true`, `duration=null`, `severity="info"`, `actionLabel="View"`, `dismissible=true`.
  */
@@ -74,24 +130,77 @@ export const Default: Story = {
       canvas.getByRole('button', { name: 'Dismiss notification' }),
     );
     await expect(args.dismissed).toHaveBeenCalledTimes(1);
+    await expect(canvas.queryByRole('status')).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: 'Reopen Toast' }));
+    await expect(canvas.getByRole('status')).toBeInTheDocument();
   },
 };
 
 /**
- * Stack comparing all four semantic toast severities with `duration=null` for stable visual snapshots.
+ * Interactive button-triggered toast opening and dismissing cleanly.
+ *
+ * Inputs: `open=false`, `duration=null`, `severity="success"`.
+ */
+export const InteractiveTrigger: Story = {
+  args: {
+    open: false,
+    severity: 'success',
+    title: 'Snapshot updated',
+    message: 'Visual baseline verified cleanly.',
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole('button', { name: 'Show Toast' }));
+    await expect(canvas.getByRole('status')).toBeInTheDocument();
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Dismiss notification' }),
+    );
+    await expect(args.dismissed).toHaveBeenCalledTimes(1);
+  },
+};
+
+/**
+ * Stack comparing all four semantic toast severities with interactive dismiss and reset controls.
  *
  * Inputs: `severity="info" | "success" | "warning" | "error"`, `open=true`, `duration=null`.
  */
 export const Severities: Story = {
-  render: (args) => ({
-    props: args,
-    template: `
-      <div style="display: grid; gap: 12px; justify-items: start;">
-        <magic-toast [open]="true" severity="info" title="Info" message="Sync started in background." [duration]="null" />
-        <magic-toast [open]="true" severity="success" title="Published" message="Release v2.4.0 is live." actionLabel="Undo" [duration]="null" />
-        <magic-toast [open]="true" severity="warning" title="Slow network" message="Retrying artifact upload..." [duration]="null" />
-        <magic-toast [open]="true" severity="error" title="Upload failed" message="Checksum mismatch on bundle.js." actionLabel="Retry" [duration]="null" />
-      </div>
-    `,
-  }),
+  render: (args) => {
+    const openInfo = signal(true);
+    const openSuccess = signal(true);
+    const openWarning = signal(true);
+    const openError = signal(true);
+
+    return {
+      props: {
+        ...args,
+        openInfo,
+        openSuccess,
+        openWarning,
+        openError,
+        resetAll() {
+          openInfo.set(true);
+          openSuccess.set(true);
+          openWarning.set(true);
+          openError.set(true);
+        },
+      },
+      template: `
+        <div style="display: grid; gap: 12px; justify-items: start;">
+          @if (!openInfo() || !openSuccess() || !openWarning() || !openError()) {
+            <magic-button
+              label="Reset Toasts"
+              variant="tonal"
+              size="sm"
+              (clicked)="resetAll()"
+            />
+          }
+          <magic-toast [open]="openInfo()" severity="info" title="Info" message="Sync started in background." [duration]="null" (dismissed)="openInfo.set(false)" />
+          <magic-toast [open]="openSuccess()" severity="success" title="Published" message="Release v2.4.0 is live." actionLabel="Undo" [duration]="null" (dismissed)="openSuccess.set(false)" />
+          <magic-toast [open]="openWarning()" severity="warning" title="Slow network" message="Retrying artifact upload..." [duration]="null" (dismissed)="openWarning.set(false)" />
+          <magic-toast [open]="openError()" severity="error" title="Upload failed" message="Checksum mismatch on bundle.js." actionLabel="Retry" [duration]="null" (dismissed)="openError.set(false)" />
+        </div>
+      `,
+    };
+  },
 };

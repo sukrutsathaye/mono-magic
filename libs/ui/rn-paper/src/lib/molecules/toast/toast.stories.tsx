@@ -1,10 +1,101 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { View } from 'react-native';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { MagicButton } from '../../atoms/button/button';
 import { MagicPaperProvider } from '../../theme/paper-theme';
 import { MagicToast } from './toast';
+
+function StatefulToastDemo(args: React.ComponentProps<typeof MagicToast>) {
+  const [open, setOpen] = useState(Boolean(args.open));
+
+  useEffect(() => {
+    setOpen(Boolean(args.open));
+  }, [args.open]);
+
+  if (!open) {
+    return (
+      <MagicButton
+        label={args.inline === false ? 'Show Toast' : 'Reopen Toast'}
+        variant="tonal"
+        onPress={() => setOpen(true)}
+      />
+    );
+  }
+
+  return (
+    <MagicToast
+      {...args}
+      open={open}
+      onClose={(reason) => {
+        args.onClose?.(reason);
+        setOpen(false);
+      }}
+    />
+  );
+}
+
+function StatefulSeveritiesDemo() {
+  const [visible, setVisible] = useState({
+    info: true,
+    success: true,
+    warning: true,
+    error: true,
+  });
+  const anyHidden = Object.values(visible).some((v) => !v);
+
+  return (
+    <View style={{ gap: 12, alignItems: 'flex-start' }}>
+      {anyHidden && (
+        <MagicButton
+          label="Reset Toasts"
+          variant="tonal"
+          size="sm"
+          onPress={() =>
+            setVisible({ info: true, success: true, warning: true, error: true })
+          }
+        />
+      )}
+      <MagicToast
+        open={visible.info}
+        inline
+        duration={null}
+        severity="info"
+        title="Syncing"
+        message="Fetching latest build artifacts."
+        onClose={() => setVisible((prev) => ({ ...prev, info: false }))}
+      />
+      <MagicToast
+        open={visible.success}
+        inline
+        duration={null}
+        severity="success"
+        title="Saved"
+        message="Design tokens exported."
+        onClose={() => setVisible((prev) => ({ ...prev, success: false }))}
+      />
+      <MagicToast
+        open={visible.warning}
+        inline
+        duration={null}
+        severity="warning"
+        title="Latency"
+        message="Cache server responded slowly."
+        onClose={() => setVisible((prev) => ({ ...prev, warning: false }))}
+      />
+      <MagicToast
+        open={visible.error}
+        inline
+        duration={null}
+        severity="error"
+        title="Failed"
+        message="Deployment aborted due to lint errors."
+        actionLabel="Retry"
+        onClose={() => setVisible((prev) => ({ ...prev, error: false }))}
+      />
+    </View>
+  );
+}
 
 /**
  * `MagicToast` is the Material 3 transient notification molecule for `@mono-magic/rn-paper`.
@@ -64,12 +155,13 @@ export default meta;
 type Story = StoryObj<typeof MagicToast>;
 
 /**
- * Default inline persistent toast preview verifying action and dismiss callbacks.
+ * Default inline persistent toast preview verifying action, dismiss, and reopen callbacks.
  */
 export const Default: Story = {
   args: {
     testId: 'story-toast',
   },
+  render: (args) => <StatefulToastDemo {...args} />,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('status')).toBeInTheDocument();
@@ -79,11 +171,19 @@ export const Default: Story = {
       canvas.getByRole('button', { name: 'Dismiss notification' })
     );
     await expect(args.onClose).toHaveBeenCalledWith('dismiss');
+    await expect(canvas.queryByRole('status')).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: 'Reopen Toast' }));
+    await expect(canvas.getByRole('status')).toBeInTheDocument();
   },
 };
 
-function InteractiveToastDemo(args: Story['args']) {
-  const [open, setOpen] = useState(false);
+function InteractiveToastDemo(args: React.ComponentProps<typeof MagicToast>) {
+  const [open, setOpen] = useState(Boolean(args.open));
+
+  useEffect(() => {
+    setOpen(Boolean(args.open));
+  }, [args.open]);
+
   return (
     <View style={{ minHeight: 80, alignItems: 'flex-start' }}>
       <MagicButton
@@ -93,12 +193,12 @@ function InteractiveToastDemo(args: Story['args']) {
       />
       <MagicToast
         {...args}
-        message={args?.message ?? 'Your workspace tokens were synced cleanly.'}
+        message={args.message ?? 'Your workspace tokens were synced cleanly.'}
         inline={false}
         duration={null}
         open={open}
         onClose={(reason) => {
-          args?.onClose?.(reason);
+          args.onClose?.(reason);
           setOpen(false);
         }}
       />
@@ -110,6 +210,10 @@ function InteractiveToastDemo(args: Story['args']) {
  * Interactive toast trigger showing live fixed-overlay toast notification.
  */
 export const InteractiveTrigger: Story = {
+  args: {
+    open: false,
+    inline: false,
+  },
   render: (args) => <InteractiveToastDemo {...args} />,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
@@ -123,46 +227,10 @@ export const InteractiveTrigger: Story = {
 };
 
 /**
- * Severity showcase (`info`, `success`, `warning`, `error`) rendered inline.
+ * Severity showcase (`info`, `success`, `warning`, `error`) rendered inline with dismiss controls.
  */
 export const Severities: Story = {
-  render: () => (
-    <View style={{ gap: 12 }}>
-      <MagicToast
-        open
-        inline
-        duration={null}
-        severity="info"
-        title="Syncing"
-        message="Fetching latest build artifacts."
-      />
-      <MagicToast
-        open
-        inline
-        duration={null}
-        severity="success"
-        title="Saved"
-        message="Design tokens exported."
-      />
-      <MagicToast
-        open
-        inline
-        duration={null}
-        severity="warning"
-        title="Latency"
-        message="Cache server responded slowly."
-      />
-      <MagicToast
-        open
-        inline
-        duration={null}
-        severity="error"
-        title="Failed"
-        message="Deployment aborted due to lint errors."
-        actionLabel="Retry"
-      />
-    </View>
-  ),
+  render: () => <StatefulSeveritiesDemo />,
 };
 
 /**
@@ -172,7 +240,7 @@ export const DarkTheme: Story = {
   render: () => (
     <MagicPaperProvider palette="dark-theme">
       <View style={{ backgroundColor: '#121410', padding: 16, borderRadius: 12 }}>
-        <MagicToast
+        <StatefulToastDemo
           open
           inline
           duration={null}

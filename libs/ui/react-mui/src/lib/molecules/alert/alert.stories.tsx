@@ -1,7 +1,92 @@
+import { useState } from 'react';
 import Stack from '@mui/material/Stack';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
+import { MagicButton } from '../../atoms/button/button';
 import { MagicAlert } from './alert';
+
+function StatefulAlertDemo(args: React.ComponentProps<typeof MagicAlert>) {
+  const [visible, setVisible] = useState(true);
+
+  if (!visible) {
+    return (
+      <MagicButton
+        label="Show Alert"
+        variant="tonal"
+        size="sm"
+        onClick={() => setVisible(true)}
+      />
+    );
+  }
+
+  return (
+    <MagicAlert
+      {...args}
+      onDismiss={() => {
+        args.onDismiss?.();
+        setVisible(false);
+      }}
+    />
+  );
+}
+
+function StatefulVariantsDemo() {
+  const [visible, setVisible] = useState({
+    standard: true,
+    filled: true,
+    outlined: true,
+  });
+
+  const anyHidden = Object.values(visible).some((v) => !v);
+
+  return (
+    <Stack spacing={1.5} sx={{ maxWidth: 560, alignItems: 'flex-start' }}>
+      {anyHidden && (
+        <MagicButton
+          label="Reset Alerts"
+          variant="tonal"
+          size="sm"
+          onClick={() =>
+            setVisible({ standard: true, filled: true, outlined: true })
+          }
+        />
+      )}
+      {visible.standard && (
+        <MagicAlert
+          severity="success"
+          variant="standard"
+          title="Standard Variant"
+          message="Soft container surface for inline feedback."
+          actionLabel="Undo"
+          dismissible
+          onDismiss={() => setVisible((prev) => ({ ...prev, standard: false }))}
+        />
+      )}
+      {visible.filled && (
+        <MagicAlert
+          severity="success"
+          variant="filled"
+          title="Filled Variant"
+          message="High-emphasis solid surface for critical status."
+          actionLabel="Undo"
+          dismissible
+          onDismiss={() => setVisible((prev) => ({ ...prev, filled: false }))}
+        />
+      )}
+      {visible.outlined && (
+        <MagicAlert
+          severity="success"
+          variant="outlined"
+          title="Outlined Variant"
+          message="Low-emphasis bordered container."
+          actionLabel="Undo"
+          dismissible
+          onDismiss={() => setVisible((prev) => ({ ...prev, outlined: false }))}
+        />
+      )}
+    </Stack>
+  );
+}
 
 /**
  * `MagicAlert` is the Material 3 inline alert banner molecule composing
@@ -62,9 +147,10 @@ export default meta;
 type Story = StoryObj<typeof MagicAlert>;
 
 /**
- * Default standard info alert verifying action and dismiss button callbacks.
+ * Default standard info alert verifying action, dismiss, and restore interactions.
  */
 export const Default: Story = {
+  render: (args) => <StatefulAlertDemo {...args} />,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
@@ -74,6 +160,9 @@ export const Default: Story = {
       canvas.getByRole('button', { name: 'Dismiss alert' }),
     );
     await expect(args.onDismiss).toHaveBeenCalledTimes(1);
+    await expect(canvas.queryByRole('alert')).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: 'Show Alert' }));
+    await expect(canvas.getByRole('alert')).toBeInTheDocument();
   },
 };
 
@@ -111,34 +200,7 @@ export const Severities: Story = {
  * Comparison of `standard`, `filled`, and `outlined` alert emphasis variants.
  */
 export const Variants: Story = {
-  render: () => (
-    <Stack spacing={1.5} sx={{ maxWidth: 560 }}>
-      <MagicAlert
-        severity="success"
-        variant="standard"
-        title="Standard Variant"
-        message="Soft container surface for inline feedback."
-        actionLabel="Undo"
-        dismissible
-      />
-      <MagicAlert
-        severity="success"
-        variant="filled"
-        title="Filled Variant"
-        message="High-emphasis solid surface for critical status."
-        actionLabel="Undo"
-        dismissible
-      />
-      <MagicAlert
-        severity="success"
-        variant="outlined"
-        title="Outlined Variant"
-        message="Low-emphasis bordered container."
-        actionLabel="Undo"
-        dismissible
-      />
-    </Stack>
-  ),
+  render: () => <StatefulVariantsDemo />,
 };
 
 /**

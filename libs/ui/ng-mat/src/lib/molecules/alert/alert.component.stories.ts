@@ -1,6 +1,57 @@
+import { signal } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
+import { moduleMetadata } from '@storybook/angular';
 import { expect, fn, userEvent, within } from 'storybook/test';
+import { MagicButtonComponent } from '../../atoms/button/button.component';
 import { MagicAlertComponent } from './alert.component';
+
+const renderStatefulAlert: Story['render'] = (args) => {
+  const visible = signal(true);
+
+  return {
+    props: {
+      ...args,
+      visible,
+      handleDismiss() {
+        visible.set(false);
+        args.dismissed?.();
+      },
+      handleAction() {
+        args.actionClicked?.();
+      },
+      handleRestore() {
+        visible.set(true);
+      },
+    },
+    template: `
+      @if (visible()) {
+        <magic-alert
+          [severity]="severity"
+          [variant]="variant"
+          [title]="title"
+          [message]="message"
+          [icon]="icon"
+          [hideIcon]="hideIcon"
+          [dismissible]="dismissible"
+          [actionLabel]="actionLabel"
+          [size]="size"
+          [id]="id"
+          [testId]="testId"
+          [ariaLabel]="ariaLabel"
+          (dismissed)="handleDismiss()"
+          (actionClicked)="handleAction()"
+        />
+      } @else {
+        <magic-button
+          label="Show Alert"
+          variant="tonal"
+          size="sm"
+          (clicked)="handleRestore()"
+        />
+      }
+    `,
+  };
+};
 
 /**
  * `MagicAlertComponent` renders Material 3 status banners across `info`,
@@ -14,6 +65,11 @@ import { MagicAlertComponent } from './alert.component';
 const meta: Meta<MagicAlertComponent> = {
   title: 'Molecules/Alert',
   component: MagicAlertComponent,
+  decorators: [
+    moduleMetadata({
+      imports: [MagicButtonComponent],
+    }),
+  ],
   args: {
     severity: 'info',
     variant: 'standard',
@@ -53,6 +109,7 @@ const meta: Meta<MagicAlertComponent> = {
     dismissed: { action: 'dismissed', table: { category: 'Events' } },
     actionClicked: { action: 'actionClicked', table: { category: 'Events' } },
   },
+  render: renderStatefulAlert,
 };
 
 export default meta;
@@ -66,7 +123,7 @@ type Story = StoryObj<MagicAlertComponent>;
 export const Default: Story = {};
 
 /**
- * Interactive alert with inline action and dismiss buttons emitting `actionClicked` and `dismissed`.
+ * Interactive alert with inline action, dismiss, and restore controls verified by play assertions.
  *
  * Inputs: `severity="warning"`, `actionLabel="Review"`, `dismissible=true`.
  */
@@ -85,6 +142,9 @@ export const WithActionsAndDismiss: Story = {
     await expect(args.actionClicked).toHaveBeenCalledTimes(1);
     await userEvent.click(canvas.getByRole('button', { name: 'Dismiss alert' }));
     await expect(args.dismissed).toHaveBeenCalledTimes(1);
+    await expect(canvas.queryByRole('alert')).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: 'Show Alert' }));
+    await expect(canvas.getByRole('alert')).toBeInTheDocument();
   },
 };
 

@@ -1,8 +1,30 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Text, View } from 'react-native';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { MagicPaperProvider } from '../../theme/paper-theme';
 import { MagicCard, type CardActionItem, type ChipItem } from './card';
+
+function StatefulChipsCard(args: React.ComponentProps<typeof MagicCard>) {
+  const [chips, setChips] = useState<readonly ChipItem[]>(args.chips ?? []);
+
+  return (
+    <MagicCard
+      {...args}
+      chips={chips}
+      onChipSelect={(clicked) => {
+        args.onChipSelect?.(clicked);
+        setChips((prev) =>
+          prev.map((chip) =>
+            chip.id === clicked.id
+              ? { ...chip, selected: !chip.selected }
+              : chip
+          )
+        );
+      }}
+    />
+  );
+}
 
 const SAMPLE_ACTIONS: readonly CardActionItem[] = [
   { id: 'share', label: 'Share', variant: 'text', color: 'primary' },
@@ -145,6 +167,7 @@ export const WithChips: Story = {
     variant: 'with-chips',
     chips: SAMPLE_CHIPS,
   },
+  render: (args) => <StatefulChipsCard {...args} />,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     const chipBtn = canvas.getByRole('button', { name: 'Material 3' });

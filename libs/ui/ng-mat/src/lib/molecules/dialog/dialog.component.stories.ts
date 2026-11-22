@@ -1,8 +1,61 @@
+import { signal } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { MagicButtonComponent } from '../../atoms/button/button.component';
 import { MagicDialogComponent } from './dialog.component';
+
+const renderStatefulDialog: Story['render'] = (args) => {
+  const isOpen = signal(Boolean(args.open));
+
+  return {
+    props: {
+      ...args,
+      isOpen,
+      handleOpen() {
+        isOpen.set(true);
+      },
+      handleClosed() {
+        isOpen.set(false);
+        args.closed?.();
+      },
+      handleAction(action: unknown) {
+        args.actionClicked?.(action as never);
+        isOpen.set(false);
+      },
+    },
+    template: `
+      @if (!isOpen()) {
+        <magic-button
+          [label]="open ? 'Reopen Dialog' : 'Open Dialog'"
+          [variant]="open ? 'tonal' : 'filled'"
+          color="primary"
+          leadingIcon="open_in_new"
+          (clicked)="handleOpen()"
+        />
+      }
+      <magic-dialog
+        [open]="isOpen()"
+        [title]="title"
+        [subtitle]="subtitle"
+        [content]="content"
+        [size]="size"
+        [dismissible]="dismissible"
+        [closeOnBackdropClick]="closeOnBackdropClick"
+        [closeOnEscape]="closeOnEscape"
+        [showCloseButton]="showCloseButton"
+        [scrollable]="scrollable"
+        [actions]="actions"
+        [alignActions]="alignActions"
+        [id]="id"
+        [testId]="testId"
+        [ariaLabel]="ariaLabel"
+        (closed)="handleClosed()"
+        (actionClicked)="handleAction($event)"
+      />
+    `,
+  };
+};
 
 /**
  * `MagicDialogComponent` composes Angular Material's `MatDialog` overlay
@@ -16,6 +69,11 @@ import { MagicDialogComponent } from './dialog.component';
 const meta: Meta<MagicDialogComponent> = {
   title: 'Molecules/Dialog',
   component: MagicDialogComponent,
+  decorators: [
+    moduleMetadata({
+      imports: [MagicButtonComponent],
+    }),
+  ],
   args: {
     open: false,
     title: 'Publish changes?',
@@ -69,6 +127,7 @@ const meta: Meta<MagicDialogComponent> = {
     closed: { action: 'closed', table: { category: 'Events' } },
     actionClicked: { action: 'actionClicked', table: { category: 'Events' } },
   },
+  render: renderStatefulDialog,
 };
 
 export default meta;
@@ -80,54 +139,10 @@ type Story = StoryObj<MagicDialogComponent>;
  * Inputs: `size="md"`, `dismissible=true`, `actions` (Cancel, Publish).
  */
 export const InteractiveTrigger: Story = {
-  decorators: [
-    moduleMetadata({
-      imports: [MagicButtonComponent],
-    }),
-  ],
-  render: (args) => ({
-    props: {
-      ...args,
-      isOpen: false,
-      handleOpen() {
-        this['isOpen'] = true;
-      },
-      handleClosed() {
-        this['isOpen'] = false;
-        args.closed?.();
-      },
-      handleAction(action: unknown) {
-        args.actionClicked?.(action as never);
-        this['isOpen'] = false;
-      },
-    },
-    template: `
-      <magic-button
-        label="Open Dialog"
-        variant="filled"
-        color="primary"
-        leadingIcon="open_in_new"
-        (clicked)="handleOpen()"
-      />
-      <magic-dialog
-        [open]="isOpen"
-        [title]="title"
-        [subtitle]="subtitle"
-        [content]="content"
-        [size]="size"
-        [dismissible]="dismissible"
-        [closeOnBackdropClick]="closeOnBackdropClick"
-        [closeOnEscape]="closeOnEscape"
-        [showCloseButton]="showCloseButton"
-        [scrollable]="scrollable"
-        [actions]="actions"
-        [alignActions]="alignActions"
-        [testId]="'story-dialog'"
-        (closed)="handleClosed()"
-        (actionClicked)="handleAction($event)"
-      />
-    `,
-  }),
+  args: {
+    open: false,
+    testId: 'story-dialog',
+  },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: /Open Dialog/i }));

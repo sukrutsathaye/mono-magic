@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Text, View } from 'react-native';
 import { expect, fn, userEvent, within } from 'storybook/test';
@@ -16,6 +16,38 @@ const DEFAULT_ACTIONS: readonly DialogActionItem[] = [
     icon: 'check',
   },
 ];
+
+function StatefulDialogDemo(args: React.ComponentProps<typeof MagicDialog>) {
+  const [isOpen, setIsOpen] = useState(Boolean(args.open));
+
+  useEffect(() => {
+    setIsOpen(Boolean(args.open));
+  }, [args.open]);
+
+  return (
+    <View style={{ minHeight: 80, alignItems: 'flex-start', width: '100%' }}>
+      {!isOpen && (
+        <MagicButton
+          label={args.inline === false ? 'Open Dialog' : 'Reopen Dialog'}
+          variant={args.inline === false ? 'filled' : 'tonal'}
+          onPress={() => setIsOpen(true)}
+        />
+      )}
+      <MagicDialog
+        {...args}
+        open={isOpen}
+        onClose={(reason) => {
+          args.onClose?.(reason);
+          setIsOpen(false);
+        }}
+        onActionClick={(action) => {
+          args.onActionClick?.(action);
+          setIsOpen(false);
+        }}
+      />
+    </View>
+  );
+}
 
 /**
  * `MagicDialog` is the Material 3 modal dialog molecule for `@mono-magic/rn-paper`.
@@ -77,13 +109,14 @@ const meta: Meta<typeof MagicDialog> = {
     onClose: { action: 'closed', table: { category: 'Events' } },
     onActionClick: { action: 'actionClicked', table: { category: 'Events' } },
   },
+  render: (args) => <StatefulDialogDemo {...args} />,
 };
 
 export default meta;
 type Story = StoryObj<typeof MagicDialog>;
 
 /**
- * Default inline dialog preview verifying title, body, and action click callback.
+ * Default inline dialog preview verifying title, action click, close state, and reopen flow.
  */
 export const Default: Story = {
   args: {
@@ -95,40 +128,22 @@ export const Default: Story = {
     const publishBtn = canvas.getByRole('button', { name: 'Publish' });
     await userEvent.click(publishBtn);
     await expect(args.onActionClick).toHaveBeenCalledWith(DEFAULT_ACTIONS[1]);
+    await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Reopen Dialog' })
+    );
+    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
   },
 };
-
-function InteractiveDialogDemo(args: Story['args']) {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <View style={{ minHeight: 80, alignItems: 'flex-start' }}>
-      <MagicButton
-        label="Open Dialog"
-        variant="filled"
-        onPress={() => setIsOpen(true)}
-      />
-      <MagicDialog
-        {...args}
-        inline={false}
-        open={isOpen}
-        onClose={(reason) => {
-          args?.onClose?.(reason);
-          setIsOpen(false);
-        }}
-        onActionClick={(action) => {
-          args?.onActionClick?.(action);
-          setIsOpen(false);
-        }}
-      />
-    </View>
-  );
-}
 
 /**
  * Interactive modal overlay triggered from a button, supporting backdrop & button dismissal.
  */
 export const InteractiveTrigger: Story = {
-  render: (args) => <InteractiveDialogDemo {...args} />,
+  args: {
+    open: false,
+    inline: false,
+  },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Open Dialog' }));
@@ -149,34 +164,30 @@ export const Scrollable: Story = {
     title: 'Terms & Guidelines',
     subtitle: 'Scrollable body example',
     content: undefined,
+    children: Array.from({ length: 8 }, (_, idx) => (
+      <Text key={idx} style={{ fontSize: 14, lineHeight: 20, color: '#44474e' }}>
+        Section {idx + 1}: Consistent Material 3 spacing, semantic color intents,
+        and keyboard accessibility guidelines apply across React, Angular,
+        React Native, and Flutter.
+      </Text>
+    )),
   },
-  render: (args) => (
-    <MagicDialog {...args}>
-      {Array.from({ length: 8 }, (_, idx) => (
-        <Text key={idx} style={{ fontSize: 14, lineHeight: 20, color: '#44474e' }}>
-          Section {idx + 1}: Consistent Material 3 spacing, semantic color intents,
-          and keyboard accessibility guidelines apply across React, Angular,
-          React Native, and Flutter.
-        </Text>
-      ))}
-    </MagicDialog>
-  ),
 };
 
 /**
  * Dialog rendered inside a dark Material 3 palette.
  */
 export const DarkTheme: Story = {
+  args: {
+    open: true,
+    inline: true,
+    title: 'Dark Mode Dialog',
+    subtitle: 'High-contrast M3 elevation level 3',
+  },
   render: (args) => (
     <MagicPaperProvider palette="dark-theme">
       <View style={{ backgroundColor: '#121410', padding: 16, borderRadius: 12 }}>
-        <MagicDialog
-          {...args}
-          open
-          inline
-          title="Dark Mode Dialog"
-          subtitle="High-contrast M3 elevation level 3"
-        />
+        <StatefulDialogDemo {...args} />
       </View>
     </MagicPaperProvider>
   ),

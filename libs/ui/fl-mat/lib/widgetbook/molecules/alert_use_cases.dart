@@ -50,23 +50,15 @@ WidgetbookComponent buildMagicAlertComponent() {
             initialValue: false,
           );
 
-          return Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
-              child: MagicAlert(
-                title: title,
-                message: message,
-                severity: severity,
-                variant: variant,
-                size: size,
-                hideIcon: hideIcon,
-                dismissible: dismissible,
-                disabled: disabled,
-                actionLabel: 'View Logs',
-                onAction: () {},
-                onDismiss: () {},
-              ),
-            ),
+          return _InteractiveAlertPreview(
+            title: title,
+            message: message,
+            severity: severity,
+            variant: variant,
+            size: size,
+            hideIcon: hideIcon,
+            dismissible: dismissible,
+            disabled: disabled,
           );
         },
       ),
@@ -111,4 +103,62 @@ WidgetbookComponent buildMagicAlertComponent() {
       ),
     ],
   );
+}
+
+class _InteractiveAlertPreview extends StatefulWidget {
+  const _InteractiveAlertPreview({
+    required this.title,
+    required this.message,
+    required this.severity,
+    required this.variant,
+    required this.size,
+    required this.hideIcon,
+    required this.dismissible,
+    required this.disabled,
+  });
+
+  final String title;
+  final String message;
+  final AlertSeverity severity;
+  final AlertVariant variant;
+  final AtomicSize size;
+  final bool hideIcon;
+  final bool dismissible;
+  final bool disabled;
+
+  @override
+  State<_InteractiveAlertPreview> createState() =>
+      _InteractiveAlertPreviewState();
+}
+
+class _InteractiveAlertPreviewState extends State<_InteractiveAlertPreview> {
+  bool _visible = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 520),
+        child: _visible
+            ? MagicAlert(
+                title: widget.title,
+                message: widget.message,
+                severity: widget.severity,
+                variant: widget.variant,
+                size: widget.size,
+                hideIcon: widget.hideIcon,
+                dismissible: widget.dismissible,
+                disabled: widget.disabled,
+                actionLabel: 'View Logs',
+                onAction: () {},
+                onDismiss: () => setState(() => _visible = false),
+              )
+            : MagicButton(
+                label: 'Show Alert',
+                variant: ButtonVariant.tonal,
+                onPressed: () => setState(() => _visible = true),
+              ),
+      ),
+    );
+  }
 }

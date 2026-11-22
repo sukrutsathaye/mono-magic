@@ -1,11 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, screen, userEvent, within } from 'storybook/test';
+import { expect, fn, screen, userEvent, waitFor, within } from 'storybook/test';
 import { MagicButton } from '../../atoms/button/button';
 import { MagicDialog } from './dialog';
+
+function StatefulDialogDemo(args: React.ComponentProps<typeof MagicDialog>) {
+  const [open, setOpen] = useState(Boolean(args.open));
+
+  useEffect(() => {
+    setOpen(Boolean(args.open));
+  }, [args.open]);
+
+  return (
+    <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
+      {!open && (
+        <MagicButton
+          label={args.disablePortal === false ? 'Open Confirmation Dialog' : 'Reopen Dialog'}
+          variant={args.disablePortal === false ? 'filled' : 'tonal'}
+          leadingIcon="open_in_new"
+          onClick={() => setOpen(true)}
+        />
+      )}
+      <MagicDialog
+        {...args}
+        open={open}
+        onClose={(reason) => {
+          args.onClose?.(reason);
+          setOpen(false);
+        }}
+        onActionClick={(action) => {
+          args.onActionClick?.(action);
+          setOpen(false);
+        }}
+      />
+    </Stack>
+  );
+}
 
 /**
  * `MagicDialog` is the Material 3 modal dialog molecule composing MUI v9 `Dialog`,
@@ -100,13 +133,14 @@ const meta: Meta<typeof MagicDialog> = {
       </Box>
     ),
   ],
+  render: (args) => <StatefulDialogDemo {...args} />,
 };
 
 export default meta;
 type Story = StoryObj<typeof MagicDialog>;
 
 /**
- * Default inline-contained dialog snapshot verifying action button and close interaction.
+ * Default inline-contained dialog snapshot verifying action button, close state, and reopen flow.
  */
 export const Default: Story = {
   args: {
@@ -119,42 +153,24 @@ export const Default: Story = {
     await expect(args.onActionClick).toHaveBeenCalledWith(
       expect.objectContaining({ id: 'publish', label: 'Publish' }),
     );
+    await waitFor(() =>
+      expect(canvas.queryByRole('dialog')).not.toBeInTheDocument(),
+    );
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Reopen Dialog' }),
+    );
+    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
   },
 };
-
-function InteractiveDialogDemo(args: React.ComponentProps<typeof MagicDialog>) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
-      <MagicButton
-        label="Open Confirmation Dialog"
-        variant="filled"
-        leadingIcon="open_in_new"
-        onClick={() => setOpen(true)}
-      />
-      <MagicDialog
-        {...args}
-        disablePortal={false}
-        open={open}
-        onClose={(reason) => {
-          args.onClose?.(reason);
-          setOpen(false);
-        }}
-        onActionClick={(action) => {
-          args.onActionClick?.(action);
-          setOpen(false);
-        }}
-      />
-    </Stack>
-  );
-}
 
 /**
  * Triggered modal dialog rendering through a real React portal to `document.body`.
  */
 export const InteractivePortal: Story = {
-  render: (args) => <InteractiveDialogDemo {...args} />,
+  args: {
+    open: false,
+    disablePortal: false,
+  },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(

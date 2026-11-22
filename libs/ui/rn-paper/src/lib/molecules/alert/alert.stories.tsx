@@ -1,8 +1,90 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { View } from 'react-native';
 import { expect, fn, userEvent, within } from 'storybook/test';
+import { MagicButton } from '../../atoms/button/button';
 import { MagicPaperProvider } from '../../theme/paper-theme';
 import { MagicAlert } from './alert';
+
+function StatefulAlertDemo(args: React.ComponentProps<typeof MagicAlert>) {
+  const [visible, setVisible] = useState(true);
+
+  if (!visible) {
+    return (
+      <MagicButton
+        label="Show Alert"
+        variant="tonal"
+        size="sm"
+        onPress={() => setVisible(true)}
+      />
+    );
+  }
+
+  return (
+    <MagicAlert
+      {...args}
+      onDismiss={() => {
+        args.onDismiss?.();
+        setVisible(false);
+      }}
+    />
+  );
+}
+
+function StatefulVariantsDemo() {
+  const [visible, setVisible] = useState({
+    standard: true,
+    filled: true,
+    outlined: true,
+  });
+  const anyHidden = Object.values(visible).some((v) => !v);
+
+  return (
+    <View style={{ gap: 12, maxWidth: 560, alignItems: 'flex-start' }}>
+      {anyHidden && (
+        <MagicButton
+          label="Reset Alerts"
+          variant="tonal"
+          size="sm"
+          onPress={() =>
+            setVisible({ standard: true, filled: true, outlined: true })
+          }
+        />
+      )}
+      {visible.standard && (
+        <MagicAlert
+          severity="success"
+          variant="standard"
+          title="Standard"
+          message="Tonal container with semantic foreground."
+          dismissible
+          onDismiss={() => setVisible((prev) => ({ ...prev, standard: false }))}
+        />
+      )}
+      {visible.filled && (
+        <MagicAlert
+          severity="success"
+          variant="filled"
+          title="Filled"
+          message="High-emphasis solid semantic surface."
+          actionLabel="Undo"
+          dismissible
+          onDismiss={() => setVisible((prev) => ({ ...prev, filled: false }))}
+        />
+      )}
+      {visible.outlined && (
+        <MagicAlert
+          severity="success"
+          variant="outlined"
+          title="Outlined"
+          message="Low-emphasis bordered container."
+          dismissible
+          onDismiss={() => setVisible((prev) => ({ ...prev, outlined: false }))}
+        />
+      )}
+    </View>
+  );
+}
 
 /**
  * `MagicAlert` is the Material 3 inline feedback banner molecule for `@mono-magic/rn-paper`.
@@ -58,12 +140,13 @@ export default meta;
 type Story = StoryObj<typeof MagicAlert>;
 
 /**
- * Default standard info alert with interactive action & dismiss button tests.
+ * Default standard info alert with interactive action, dismiss, and restore tests.
  */
 export const Default: Story = {
   args: {
     testId: 'story-alert',
   },
+  render: (args) => <StatefulAlertDemo {...args} />,
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('alert')).toBeInTheDocument();
@@ -71,6 +154,9 @@ export const Default: Story = {
     await expect(args.onAction).toHaveBeenCalledTimes(1);
     await userEvent.click(canvas.getByRole('button', { name: 'Dismiss alert' }));
     await expect(args.onDismiss).toHaveBeenCalledTimes(1);
+    await expect(canvas.queryByRole('alert')).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: 'Show Alert' }));
+    await expect(canvas.getByRole('alert')).toBeInTheDocument();
   },
 };
 
@@ -108,32 +194,7 @@ export const Severities: Story = {
  * Visual variant comparison (`standard`, `filled`, `outlined`).
  */
 export const Variants: Story = {
-  render: () => (
-    <View style={{ gap: 12, maxWidth: 560 }}>
-      <MagicAlert
-        severity="success"
-        variant="standard"
-        title="Standard"
-        message="Tonal container with semantic foreground."
-        dismissible
-      />
-      <MagicAlert
-        severity="success"
-        variant="filled"
-        title="Filled"
-        message="High-emphasis solid semantic surface."
-        actionLabel="Undo"
-        dismissible
-      />
-      <MagicAlert
-        severity="success"
-        variant="outlined"
-        title="Outlined"
-        message="Low-emphasis bordered container."
-        dismissible
-      />
-    </View>
-  ),
+  render: () => <StatefulVariantsDemo />,
 };
 
 /**
@@ -157,7 +218,7 @@ export const DarkTheme: Story = {
           title="Dark Standard"
           message="Adapts container tokens automatically for dark mode."
         />
-        <MagicAlert
+        <StatefulAlertDemo
           severity="warning"
           variant="filled"
           title="Dark Filled"
