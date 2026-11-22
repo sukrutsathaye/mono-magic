@@ -136,7 +136,7 @@ describe('MagicDialogComponent', () => {
       },
     );
 
-    it('updates dialog size cleanly when size changes while open', () => {
+    it('updates dialog size cleanly when size changes while open and toggles back from fullscreen', () => {
       setInputs({ open: true, size: 'sm', title: 'Resizable' });
       expect(dialogSurface()).toBeTruthy();
 
@@ -144,6 +144,39 @@ describe('MagicDialogComponent', () => {
       expect(dialogSurface()?.classList).toContain(
         'magic-dialog__surface--fullscreen',
       );
+
+      setInputs({ size: 'lg' });
+      expect(dialogSurface()?.classList).not.toContain(
+        'magic-dialog__surface--fullscreen',
+      );
+    });
+
+    it('renders without header when title, subtitle, and close button are omitted', () => {
+      setInputs({
+        open: true,
+        showCloseButton: false,
+        content: 'Headerless dialog body.',
+      });
+
+      expect(overlayEl().querySelector('.magic-dialog__header')).toBeNull();
+      expect(dialogSurface()?.textContent).toContain('Headerless dialog body.');
+    });
+
+    it('emits closed on requestClose when already closed and ignores non-Escape keys', () => {
+      const closedSpy = vi.fn();
+      fixture.componentInstance.closed.subscribe(closedSpy);
+
+      fixture.componentInstance.requestClose();
+      expect(closedSpy).toHaveBeenCalledTimes(1);
+
+      setInputs({ open: true, title: 'Key test' });
+      const pane = overlayEl().querySelector('.cdk-overlay-pane') as HTMLElement;
+      pane.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }),
+      );
+      fixture.detectChanges();
+      expect(closedSpy).toHaveBeenCalledTimes(1);
+      expect(dialogSurface()).toBeTruthy();
     });
   });
 

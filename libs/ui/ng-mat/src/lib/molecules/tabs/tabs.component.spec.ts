@@ -194,8 +194,29 @@ describe('MagicTabsComponent', () => {
       fixture.detectChanges();
       expect(fixture.componentInstance.currentTabId()).toBe('settings');
 
+      // ArrowDown wrap-around from last enabled tab (settings) -> overview (0)
+      buttons[3].dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }),
+      );
+      fixture.detectChanges();
+      expect(fixture.componentInstance.currentTabId()).toBe('overview');
+
+      // ArrowUp wrap-around from first enabled tab (overview) -> settings (3)
+      buttons[0].dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }),
+      );
+      fixture.detectChanges();
+      expect(fixture.componentInstance.currentTabId()).toBe('settings');
+
       buttons[3].dispatchEvent(
         new KeyboardEvent('keydown', { key: 'Home', bubbles: true }),
+      );
+      fixture.detectChanges();
+      expect(fixture.componentInstance.currentTabId()).toBe('overview');
+
+      // Unhandled key does not change active tab
+      buttons[0].dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }),
       );
       fixture.detectChanges();
       expect(fixture.componentInstance.currentTabId()).toBe('overview');
@@ -204,7 +225,27 @@ describe('MagicTabsComponent', () => {
       buttons[2].click();
       fixture.detectChanges();
       expect(fixture.componentInstance.currentTabId()).toBe('overview');
-      expect(changeSpy).toHaveBeenCalledTimes(5);
+      expect(changeSpy).toHaveBeenCalledTimes(7);
+    });
+
+    it('handles empty and all-disabled tab lists safely', () => {
+      setInputs({ items: [] });
+      expect(fixture.componentInstance.currentTabId()).toBe('');
+
+      const allDisabled: readonly TabItem[] = [
+        { id: 'only-disabled', label: 'Locked', disabled: true },
+      ];
+      setInputs({ items: allDisabled, orientation: 'vertical' });
+      expect(fixture.componentInstance.currentTabId()).toBe('only-disabled');
+
+      const btn = host().querySelector(
+        '.magic-tabs__vertical-tab',
+      ) as HTMLButtonElement;
+      btn.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }),
+      );
+      fixture.detectChanges();
+      expect(fixture.componentInstance.currentTabId()).toBe('only-disabled');
     });
 
     it('supports lazy panel mounting and [magicTabPanel] templates in vertical orientation', () => {

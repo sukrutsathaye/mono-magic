@@ -175,5 +175,58 @@ describe('MagicTabs', () => {
       key: 'ArrowUp',
     });
     expect(onTabChange).toHaveBeenLastCalledWith('alerts', TAB_ITEMS[1]);
+
+    // Unhandled key leaves selection unchanged
+    const callsBefore = onTabChange.mock.calls.length;
+    fireEvent.keyDown(screen.getByTestId('kbd-tabs-tab-alerts'), {
+      key: 'Enter',
+    });
+    expect(onTabChange).toHaveBeenCalledTimes(callsBefore);
+
+    // ArrowUp wrap-around from first enabled tab ('overview') -> 'settings'
+    fireEvent.keyDown(screen.getByTestId('kbd-tabs-tab-overview'), {
+      key: 'ArrowUp',
+    });
+    expect(onTabChange).toHaveBeenLastCalledWith('settings', TAB_ITEMS[3]);
+  });
+
+  it('renders children fallback without testId and handles empty or all-disabled items safely', () => {
+    const minimalItems: readonly TabItem[] = [
+      { id: 'first', label: 'First' },
+      { id: 'second', label: 'Second' },
+    ];
+
+    render(
+      <MagicPaperProvider>
+        <MagicTabs items={minimalItems} activeTabId="missing">
+          <Text>Fallback child content</Text>
+        </MagicTabs>
+      </MagicPaperProvider>
+    );
+    expect(screen.getByText('Fallback child content')).toBeTruthy();
+
+    cleanup();
+
+    const allDisabled: readonly TabItem[] = [
+      { id: 'only', label: 'Disabled Only', disabled: true },
+    ];
+    render(
+      <MagicPaperProvider>
+        <MagicTabs testId="disabled-tabs" items={allDisabled} />
+      </MagicPaperProvider>
+    );
+    fireEvent.keyDown(screen.getByTestId('disabled-tabs-tab-only'), {
+      key: 'ArrowRight',
+    });
+    expect(screen.getByTestId('disabled-tabs-panel-only')).toBeTruthy();
+
+    cleanup();
+
+    render(
+      <MagicPaperProvider>
+        <MagicTabs testId="empty-tabs" items={[]} />
+      </MagicPaperProvider>
+    );
+    expect(screen.getByTestId('empty-tabs-tablist')).toBeTruthy();
   });
 });

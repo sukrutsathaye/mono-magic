@@ -139,4 +139,34 @@ describe('MagicAccordion', () => {
     );
     expect(screen.getByTestId('ctrl-acc-panel-one')).toBeTruthy();
   });
+
+  it('handles single-mode clamping, missing testId, and panels without content', () => {
+    const multiHintItems: readonly AccordionItem[] = [
+      { id: 'a', title: 'Alpha', expanded: true },
+      { id: 'b', title: 'Beta', expanded: true, content: 'Beta body' },
+    ];
+
+    render(
+      <MagicPaperProvider>
+        <MagicAccordion items={multiHintItems} multiple={false} />
+      </MagicPaperProvider>
+    );
+
+    // Only the first expanded item remains open in single mode and empty content renders cleanly
+    expect(screen.getByText('Alpha')).toBeTruthy();
+    expect(screen.queryByText('Beta body')).toBeNull();
+
+    cleanup();
+
+    render(
+      <MagicPaperProvider>
+        <MagicAccordion
+          items={multiHintItems}
+          multiple={false}
+          defaultExpandedIds={['a', 'b']}
+        />
+      </MagicPaperProvider>
+    );
+    expect(screen.queryByText('Beta body')).toBeNull();
+  });
 });
