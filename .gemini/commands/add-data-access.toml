@@ -8,8 +8,8 @@ Follow the `data-access-provider` skill (`.gemini/skills/data-access-provider/SK
 {{args}}
 
 ## Execution Steps
-1. Ensure vendor-agnostic interfaces, abstract base classes, and contract compliance tests exist in `libs/data-access/data-access-interfaces`.
-2. Reuse pure functional error/result primitives from `libs/utils/core`.
-3. Scaffold new libraries using the `nx-generate` skill and wire workspace dependencies with `link-workspace-packages`.
-4. Implement the concrete provider adapter and verify it passes the shared contract compliance test suite, `lint`, and `typecheck`.
+1. Ensure Protobuf wire schemas exist in `libs/data-access/proto-contracts` (`buf`) and idiomatic vendor-agnostic interfaces, base classes, and compliance tests exist in `libs/data-access/ts-interfaces` / `libs/data-access/py-interfaces`.
+2. Reuse pure functional error/result primitives from `libs/utils/ts-core` (`@mono-magic/utils-ts-core`) or `libs/utils/py-common`.
+3. Scaffold new libraries under `libs/data-access/<lang>-<provider>` using the `nx-generate` skill with tags `scope:data-access,type:data-access,lang:<lang>,provider:<provider>` and wire workspace dependencies with `link-workspace-packages` (or `[tool.uv.sources]` for Python).
+4. Implement the concrete provider adapter and verify it passes the shared contract compliance test suite (`>=80%` coverage), `lint`, and `typecheck`.
 """

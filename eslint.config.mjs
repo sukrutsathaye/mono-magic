@@ -28,9 +28,48 @@ export default [
                     ],
                     depConstraints: [
                         {
-                            sourceTag: "*",
+                            sourceTag: "scope:utils",
                             onlyDependOnLibsWithTags: [
-                                "*"
+                                "scope:utils"
+                            ]
+                        },
+                        {
+                            sourceTag: "scope:ui",
+                            onlyDependOnLibsWithTags: [
+                                "scope:ui",
+                                "scope:utils"
+                            ]
+                        },
+                        {
+                            sourceTag: "scope:data-access",
+                            onlyDependOnLibsWithTags: [
+                                "scope:data-access",
+                                "scope:utils"
+                            ]
+                        },
+                        {
+                            sourceTag: "scope:features",
+                            onlyDependOnLibsWithTags: [
+                                "scope:features",
+                                "scope:ui",
+                                "scope:data-access",
+                                "scope:utils"
+                            ]
+                        },
+                        {
+                            sourceTag: "scope:app",
+                            onlyDependOnLibsWithTags: [
+                                "scope:features",
+                                "scope:ui",
+                                "scope:data-access",
+                                "scope:utils"
+                            ]
+                        },
+                        {
+                            sourceTag: "type:interfaces",
+                            onlyDependOnLibsWithTags: [
+                                "type:interfaces",
+                                "type:util"
                             ]
                         }
                     ]

@@ -1,7 +1,9 @@
 packages:
   - "apps/*"
-  - "libs/*"
   - "libs/ui/*"
+  - "libs/utils/ts-*"
+  - "libs/data-access/ts-*"
+  - "libs/features/ts-*"
   - "!libs/ui/fl-mat"
 
 allowBuilds:

@@ -25,6 +25,8 @@
 
 # mono-magic AI Orchestration & Workspace Guide
 
-- Read [GEMINI.md](GEMINI.md) for the complete architecture rules, domain boundaries (`libs/ui`, `libs/data-access`, `libs/utils`, `libs/features`, `apps`), and Storybook visual testing conventions.
-- Check [ROADMAP.md](ROADMAP.md) for the chronological phase timeline and domain deliverable checklists.
+- Read [GEMINI.md](GEMINI.md) for the complete architecture rules, strict 4-domain `libs/` boundaries (`libs/ui`, `libs/utils`, `libs/data-access`, `libs/features`, `apps`), `libs/<domain>/<lang>-<name>` naming & tagging, and Storybook visual testing conventions.
+- **Mandatory Skills**: Always apply [`engineering-standards`](.gemini/skills/engineering-standards/SKILL.md) across all changes and [`python-uv-service`](.gemini/skills/python-uv-service/SKILL.md) for Python (`libs/*/py-*`, `apps/api-*`).
+- Check [ROADMAP.md](ROADMAP.md), [PORTFOLIO_IDEAS.md](PORTFOLIO_IDEAS.md), and `docs/projects/` for the chronological phase timeline, flagship apps, and project blueprints.
+- See [.gemini/MCP.md](.gemini/MCP.md) for configured local MCP servers (`nx-mcp`, `playwright`, `context7`) and opt-in credentialed MCP instructions.
 - Repository-specific skills live in `.gemini/skills/` (registered via `.agents/skills.json`), custom commands live in `.gemini/commands/`, and specialist agent profiles live in `.gemini/agents/`.

@@ -11,16 +11,21 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 1. **Always Run Tasks Through Nx (`pnpm nx ...`)**:
    - Prefix all Nx commands with `pnpm nx` (e.g., `pnpm nx show projects`, `pnpm nx run-many -t test`, `pnpm nx affected -t lint test build`).
    - Do **not** read `project.json` directly to assume a project's full targets—use `pnpm nx show project <project> --json` (see the `nx-workspace` skill).
+   - **Mandatory Standards Gate**: Every change MUST follow `.gemini/skills/engineering-standards/SKILL.md` (SOLID, immutability, explicit `Result`/error handling, strict typing, docs, `>=80%` / `>=90%` utils coverage, E2E suites). Python libraries and FastAPI services MUST additionally follow `.gemini/skills/python-uv-service/SKILL.md`.
 2. **Actual Nx Project Names**:
    - The UI projects are named `atomic-design-interfaces`, `react-mui`, `ng-mat`, `rn-paper`, and `fl-mat` (do **not** use stale `ui-*` prefixes like `ui-react-mui` or `ui-fl-mat`).
    - Flutter uses **Widgetbook** (`pnpm nx widgetbook fl-mat`, `pnpm nx build-widgetbook fl-mat`), while the JS/TS UI libraries use **Storybook** (`pnpm nx storybook <project>`, `pnpm nx build-storybook <project>`, `pnpm nx test-storybook <project>`).
-3. **Strict Domain & Folder Boundaries**:
-   - `libs/ui/atomic-design-interfaces` (`@mono-magic/atomic-design-interfaces`, tags: `scope:ui`, `type:interfaces`): Framework-agnostic TypeScript Atomic Design component contracts.
-   - `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` (`scope:ui`): Concrete framework implementations. Every component added to `atomic-design-interfaces` must maintain 1:1 parity across all 4 UI libraries (and Dart models in `fl-mat`), ordered strictly bottom-up (`Atoms -> Molecules -> Core Organisms -> Domain Organisms -> Templates`).
-   - `libs/data-access/*` (`scope:data-access`): Contract-first data providers. Define vendor-agnostic interfaces and abstract base classes in `libs/data-access/data-access-interfaces` (`type:interfaces`) before implementing concrete BaaS or backend wrappers (Firebase, Supabase, NestJS, Spring Boot + Keycloak + PostgreSQL, AWS, GCP, Azure).
-   - `libs/utils/*` (`scope:utils`, `type:util`): Pure, stateless, framework- and vendor-agnostic utilities (`core`, `formatters`, `pose-math`, `design-tokens`, `py-common`). Domain contracts do **not** go in `libs/utils/`.
-   - `libs/features/*` (`scope:features`): Feature modules composing `ui`, `data-access`, and `utils`.
-   - `apps/*`: End-user applications and polyglot microservices (`apps/api-*`).
+3. **Strict 4-Domain `libs/` Structure, Naming & Tagging Standard**:
+   - `libs/` contains **exclusively 4 domain directories**: `libs/ui/`, `libs/utils/`, `libs/data-access/`, and `libs/features/`.
+   - All new non-UI libraries follow `libs/<domain>/<lang>-<name>` (existing `libs/ui/*` names remain unchanged) and carry `scope:<ui|utils|data-access|features|app>`, `type:<interfaces|util|data-access|feature|ui|app>`, and `lang:<ts|py|java|dart|proto|rust|go>` tags enforced by `eslint.config.mjs`:
+     - `libs/ui/atomic-design-interfaces` (`@mono-magic/atomic-design-interfaces`, `scope:ui`, `type:interfaces`): Framework-agnostic TypeScript Atomic Design component contracts.
+     - `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` (`scope:ui`): Concrete framework implementations maintaining 1:1 parity across all 4 UI libraries (and Dart models in `fl-mat`), ordered strictly bottom-up (`Atoms -> Molecules -> Core Organisms -> Domain Organisms -> Templates`).
+     - `libs/data-access/*` (`scope:data-access`): **Hybrid `buf`/Protobuf + Idiomatic Trait workflow**. Wire DTOs, errors, and query/pagination schemas live in `libs/data-access/proto-contracts` (`buf`); idiomatic provider interfaces + Contract Compliance Test Suites live in `libs/data-access/ts-interfaces` (`@mono-magic/data-access-ts-interfaces`) and `libs/data-access/py-interfaces` (`py-data-access-interfaces`) (plus future `dart-interfaces`, `java-interfaces`), backed by concrete wrappers (`ts-firebase`, `ts-supabase`, `ts-nestjs-*`, `java-spring-boot-*`, `ts-aws`, `ts-gcp`, `ts-azure`, `py-reflective-nlp`, `ts-reflective-api`, `ts-livekit`).
+     - `libs/utils/*` (`scope:utils`, `type:util`): Pure, stateless, framework- and vendor-agnostic utilities (`ts-core`, `ts-formatters`, `ts-pose-math`, `ts-design-tokens`, `py-common`, `py-nlp`). Domain contracts and external I/O do **not** go in `libs/utils/`.
+     - `libs/features/*` (`scope:features`): Feature modules (`ts-*`, `py-*`) composing `ui`, `data-access`, and `utils` via `type:interfaces` abstractions.
+     - `apps/*` (`scope:app`): Thin deployable end-user apps and polyglot microservices (`apps/api-*`).
+4. **MCP Server Configuration**:
+   - Local zero-secret stdio MCPs (`nx-mcp`, `playwright`, `context7`) are enabled in `.gemini/settings.json`. See [.gemini/MCP.md](.gemini/MCP.md) for usage and opt-in credentialed MCPs (`supabase`, `firebase`, `storybook`, `github`)—never commit tokens or secrets.
 
 ---
 
@@ -44,11 +49,13 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 ## 3. Repository Skills, Commands & Specialist Agents (`.gemini/`)
 
 ### Custom Skills (`.gemini/skills/`)
+- **`engineering-standards`** *(Mandatory)* ([.gemini/skills/engineering-standards/SKILL.md](.gemini/skills/engineering-standards/SKILL.md)): Concrete SOLID principles, clean code & performance hygiene, documentation gates, unit/E2E coverage thresholds, and `libs/<domain>/<lang>-<name>` naming/tagging.
+- **`python-uv-service`** *(Mandatory for Python)* ([.gemini/skills/python-uv-service/SKILL.md](.gemini/skills/python-uv-service/SKILL.md)): `uv` workspace standards for `libs/*/py-*` & `apps/api-*`, Nx `ruff`/`pyright`/`pytest --cov` targets, FastAPI `lifespan` singletons, Pydantic v2, and SOLID `Protocol`s.
 - **`polyglot-ui-component`** ([.gemini/skills/polyglot-ui-component/SKILL.md](.gemini/skills/polyglot-ui-component/SKILL.md)): End-to-end workflow for adding or updating an Atomic Design component across `atomic-design-interfaces`, `react-mui`, `ng-mat`, `rn-paper`, and `fl-mat`.
 - **`storybook-visual-testing`** ([.gemini/skills/storybook-visual-testing/SKILL.md](.gemini/skills/storybook-visual-testing/SKILL.md)): Runbook for `storybook-addon-vis` baselines (`-- -u`), diff triage, and assembling the GitHub Pages showcase portal (`tools/ci/storybook-pages.mjs`).
 - **`coverage-and-quality`** ([.gemini/skills/coverage-and-quality/SKILL.md](.gemini/skills/coverage-and-quality/SKILL.md)): Runbook for Unit test coverage (`@vitest/coverage-v8`, `flutter test --coverage`), Storybook browser test coverage, 80% threshold enforcement, and static coverage portal generation.
-- **`data-access-provider`** ([.gemini/skills/data-access-provider/SKILL.md](.gemini/skills/data-access-provider/SKILL.md)): Blueprint for designing contract-first `libs/data-access/*` interfaces and provider implementations (Firebase, Supabase, NestJS, Spring Boot + Keycloak + Postgres, Cloud SDKs).
-- **`roadmap-tracker`** ([.gemini/skills/roadmap-tracker/SKILL.md](.gemini/skills/roadmap-tracker/SKILL.md)): Workflow for picking up, verifying, and updating milestone checklists in [ROADMAP.md](ROADMAP.md).
+- **`data-access-provider`** ([.gemini/skills/data-access-provider/SKILL.md](.gemini/skills/data-access-provider/SKILL.md)): Blueprint for designing hybrid `proto-contracts` + `ts-interfaces`/`py-interfaces` contracts and provider implementations (`ts-firebase`, `ts-supabase`, `ts-nestjs-*`, `java-spring-boot-*`, Cloud SDKs).
+- **`roadmap-tracker`** ([.gemini/skills/roadmap-tracker/SKILL.md](.gemini/skills/roadmap-tracker/SKILL.md)): Workflow for picking up, verifying, and updating milestone checklists in [ROADMAP.md](ROADMAP.md) (plus links to [PORTFOLIO_IDEAS.md](PORTFOLIO_IDEAS.md) and `docs/projects/`).
 
 ### Custom Gemini CLI Slash Commands (`.gemini/commands/`)
 - `/add-ui-component` ([.gemini/commands/add-ui-component.toml](.gemini/commands/add-ui-component.toml))

@@ -20,10 +20,11 @@ Use this skill whenever inspecting, planning, or updating progress in [ROADMAP.m
      2. `Phase 2B: Wave 1 Core Organisms` (depends on Wave 1 & 2 Molecules)
      3. `Phase 2C: Wave 2 Domain Organisms & Templates` (depends on Core Organisms)
    - **Phase 3 (Utilities & Data-Access)** MUST proceed contract-first:
-     1. `Phase 3A: Pure Shared Utils (libs/utils/*)`
-     2. `Phase 3B: Data-Access Contracts (libs/data-access/data-access-interfaces)`
-     3. `Phase 3C: Concrete BaaS / NestJS / Spring Boot / Cloud Wrappers`
-   - **Phase 4 & 5** compose Phases 2 and 3 into ecosystem integrations (LiveKit, PoseNet), additional UI frameworks (Vue, Svelte, Tailwind/shadcn), and flagship apps (`apps/yoga-live`, `apps/knitted-showcase`).
+     1. `Phase 3A: Pure Shared Utils (libs/utils/ts-*, libs/utils/py-*)`
+     2. `Phase 3B: Data-Access Contracts (libs/data-access/proto-contracts, libs/data-access/ts-interfaces, libs/data-access/py-interfaces)`
+     3. `Phase 3C: Concrete BaaS / NestJS / Spring Boot / Cloud / Domain Wrappers`
+   - **Phase 4 & 5** compose Phases 2 and 3 into ecosystem integrations (LiveKit, PoseNet), additional UI frameworks (Vue, Svelte, Tailwind/shadcn), and Flagship Apps **5A–5D** (`apps/yoga-live*`, `apps/knitted-showcase*`, `apps/reflective-learning*`, `apps/couples-journal*`).
+   - Deep project designs live under [docs/projects/](../../../docs/projects/_TEMPLATE.md), and deferred portfolio ideas are tracked in [PORTFOLIO_IDEAS.md](../../../PORTFOLIO_IDEAS.md).
 
 ---
 
