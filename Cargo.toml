@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+members = [
+  "libs/*/rs-*",
+  # Add "apps/api-rs-*" once the first Rust microservice crate is scaffolded
+  # (Cargo rejects workspace member globs that match zero crates).
+]
