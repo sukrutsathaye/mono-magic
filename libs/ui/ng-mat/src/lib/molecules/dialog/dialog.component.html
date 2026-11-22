@@ -1,0 +1,76 @@
+<ng-template #dialogTemplate>
+  <div
+    class="magic-dialog__surface"
+    [class.magic-dialog__surface--scrollable]="scrollable()"
+    [class.magic-dialog__surface--fullscreen]="size() === 'fullscreen'"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="true"
+    [attr.id]="id() || null"
+    [attr.data-testid]="testId() || null"
+    [attr.aria-label]="ariaLabel() || null"
+  >
+    @if (showHeader()) {
+      <header class="magic-dialog__header">
+        <div class="magic-dialog__titles">
+          <ng-content select="[magicDialogHeader]" />
+          @if (!hasCustomHeader()) {
+            @if (title()) {
+              <h2 mat-dialog-title class="magic-dialog__title">{{ title() }}</h2>
+            }
+            @if (subtitle()) {
+              <p class="magic-dialog__subtitle">{{ subtitle() }}</p>
+            }
+          }
+        </div>
+        @if (dismissible() && showCloseButton()) {
+          <magic-button
+            class="magic-dialog__close"
+            kind="icon"
+            variant="text"
+            color="neutral"
+            size="sm"
+            leadingIcon="close"
+            ariaLabel="Close dialog"
+            [testId]="testId() ? testId() + '-close' : undefined"
+            (clicked)="requestClose()"
+          />
+        }
+      </header>
+    }
+
+    <mat-dialog-content
+      class="magic-dialog__body"
+      [class.magic-dialog__body--scrollable]="scrollable()"
+    >
+      @if (content()) {
+        <p class="magic-dialog__text">{{ content() }}</p>
+      }
+      <ng-content />
+    </mat-dialog-content>
+
+    @if (showFooter()) {
+      <mat-dialog-actions
+        class="magic-dialog__actions"
+        [align]="alignActions()"
+      >
+        <ng-content select="[magicDialogActions]" />
+        @for (action of actions(); track action.id ?? action.label) {
+          <magic-button
+            [id]="action.id"
+            [label]="action.label"
+            [variant]="action.variant ?? 'text'"
+            [color]="action.color ?? 'primary'"
+            [leadingIcon]="action.icon"
+            [disabled]="action.disabled ?? false"
+            [testId]="
+              testId()
+                ? testId() + '-action-' + (action.id ?? action.label)
+                : undefined
+            "
+            (clicked)="onActionClick(action)"
+          />
+        }
+      </mat-dialog-actions>
+    }
+  </div>
+</ng-template>

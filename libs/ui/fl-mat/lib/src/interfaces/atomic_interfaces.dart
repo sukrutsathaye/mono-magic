@@ -972,3 +972,828 @@ class MagicSearchBarProps implements BaseAtomicProps {
   /// Whether a search submission is currently in progress.
   final bool loading;
 }
+
+/// Responsive width preset for `MagicDialog`.
+enum DialogSize {
+  /// Compact confirmation dialog width.
+  sm,
+
+  /// Standard medium dialog width.
+  md,
+
+  /// Wide content dialog width.
+  lg,
+
+  /// Fullscreen modal dialog covering the entire viewport.
+  fullscreen,
+}
+
+/// Horizontal alignment of action buttons in `MagicDialog`.
+enum DialogActionsAlignment {
+  /// Aligns actions to the start (leading) edge.
+  start,
+
+  /// Aligns actions to the end (trailing) edge.
+  end,
+}
+
+/// Action button descriptor rendered inside `MagicDialog`.
+@immutable
+class DialogActionItem {
+  /// Creates a dialog action item.
+  const DialogActionItem({
+    this.id,
+    required this.label,
+    this.variant,
+    this.color,
+    this.icon,
+    this.iconName,
+    this.disabled = false,
+  });
+
+  /// Optional unique identifier for the action.
+  final String? id;
+
+  /// Button text label.
+  final String label;
+
+  /// Optional button emphasis variant.
+  final ButtonVariant? variant;
+
+  /// Optional semantic color intent.
+  final ColorIntent? color;
+
+  /// Optional native Material [IconData] for the action button.
+  final IconData? icon;
+
+  /// Optional Material icon string name resolved via `MagicIcon`.
+  final String? iconName;
+
+  /// Whether the action button is disabled.
+  final bool disabled;
+
+  /// Returns a copy of this dialog action item with the given fields replaced.
+  DialogActionItem copyWith({
+    String? id,
+    String? label,
+    ButtonVariant? variant,
+    ColorIntent? color,
+    IconData? icon,
+    String? iconName,
+    bool? disabled,
+  }) {
+    return DialogActionItem(
+      id: id ?? this.id,
+      label: label ?? this.label,
+      variant: variant ?? this.variant,
+      color: color ?? this.color,
+      icon: icon ?? this.icon,
+      iconName: iconName ?? this.iconName,
+      disabled: disabled ?? this.disabled,
+    );
+  }
+}
+
+/// Property contract for `MagicDialog`.
+///
+/// Mirrors `DialogMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicDialogProps implements BaseAtomicProps {
+  /// Creates a dialog property contract instance.
+  const MagicDialogProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    this.open = false,
+    this.title,
+    this.subtitle,
+    this.content,
+    this.size = DialogSize.md,
+    this.dismissible = true,
+    this.closeOnBackdropClick = true,
+    this.closeOnEscape = true,
+    this.showCloseButton = true,
+    this.scrollable = false,
+    this.actions = const <DialogActionItem>[],
+    this.alignActions = DialogActionsAlignment.end,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Whether the dialog is currently visible.
+  final bool open;
+
+  /// Primary heading displayed in the dialog header.
+  final String? title;
+
+  /// Optional secondary subtitle displayed beneath [title].
+  final String? subtitle;
+
+  /// Body message text when custom widget children are not provided.
+  final String? content;
+
+  /// Responsive dialog container size preset.
+  final DialogSize size;
+
+  /// Whether the dialog can be dismissed by user interaction.
+  final bool dismissible;
+
+  /// Whether tapping the modal scrim closes the dialog.
+  final bool closeOnBackdropClick;
+
+  /// Whether pressing Escape closes the dialog.
+  final bool closeOnEscape;
+
+  /// Whether to render a close icon button in the dialog header.
+  final bool showCloseButton;
+
+  /// Whether long body content scrolls independently inside the dialog.
+  final bool scrollable;
+
+  /// Action buttons displayed in the dialog footer.
+  final List<DialogActionItem> actions;
+
+  /// Horizontal alignment of the footer action buttons.
+  final DialogActionsAlignment alignActions;
+}
+
+/// Semantic severity level for `MagicAlert` and `MagicToast`.
+enum AlertSeverity {
+  /// Informational status severity.
+  info,
+
+  /// Positive confirmation severity.
+  success,
+
+  /// Caution / warning severity.
+  warning,
+
+  /// Error / failure severity.
+  error,
+}
+
+/// Material 3 visual emphasis variant for `MagicAlert`.
+enum AlertVariant {
+  /// Tinted surface container with subtle accent border.
+  standard,
+
+  /// High-emphasis solid semantic fill.
+  filled,
+
+  /// Transparent surface with crisp semantic outline.
+  outlined,
+}
+
+/// Property contract for `MagicAlert`.
+///
+/// Mirrors `AlertMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicAlertProps implements BaseAtomicProps {
+  /// Creates an alert property contract instance.
+  const MagicAlertProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    this.severity = AlertSeverity.info,
+    this.variant = AlertVariant.standard,
+    this.title,
+    required this.message,
+    this.icon,
+    this.iconName,
+    this.hideIcon = false,
+    this.dismissible = false,
+    this.actionLabel,
+    this.size = AtomicSize.md,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Semantic severity controlling icon and color intent.
+  final AlertSeverity severity;
+
+  /// Visual container style (`standard`, `filled`, or `outlined`).
+  final AlertVariant variant;
+
+  /// Optional bold heading rendered above [message].
+  final String? title;
+
+  /// Primary alert body message.
+  final String message;
+
+  /// Optional native Material [IconData] overriding the default severity icon.
+  final IconData? icon;
+
+  /// Optional Material icon string name resolved via `MagicIcon`.
+  final String? iconName;
+
+  /// Whether to suppress the leading severity icon.
+  final bool hideIcon;
+
+  /// Whether a dismiss/close button is rendered.
+  final bool dismissible;
+
+  /// Optional label for an inline action button.
+  final String? actionLabel;
+
+  /// Standardized component density/size preset.
+  final AtomicSize size;
+}
+
+/// Viewport anchor position for transient `MagicToast` notifications.
+enum ToastPosition {
+  /// Anchored to the top-left corner of the viewport.
+  topLeft,
+
+  /// Anchored to the top-center edge of the viewport.
+  topCenter,
+
+  /// Anchored to the top-right corner of the viewport.
+  topRight,
+
+  /// Anchored to the bottom-left corner of the viewport.
+  bottomLeft,
+
+  /// Anchored to the bottom-center edge of the viewport.
+  bottomCenter,
+
+  /// Anchored to the bottom-right corner of the viewport.
+  bottomRight,
+}
+
+/// Property contract for `MagicToast`.
+///
+/// Mirrors `ToastMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicToastProps implements BaseAtomicProps {
+  /// Creates a toast property contract instance.
+  const MagicToastProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    this.open = false,
+    this.severity = AlertSeverity.info,
+    this.title,
+    required this.message,
+    this.duration = 4000,
+    this.position = ToastPosition.bottomRight,
+    this.dismissible = true,
+    this.actionLabel,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Whether the toast notification is currently visible.
+  final bool open;
+
+  /// Semantic severity level mapped from [AlertSeverity].
+  final AlertSeverity severity;
+
+  /// Optional bold heading rendered above [message].
+  final String? title;
+
+  /// Primary notification message text.
+  final String message;
+
+  /// Auto-dismiss timeout in milliseconds, or `null` to persist until dismissed.
+  final int? duration;
+
+  /// Viewport anchor position for the toast container.
+  final ToastPosition position;
+
+  /// Whether a manual close button is rendered.
+  final bool dismissible;
+
+  /// Optional label for an inline action button (e.g., `Undo`).
+  final String? actionLabel;
+}
+
+/// Layout axis orientation for `MagicTabs`.
+enum TabsOrientation {
+  /// Arranges tab headers in a horizontal row above the active panel.
+  horizontal,
+
+  /// Arranges tab headers in a vertical rail beside the active panel.
+  vertical,
+}
+
+/// Material 3 tab indicator hierarchy variant for `MagicTabs`.
+enum TabsVariant {
+  /// Primary navigation tabs with rounded active bottom indicator.
+  primary,
+
+  /// Secondary sub-navigation tabs with full-width bottom indicator.
+  secondary,
+}
+
+/// Tab descriptor rendered inside `MagicTabs`.
+@immutable
+class TabItem {
+  /// Creates a tab descriptor.
+  const TabItem({
+    required this.id,
+    required this.label,
+    this.icon,
+    this.iconName,
+    this.badgeContent,
+    this.disabled = false,
+    this.content,
+  });
+
+  /// Unique identifier for the tab and its corresponding panel.
+  final String id;
+
+  /// Human-readable tab label.
+  final String label;
+
+  /// Optional native Material [IconData] displayed alongside [label].
+  final IconData? icon;
+
+  /// Optional Material icon string name resolved via `MagicIcon`.
+  final String? iconName;
+
+  /// Optional badge count (`int`) or short status text (`String`) shown on the tab.
+  final Object? badgeContent;
+
+  /// Whether this tab cannot be selected.
+  final bool disabled;
+
+  /// Optional default text content rendered in the tab panel.
+  final String? content;
+
+  /// Returns a copy of this tab descriptor with the given fields replaced.
+  TabItem copyWith({
+    String? id,
+    String? label,
+    IconData? icon,
+    String? iconName,
+    Object? badgeContent,
+    bool? disabled,
+    String? content,
+  }) {
+    return TabItem(
+      id: id ?? this.id,
+      label: label ?? this.label,
+      icon: icon ?? this.icon,
+      iconName: iconName ?? this.iconName,
+      badgeContent: badgeContent ?? this.badgeContent,
+      disabled: disabled ?? this.disabled,
+      content: content ?? this.content,
+    );
+  }
+}
+
+/// Property contract for `MagicTabs`.
+///
+/// Mirrors `TabsMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicTabsProps implements BaseAtomicProps {
+  /// Creates a tabs property contract instance.
+  const MagicTabsProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    required this.items,
+    this.activeTabId,
+    this.defaultActiveTabId,
+    this.orientation = TabsOrientation.horizontal,
+    this.variant = TabsVariant.primary,
+    this.scrollable = false,
+    this.lazy = false,
+    this.color = ColorIntent.primary,
+    this.size = AtomicSize.md,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Ordered list of tab descriptors and panel definitions.
+  final List<TabItem> items;
+
+  /// Controlled active tab identifier.
+  final String? activeTabId;
+
+  /// Initial active tab identifier for uncontrolled usage.
+  final String? defaultActiveTabId;
+
+  /// Tab strip layout axis (`horizontal` or `vertical`).
+  final TabsOrientation orientation;
+
+  /// Material 3 tab indicator variant (`primary` or `secondary`).
+  final TabsVariant variant;
+
+  /// Whether the tab header strip scrolls when items overflow.
+  final bool scrollable;
+
+  /// Whether inactive tab panels defer building until first selected.
+  final bool lazy;
+
+  /// Semantic color intent applied to active tab text and indicator.
+  final ColorIntent color;
+
+  /// Standardized component density/size preset.
+  final AtomicSize size;
+}
+
+/// Visual surface treatment for `MagicAccordion` panels.
+enum AccordionAppearance {
+  /// Outlined panel container with hairline border.
+  outlined,
+
+  /// Elevated raised panel surface with Material 3 shadow.
+  raised,
+}
+
+/// Panel descriptor rendered inside `MagicAccordion`.
+@immutable
+class AccordionItem {
+  /// Creates an accordion panel descriptor.
+  const AccordionItem({
+    required this.id,
+    required this.title,
+    this.summary,
+    this.content,
+    this.icon,
+    this.iconName,
+    this.disabled = false,
+    this.expanded = false,
+  });
+
+  /// Unique identifier for the accordion panel.
+  final String id;
+
+  /// Primary heading displayed in the clickable summary header.
+  final String title;
+
+  /// Optional secondary summary text displayed next to [title].
+  final String? summary;
+
+  /// Body content revealed when the panel is expanded.
+  final String? content;
+
+  /// Optional native Material [IconData] displayed in the panel header.
+  final IconData? icon;
+
+  /// Optional Material icon string name resolved via `MagicIcon`.
+  final String? iconName;
+
+  /// Whether this individual panel is disabled and non-expandable.
+  final bool disabled;
+
+  /// Initial per-item expanded hint when `expandedIds` is not supplied.
+  final bool expanded;
+
+  /// Returns a copy of this accordion item with the given fields replaced.
+  AccordionItem copyWith({
+    String? id,
+    String? title,
+    String? summary,
+    String? content,
+    IconData? icon,
+    String? iconName,
+    bool? disabled,
+    bool? expanded,
+  }) {
+    return AccordionItem(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      summary: summary ?? this.summary,
+      content: content ?? this.content,
+      icon: icon ?? this.icon,
+      iconName: iconName ?? this.iconName,
+      disabled: disabled ?? this.disabled,
+      expanded: expanded ?? this.expanded,
+    );
+  }
+}
+
+/// Property contract for `MagicAccordion`.
+///
+/// Mirrors `AccordionMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicAccordionProps implements BaseAtomicProps {
+  /// Creates an accordion property contract instance.
+  const MagicAccordionProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    required this.items,
+    this.multiple = false,
+    this.expandedIds,
+    this.defaultExpandedIds,
+    this.appearance = AccordionAppearance.outlined,
+    this.size = AtomicSize.md,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Ordered list of collapsible accordion panel items.
+  final List<AccordionItem> items;
+
+  /// Whether multiple panels may be expanded simultaneously.
+  final bool multiple;
+
+  /// Controlled list of currently expanded panel identifiers.
+  final List<String>? expandedIds;
+
+  /// Initial list of expanded panel identifiers for uncontrolled usage.
+  final List<String>? defaultExpandedIds;
+
+  /// Material 3 surface appearance (`outlined` or `raised`).
+  final AccordionAppearance appearance;
+
+  /// Standardized component density/size preset.
+  final AtomicSize size;
+}
+
+/// Presence indicator status for `MagicAvatar`.
+enum AvatarStatus {
+  /// User is active and online.
+  online,
+
+  /// User is busy or unavailable for interruption.
+  busy,
+
+  /// User is currently offline.
+  offline,
+}
+
+/// Geometric container shape for `MagicAvatar`.
+enum AvatarShape {
+  /// Fully circular avatar container.
+  circle,
+
+  /// Rounded-square avatar container.
+  rounded,
+
+  /// Sharp-cornered square avatar container.
+  square,
+}
+
+/// Overlap spacing density for `MagicAvatarGroup`.
+enum AvatarGroupSpacing {
+  /// Compact overlap between adjacent avatars.
+  tight,
+
+  /// Standard overlap between adjacent avatars.
+  normal,
+}
+
+/// Property contract for `MagicAvatar`.
+///
+/// Mirrors `AvatarMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicAvatarProps implements BaseAtomicProps {
+  /// Creates an avatar property contract instance.
+  const MagicAvatarProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    this.src,
+    this.alt,
+    this.name,
+    this.initials,
+    this.icon,
+    this.iconName,
+    this.size = AtomicSize.md,
+    this.color = ColorIntent.primary,
+    this.shape = AvatarShape.circle,
+    this.status,
+    this.statusLabel,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Optional image URL rendered inside the avatar.
+  final String? src;
+
+  /// Accessible alternative text for the avatar image.
+  final String? alt;
+
+  /// Display name used to derive fallback initials and accessible labels.
+  final String? name;
+
+  /// Explicit fallback initials overriding derived [name] initials.
+  final String? initials;
+
+  /// Optional native Material [IconData] fallback icon.
+  final IconData? icon;
+
+  /// Optional Material icon string name resolved via `MagicIcon`.
+  final String? iconName;
+
+  /// Standardized component size preset.
+  final AtomicSize size;
+
+  /// Semantic color intent applied to the fallback container and foreground.
+  final ColorIntent color;
+
+  /// Container corner geometry (`circle`, `rounded`, or `square`).
+  final AvatarShape shape;
+
+  /// Optional presence status badge rendered at the avatar corner.
+  final AvatarStatus? status;
+
+  /// Accessible label describing the presence [status].
+  final String? statusLabel;
+}
+
+/// Item descriptor rendered within a `MagicAvatarGroup` stack.
+@immutable
+class AvatarGroupItem {
+  /// Creates an avatar group item descriptor.
+  const AvatarGroupItem({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.src,
+    this.alt,
+    this.name,
+    this.initials,
+    this.icon,
+    this.iconName,
+    this.color,
+    this.shape,
+    this.status,
+    this.statusLabel,
+  });
+
+  /// Optional unique identifier for the avatar group entry.
+  final String? id;
+
+  /// Optional test key identifier.
+  final String? testId;
+
+  /// Optional accessible semantics label.
+  final String? ariaLabel;
+
+  /// Optional image URL rendered inside the avatar.
+  final String? src;
+
+  /// Accessible alternative text for the avatar image.
+  final String? alt;
+
+  /// Display name used to derive fallback initials.
+  final String? name;
+
+  /// Explicit fallback initials overriding derived [name] initials.
+  final String? initials;
+
+  /// Optional native Material [IconData] fallback icon.
+  final IconData? icon;
+
+  /// Optional Material icon string name resolved via `MagicIcon`.
+  final String? iconName;
+
+  /// Optional semantic color intent override.
+  final ColorIntent? color;
+
+  /// Optional container corner geometry override.
+  final AvatarShape? shape;
+
+  /// Optional presence status badge.
+  final AvatarStatus? status;
+
+  /// Accessible label describing the presence [status].
+  final String? statusLabel;
+
+  /// Returns a copy of this avatar group item with the given fields replaced.
+  AvatarGroupItem copyWith({
+    String? id,
+    String? testId,
+    String? ariaLabel,
+    String? src,
+    String? alt,
+    String? name,
+    String? initials,
+    IconData? icon,
+    String? iconName,
+    ColorIntent? color,
+    AvatarShape? shape,
+    AvatarStatus? status,
+    String? statusLabel,
+  }) {
+    return AvatarGroupItem(
+      id: id ?? this.id,
+      testId: testId ?? this.testId,
+      ariaLabel: ariaLabel ?? this.ariaLabel,
+      src: src ?? this.src,
+      alt: alt ?? this.alt,
+      name: name ?? this.name,
+      initials: initials ?? this.initials,
+      icon: icon ?? this.icon,
+      iconName: iconName ?? this.iconName,
+      color: color ?? this.color,
+      shape: shape ?? this.shape,
+      status: status ?? this.status,
+      statusLabel: statusLabel ?? this.statusLabel,
+    );
+  }
+}
+
+/// Property contract for `MagicAvatarGroup`.
+///
+/// Mirrors `AvatarGroupMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicAvatarGroupProps implements BaseAtomicProps {
+  /// Creates an avatar group property contract instance.
+  const MagicAvatarGroupProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    required this.items,
+    this.max,
+    this.size = AtomicSize.md,
+    this.spacing = AvatarGroupSpacing.normal,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Ordered list of avatar descriptors displayed in the stack.
+  final List<AvatarGroupItem> items;
+
+  /// Maximum number of avatars rendered before collapsing extras into a `+N` badge.
+  final int? max;
+
+  /// Standardized size preset applied uniformly across all avatars in the group.
+  final AtomicSize size;
+
+  /// Overlap density between adjacent avatars (`tight` or `normal`).
+  final AvatarGroupSpacing spacing;
+}
+

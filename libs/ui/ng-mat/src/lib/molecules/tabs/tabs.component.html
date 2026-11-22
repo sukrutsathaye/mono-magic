@@ -1,0 +1,149 @@
+<div
+  class="magic-tabs__root"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+>
+  @if (orientation() === 'horizontal') {
+    <mat-tab-group
+      class="magic-tabs__group"
+      [selectedIndex]="selectedIndex()"
+      [disablePagination]="!scrollable()"
+      [mat-stretch-tabs]="!scrollable()"
+      [preserveContent]="true"
+      animationDuration="0ms"
+      [attr.aria-label]="ariaLabel() || null"
+      (selectedIndexChange)="onHorizontalIndexChange($event)"
+    >
+      @for (item of items(); track item.id) {
+        <mat-tab [disabled]="item.disabled ?? false" [ariaLabel]="item.label">
+          <ng-template mat-tab-label>
+            <span
+              class="magic-tabs__label"
+              [attr.data-testid]="
+                testId() ? testId() + '-tab-' + item.id : null
+              "
+            >
+              @if (item.icon) {
+                <mat-icon class="magic-tabs__icon" aria-hidden="true">{{
+                  item.icon
+                }}</mat-icon>
+              }
+              <span class="magic-tabs__text">{{ item.label }}</span>
+              @if (item.badgeContent !== undefined) {
+                <magic-badge
+                  class="magic-tabs__badge"
+                  size="sm"
+                  [color]="color()"
+                  [content]="item.badgeContent"
+                >
+                  <span class="magic-tabs__badge-anchor" aria-hidden="true"></span>
+                </magic-badge>
+              }
+            </span>
+          </ng-template>
+
+          @if (lazy()) {
+            <ng-template matTabContent>
+              <div
+                class="magic-tabs__panel"
+                [attr.data-testid]="
+                  testId() ? testId() + '-panel-' + item.id : null
+                "
+              >
+                @if (customPanelFor(item.id); as tpl) {
+                  <ng-container *ngTemplateOutlet="tpl" />
+                } @else if (item.content) {
+                  <p class="magic-tabs__content-text">{{ item.content }}</p>
+                }
+              </div>
+            </ng-template>
+          } @else {
+            <div
+              class="magic-tabs__panel"
+              [attr.data-testid]="
+                testId() ? testId() + '-panel-' + item.id : null
+              "
+            >
+              @if (customPanelFor(item.id); as tpl) {
+                <ng-container *ngTemplateOutlet="tpl" />
+              } @else if (item.content) {
+                <p class="magic-tabs__content-text">{{ item.content }}</p>
+              }
+            </div>
+          }
+        </mat-tab>
+      }
+    </mat-tab-group>
+  } @else {
+    <div class="magic-tabs__vertical">
+      <div
+        class="magic-tabs__vertical-list"
+        role="tablist"
+        aria-orientation="vertical"
+        [attr.aria-label]="ariaLabel() || null"
+      >
+        @for (item of items(); track item.id; let idx = $index) {
+          <button
+            #verticalTabBtn
+            type="button"
+            role="tab"
+            class="magic-tabs__vertical-tab"
+            [class.magic-tabs__vertical-tab--active]="currentTabId() === item.id"
+            [disabled]="item.disabled ?? false"
+            [attr.id]="(id() || 'magic-tabs') + '-tab-' + item.id"
+            [attr.aria-selected]="currentTabId() === item.id"
+            [attr.aria-controls]="(id() || 'magic-tabs') + '-panel-' + item.id"
+            [attr.tabindex]="currentTabId() === item.id ? 0 : -1"
+            [attr.data-testid]="
+              testId() ? testId() + '-tab-' + item.id : null
+            "
+            (click)="selectTab(item)"
+            (keydown)="onVerticalKeydown($event, idx)"
+          >
+            @if (item.icon) {
+              <mat-icon class="magic-tabs__icon" aria-hidden="true">{{
+                item.icon
+              }}</mat-icon>
+            }
+            <span class="magic-tabs__text">{{ item.label }}</span>
+            @if (item.badgeContent !== undefined) {
+              <magic-badge
+                class="magic-tabs__badge"
+                size="sm"
+                [color]="color()"
+                [content]="item.badgeContent"
+              >
+                <span class="magic-tabs__badge-anchor" aria-hidden="true"></span>
+              </magic-badge>
+            }
+          </button>
+        }
+      </div>
+
+      <div class="magic-tabs__vertical-panels">
+        @for (item of items(); track item.id) {
+          @if (shouldMountVerticalPanel(item.id)) {
+            <div
+              role="tabpanel"
+              class="magic-tabs__panel magic-tabs__vertical-panel"
+              [hidden]="currentTabId() !== item.id"
+              [attr.id]="(id() || 'magic-tabs') + '-panel-' + item.id"
+              [attr.aria-labelledby]="
+                (id() || 'magic-tabs') + '-tab-' + item.id
+              "
+              [attr.data-testid]="
+                testId() ? testId() + '-panel-' + item.id : null
+              "
+            >
+              @if (customPanelFor(item.id); as tpl) {
+                <ng-container *ngTemplateOutlet="tpl" />
+              } @else if (item.content) {
+                <p class="magic-tabs__content-text">{{ item.content }}</p>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+</div>

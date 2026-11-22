@@ -11,11 +11,17 @@ import 'package:fl_mat/widgetbook/atoms/slide_toggle_use_cases.dart';
 import 'package:fl_mat/widgetbook/atoms/slider_use_cases.dart';
 import 'package:fl_mat/widgetbook/atoms/text_input_use_cases.dart';
 import 'package:fl_mat/widgetbook/atoms/tool_tip_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/accordion_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/alert_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/avatar_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/card_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/dialog_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/form_field_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/menu_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/search_bar_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/select_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/tabs_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/toast_use_cases.dart';
 import 'package:fl_mat/widgetbook/widgetbook_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -58,7 +64,7 @@ void main() {
       expect(magicWidgetbookViewports.first, Viewports.none);
     });
 
-    test('all 11 atom and 5 molecule builders register expected use cases', () {
+    test('all 11 atom and 11 molecule builders register expected use cases', () {
       final atomComponents = <WidgetbookComponent>[
         buildBadgeComponent(),
         buildButtonComponent(),
@@ -93,20 +99,32 @@ void main() {
       }
 
       final moleculeComponents = <WidgetbookComponent>[
+        buildMagicAccordionComponent(),
+        buildMagicAlertComponent(),
+        buildMagicAvatarComponent(),
         buildMagicCardComponent(),
+        buildMagicDialogComponent(),
         buildMagicFormFieldComponent(),
         buildMagicMenuComponent(),
         buildMagicSearchBarComponent(),
         buildMagicSelectComponent(),
+        buildMagicTabsComponent(),
+        buildMagicToastComponent(),
       ];
       expect(
         moleculeComponents.map((c) => c.name).toList(),
         <String>[
+          'MagicAccordion',
+          'MagicAlert',
+          'MagicAvatar',
           'MagicCard',
+          'MagicDialog',
           'MagicFormField',
           'MagicMenu',
           'MagicSearchBar',
           'MagicSelect',
+          'MagicTabs',
+          'MagicToast',
         ],
       );
       for (final comp in moleculeComponents) {
@@ -163,18 +181,24 @@ void main() {
       }
     });
 
-    testWidgets('renders all 5 molecule use cases cleanly', (tester) async {
+    testWidgets('renders all 11 molecule use cases cleanly', (tester) async {
       tester.view.physicalSize = const Size(1280, 900);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
 
       final moleculeComponents = <WidgetbookComponent>[
+        buildMagicAccordionComponent(),
+        buildMagicAlertComponent(),
+        buildMagicAvatarComponent(),
         buildMagicCardComponent(),
+        buildMagicDialogComponent(),
         buildMagicFormFieldComponent(),
         buildMagicMenuComponent(),
         buildMagicSearchBarComponent(),
         buildMagicSelectComponent(),
+        buildMagicTabsComponent(),
+        buildMagicToastComponent(),
       ];
 
       for (final comp in moleculeComponents) {
@@ -276,6 +300,38 @@ void main() {
       await tester.pump();
       await tester.drag(find.byType(Slider), const Offset(30, 0));
       await tester.pump();
+
+      // MagicDialog interactive preview & modal route
+      final dialogComp = buildMagicDialogComponent();
+      await tester.pumpWidget(_wrapUseCase(dialogComp.useCases[0].builder));
+      await tester.pump();
+      await tester.tap(find.text('Publish'));
+      await tester.pump();
+      await tester.tap(find.text('Reopen Dialog'));
+      await tester.pump();
+
+      // MagicToast interactive preview
+      final toastComp = buildMagicToastComponent();
+      await tester.pumpWidget(_wrapUseCase(toastComp.useCases[0].builder));
+      await tester.pump();
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pump();
+      await tester.tap(find.text('Show Toast'));
+      await tester.pump();
+
+      // MagicTabs interactive playground
+      final tabsComp = buildMagicTabsComponent();
+      await tester.pumpWidget(_wrapUseCase(tabsComp.useCases[0].builder));
+      await tester.pump();
+      await tester.tap(find.text('Alerts'));
+      await tester.pump();
+
+      // MagicAccordion interactive playground
+      final accComp = buildMagicAccordionComponent();
+      await tester.pumpWidget(_wrapUseCase(accComp.useCases[0].builder));
+      await tester.pump();
+      await tester.tap(find.text('Cross-Framework Parity'));
+      await tester.pumpAndSettle();
     });
   });
 }

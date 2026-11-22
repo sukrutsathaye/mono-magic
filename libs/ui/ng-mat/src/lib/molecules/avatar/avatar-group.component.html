@@ -1,0 +1,36 @@
+<div
+  class="magic-avatar-group__list"
+  role="group"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || null"
+>
+  @for (item of visibleItems(); track item.id ?? $index) {
+    <magic-avatar
+      class="magic-avatar-group__item"
+      [id]="item.id"
+      [testId]="item.testId"
+      [ariaLabel]="item.ariaLabel"
+      [src]="item.src"
+      [alt]="item.alt"
+      [name]="item.name"
+      [initials]="item.initials"
+      [icon]="item.icon"
+      [size]="size()"
+      [color]="item.color ?? 'primary'"
+      [shape]="item.shape ?? 'circle'"
+      [status]="item.status"
+      [statusLabel]="item.statusLabel"
+    />
+  }
+
+  @if (overflowCount() > 0) {
+    <span
+      class="magic-avatar-group__overflow"
+      [attr.data-testid]="testId() ? testId() + '-overflow' : null"
+      [attr.aria-label]="overflowCount() + ' more'"
+    >
+      +{{ overflowCount() }}
+    </span>
+  }
+</div>

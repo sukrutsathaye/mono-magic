@@ -16,11 +16,17 @@ import 'widgetbook/atoms/slide_toggle_use_cases.dart';
 import 'widgetbook/atoms/slider_use_cases.dart';
 import 'widgetbook/atoms/text_input_use_cases.dart';
 import 'widgetbook/atoms/tool_tip_use_cases.dart';
+import 'widgetbook/molecules/accordion_use_cases.dart';
+import 'widgetbook/molecules/alert_use_cases.dart';
+import 'widgetbook/molecules/avatar_use_cases.dart';
 import 'widgetbook/molecules/card_use_cases.dart';
+import 'widgetbook/molecules/dialog_use_cases.dart';
 import 'widgetbook/molecules/form_field_use_cases.dart';
 import 'widgetbook/molecules/menu_use_cases.dart';
 import 'widgetbook/molecules/search_bar_use_cases.dart';
 import 'widgetbook/molecules/select_use_cases.dart';
+import 'widgetbook/molecules/tabs_use_cases.dart';
+import 'widgetbook/molecules/toast_use_cases.dart';
 import 'widgetbook/widgetbook_helpers.dart';
 
 /// Launches the `fl_mat` Widgetbook 3.25 catalog application.
@@ -63,11 +69,17 @@ class MagicWidgetbookApp extends StatelessWidget {
         WidgetbookCategory(
           name: 'Molecules',
           children: <WidgetbookNode>[
+            buildMagicAccordionComponent(),
+            buildMagicAlertComponent(),
+            buildMagicAvatarComponent(),
             buildMagicCardComponent(),
+            buildMagicDialogComponent(),
             buildMagicFormFieldComponent(),
             buildMagicMenuComponent(),
             buildMagicSearchBarComponent(),
             buildMagicSelectComponent(),
+            buildMagicTabsComponent(),
+            buildMagicToastComponent(),
           ],
         ),
       ],

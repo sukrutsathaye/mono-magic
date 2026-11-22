@@ -1,0 +1,106 @@
+:host {
+  display: inline-block;
+  vertical-align: middle;
+
+  --magic-avatar-size: 40px;
+  --magic-avatar-font-size: 0.9375rem;
+  --magic-avatar-icon-size: 22px;
+  --magic-avatar-status-size: 10px;
+}
+
+:host(.magic-avatar--xs) {
+  --magic-avatar-size: 24px;
+  --magic-avatar-font-size: 0.6875rem;
+  --magic-avatar-icon-size: 14px;
+  --magic-avatar-status-size: 7px;
+}
+
+:host(.magic-avatar--sm) {
+  --magic-avatar-size: 32px;
+  --magic-avatar-font-size: 0.75rem;
+  --magic-avatar-icon-size: 18px;
+  --magic-avatar-status-size: 8px;
+}
+
+:host(.magic-avatar--lg) {
+  --magic-avatar-size: 48px;
+  --magic-avatar-font-size: 1.125rem;
+  --magic-avatar-icon-size: 26px;
+  --magic-avatar-status-size: 12px;
+}
+
+:host(.magic-avatar--xl) {
+  --magic-avatar-size: 64px;
+  --magic-avatar-font-size: 1.375rem;
+  --magic-avatar-icon-size: 32px;
+  --magic-avatar-status-size: 14px;
+}
+
+.magic-avatar__root {
+  position: relative;
+  display: inline-flex;
+  width: var(--magic-avatar-size);
+  height: var(--magic-avatar-size);
+}
+
+.magic-avatar__frame {
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--magic-intent-container, var(--mat-sys-primary-container));
+  color: var(--magic-on-intent-container, var(--mat-sys-on-primary-container));
+  font-weight: 600;
+  font-size: var(--magic-avatar-font-size);
+  user-select: none;
+
+  &--circle {
+    border-radius: 9999px;
+  }
+
+  &--rounded {
+    border-radius: 10px;
+  }
+
+  &--square {
+    border-radius: 2px;
+  }
+}
+
+.magic-avatar__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.magic-avatar__icon {
+  width: var(--magic-avatar-icon-size);
+  height: var(--magic-avatar-icon-size);
+  font-size: var(--magic-avatar-icon-size);
+}
+
+.magic-avatar__status {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: var(--magic-avatar-status-size);
+  height: var(--magic-avatar-status-size);
+  border-radius: 9999px;
+  border: 2px solid var(--mat-sys-surface, #ffffff);
+  box-sizing: border-box;
+
+  &--online {
+    background: var(--magic-success, #1b6e3a);
+  }
+
+  &--busy {
+    background: var(--mat-sys-error, #b3261e);
+  }
+
+  &--offline {
+    background: var(--mat-sys-outline, #79747e);
+  }
+}

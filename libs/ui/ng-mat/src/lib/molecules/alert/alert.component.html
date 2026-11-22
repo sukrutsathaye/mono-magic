@@ -1,0 +1,49 @@
+<div
+  class="magic-alert__surface"
+  role="alert"
+  [class]="'magic-alert__surface magic-alert__surface--' + variant()"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || null"
+>
+  @if (!hideIcon()) {
+    <mat-icon class="magic-alert__icon" aria-hidden="true">{{
+      resolvedIcon()
+    }}</mat-icon>
+  }
+
+  <div class="magic-alert__content">
+    @if (title()) {
+      <div class="magic-alert__title">{{ title() }}</div>
+    }
+    <div class="magic-alert__message">{{ message() }}</div>
+    <ng-content />
+  </div>
+
+  @if (actionLabel() || dismissible()) {
+    <div class="magic-alert__trailing">
+      @if (actionLabel()) {
+        <magic-button
+          variant="text"
+          size="sm"
+          [color]="severity() === 'info' ? 'primary' : severity()"
+          [label]="actionLabel() ?? ''"
+          [testId]="testId() ? testId() + '-action' : undefined"
+          (clicked)="actionClicked.emit()"
+        />
+      }
+      @if (dismissible()) {
+        <magic-button
+          kind="icon"
+          variant="text"
+          size="sm"
+          [color]="severity() === 'info' ? 'primary' : severity()"
+          leadingIcon="close"
+          ariaLabel="Dismiss alert"
+          [testId]="testId() ? testId() + '-dismiss' : undefined"
+          (clicked)="dismissed.emit()"
+        />
+      }
+    </div>
+  }
+</div>
