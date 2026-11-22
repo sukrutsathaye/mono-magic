@@ -1,0 +1,32 @@
+{
+  "name": "vue-vuetify",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "root": "libs/ui/vue-vuetify",
+  "sourceRoot": "libs/ui/vue-vuetify/src",
+  "projectType": "library",
+  "tags": ["scope:ui", "framework:vue", "ds:material", "lang:ts"],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/ui/vue-vuetify",
+        "command": "vitest run --project=vue-vuetify"
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/ui/vue-vuetify",
+        "command": "vitest run --project=vue-vuetify-storybook"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build"],
+      "options": {
+        "cwd": "libs/ui/vue-vuetify",
+        "command": "vue-tsc --noEmit -p tsconfig.lib.json"
+      }
+    }
+  }
+}

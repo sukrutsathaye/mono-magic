@@ -1,0 +1,34 @@
+{
+  "name": "@mono-magic/vue-vuetify",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "nx": {
+    "name": "vue-vuetify",
+    "tags": ["scope:ui", "framework:vue", "ds:material", "lang:ts"]
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "@mono-magic/atomic-design-interfaces": "workspace:*",
+    "vue": "^3.5.0",
+    "vuetify": "^3.13.8"
+  },
+  "devDependencies": {
+    "@storybook/vue3-vite": "^10.6.7",
+    "@vitejs/plugin-vue": "^6.0.11",
+    "@vue/test-utils": "^2.6.0",
+    "eslint-plugin-vue": "^10.12.1",
+    "vite-plugin-vuetify": "^2.1.3",
+    "vue-eslint-parser": "^10.4.2",
+    "vue-tsc": "^3.3.14"
+  }
+}
