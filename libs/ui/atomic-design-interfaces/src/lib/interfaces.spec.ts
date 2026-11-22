@@ -6,7 +6,14 @@ import {
   AVATAR_GROUP_SPACINGS,
   AVATAR_SHAPES,
   AVATAR_STATUSES,
+  DATE_PICKER_MODES,
   DIALOG_SIZES,
+  LIST_ITEM_APPEARANCES,
+  PAGINATION_SHAPES,
+  PAGINATION_VARIANTS,
+  RATING_PRECISIONS,
+  STEP_STATUSES,
+  STEPPER_ORIENTATIONS,
   TABS_ORIENTATIONS,
   TABS_VARIANTS,
   TOAST_POSITIONS,
@@ -17,28 +24,45 @@ import {
   type AvatarGroupMoleculeProps,
   type AvatarMoleculeProps,
   type BadgeAtomProps,
+  type BreadcrumbItem,
+  type BreadcrumbsMoleculeProps,
   type ButtonAtomProps,
   type ButtonToggleAtomProps,
   type CardMoleculeProps,
   type CheckBoxAtomProps,
   type ChipAtomProps,
+  type DatePickerMoleculeProps,
+  type DateRangeValue,
   type DialogActionItem,
   type DialogMoleculeProps,
   type FormFieldMoleculeProps,
+  type ListItemMoleculeProps,
   type MagicAccordionProps,
   type MagicAlertProps,
   type MagicAvatarGroupProps,
   type MagicAvatarProps,
+  type MagicBreadcrumbItem,
+  type MagicBreadcrumbsProps,
+  type MagicDatePickerProps,
   type MagicDialogProps,
+  type MagicListItemProps,
+  type MagicPaginationProps,
+  type MagicRatingProps,
+  type MagicStepItem,
+  type MagicStepperProps,
   type MagicTabsProps,
   type MagicToastProps,
   type MenuMoleculeProps,
+  type PaginationMoleculeProps,
   type ProgressIndicatorAtomProps,
   type RadioButtonAtomProps,
+  type RatingMoleculeProps,
   type SearchBarMoleculeProps,
   type SelectMoleculeProps,
   type SlideToggleAtomProps,
   type SliderAtomProps,
+  type StepItem,
+  type StepperMoleculeProps,
   type TabItem,
   type TabsMoleculeProps,
   type TextInputAtomProps,
@@ -70,6 +94,13 @@ describe('atomic-design-interfaces', () => {
     expect(AVATAR_STATUSES).toEqual(['online', 'busy', 'offline']);
     expect(AVATAR_SHAPES).toEqual(['circle', 'rounded', 'square']);
     expect(AVATAR_GROUP_SPACINGS).toEqual(['tight', 'normal']);
+    expect(LIST_ITEM_APPEARANCES).toEqual(['standard', 'outlined', 'filled']);
+    expect(STEPPER_ORIENTATIONS).toEqual(['horizontal', 'vertical']);
+    expect(STEP_STATUSES).toEqual(['pending', 'active', 'completed', 'error']);
+    expect(PAGINATION_VARIANTS).toEqual(['text', 'outlined', 'filled']);
+    expect(PAGINATION_SHAPES).toEqual(['rounded', 'circular']);
+    expect(DATE_PICKER_MODES).toEqual(['single', 'range']);
+    expect(RATING_PRECISIONS).toEqual([0.5, 1]);
   });
 
   it('supports compliant atom prop contracts', () => {
@@ -294,5 +325,171 @@ describe('atomic-design-interfaces', () => {
     expect(magicAccordion.items[0]?.expanded).toBe(true);
     expect(magicAvatar.status).toBe('online');
     expect(magicAvatarGroup.spacing).toBe('tight');
+  });
+
+  it('supports compliant Wave 2 Batch 2 molecule contracts, aliases, and FormField inheritance', () => {
+    const listItem: ListItemMoleculeProps = {
+      id: 'item-1',
+      testId: 'list-item-1',
+      ariaLabel: 'Inbox row',
+      primaryText: 'Inbox',
+      secondaryText: '12 unread messages',
+      overlineText: 'MAILBOX',
+      leadingIcon: 'inbox',
+      leadingAvatarText: 'IN',
+      leadingAvatarSrc: 'https://example.com/inbox.png',
+      trailingIcon: 'chevron_right',
+      trailingText: '2m ago',
+      trailingBadge: 12,
+      interactive: true,
+      selectable: true,
+      selected: false,
+      disabled: false,
+      divider: true,
+      dense: false,
+      color: 'primary',
+      size: 'md',
+      appearance: 'outlined',
+    };
+    const magicListItem: MagicListItemProps = listItem;
+
+    const stepItem: StepItem = {
+      id: 'step-account',
+      label: 'Account Details',
+      description: 'Enter your workspace credentials',
+      optional: false,
+      optionalLabel: 'Optional',
+      completed: true,
+      error: false,
+      errorMessage: undefined,
+      disabled: false,
+      icon: 'person',
+      status: 'completed',
+    };
+    const magicStepItem: MagicStepItem = stepItem;
+    const stepper: StepperMoleculeProps = {
+      id: 'onboarding-stepper',
+      steps: [magicStepItem],
+      activeStep: 0,
+      defaultActiveStep: 0,
+      orientation: 'horizontal',
+      linear: true,
+      alternativeLabel: false,
+      color: 'primary',
+      size: 'md',
+      disabled: false,
+    };
+    const magicStepper: MagicStepperProps = stepper;
+
+    const pagination: PaginationMoleculeProps = {
+      id: 'results-pagination',
+      page: 2,
+      defaultPage: 1,
+      totalItems: 120,
+      pageSize: 10,
+      pageSizeOptions: [10, 25, 50],
+      siblingCount: 1,
+      boundaryCount: 1,
+      showFirstLast: true,
+      showPageSizeSelector: true,
+      showTotalCount: true,
+      variant: 'outlined',
+      shape: 'rounded',
+      color: 'primary',
+      size: 'md',
+      disabled: false,
+    };
+    const magicPagination: MagicPaginationProps = pagination;
+
+    const breadcrumbItem: BreadcrumbItem = {
+      id: 'crumb-home',
+      label: 'Home',
+      href: '/',
+      icon: 'home',
+      disabled: false,
+      current: false,
+    };
+    const magicBreadcrumbItem: MagicBreadcrumbItem = breadcrumbItem;
+    const breadcrumbs: BreadcrumbsMoleculeProps = {
+      id: 'page-breadcrumbs',
+      items: [
+        magicBreadcrumbItem,
+        { id: 'crumb-settings', label: 'Settings', current: true },
+      ],
+      separator: '/',
+      maxItems: 4,
+      itemsBeforeCollapse: 1,
+      itemsAfterCollapse: 2,
+      color: 'primary',
+      size: 'sm',
+      disabled: false,
+    };
+    const magicBreadcrumbs: MagicBreadcrumbsProps = breadcrumbs;
+
+    const rangeValue: DateRangeValue = {
+      start: '2026-11-01',
+      end: '2026-11-15',
+    };
+    const datePicker: DatePickerMoleculeProps = {
+      id: 'booking-date',
+      label: 'Booking dates',
+      hint: 'Select check-in and check-out dates',
+      errorText: undefined,
+      appearance: 'outlined',
+      size: 'md',
+      floatLabel: 'auto',
+      subscriptSizing: 'fixed',
+      hideRequiredMarker: false,
+      mode: 'range',
+      value: '2026-11-01',
+      defaultValue: '2026-11-01',
+      rangeValue,
+      defaultRangeValue: rangeValue,
+      minDate: '2026-01-01',
+      maxDate: '2026-12-31',
+      enableTime: false,
+      placeholder: 'YYYY-MM-DD',
+      startPlaceholder: 'Start date',
+      endPlaceholder: 'End date',
+      format: 'YYYY-MM-DD',
+      required: true,
+      disabled: false,
+      readOnly: false,
+      clearable: true,
+      color: 'primary',
+    };
+    const magicDatePicker: MagicDatePickerProps = datePicker;
+    // Verify DatePickerMoleculeProps is assignable to FormFieldMoleculeProps
+    const datePickerAsFormField: FormFieldMoleculeProps = datePicker;
+
+    const rating: RatingMoleculeProps = {
+      id: 'product-rating',
+      value: 4.5,
+      defaultValue: 4,
+      max: 5,
+      precision: 0.5,
+      readOnly: false,
+      disabled: false,
+      showValue: true,
+      reviewCount: 128,
+      icon: 'star',
+      emptyIcon: 'star_border',
+      color: 'warning',
+      size: 'md',
+      label: 'Overall rating',
+    };
+    const magicRating: MagicRatingProps = rating;
+
+    expect(magicListItem.appearance).toBe('outlined');
+    expect(magicListItem.trailingBadge).toBe(12);
+    expect(magicStepper.steps[0]?.status).toBe('completed');
+    expect(magicPagination.totalItems).toBe(120);
+    expect(magicPagination.pageSizeOptions).toEqual([10, 25, 50]);
+    expect(magicBreadcrumbs.items).toHaveLength(2);
+    expect(magicBreadcrumbs.items[1]?.current).toBe(true);
+    expect(magicDatePicker.rangeValue?.end).toBe('2026-11-15');
+    expect(datePickerAsFormField.label).toBe('Booking dates');
+    expect(magicRating.precision).toBe(0.5);
+    expect(magicRating.reviewCount).toBe(128);
   });
 });
