@@ -28,6 +28,7 @@
     "@babel/core": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
     "@babel/runtime": "~7.27.6",
+    "@bufbuild/buf": "^1.75.0",
     "@compodoc/compodoc": "^2.0.0",
     "@eslint/js": "^9.8.0",
     "@expo/cli": "~56.1.14",

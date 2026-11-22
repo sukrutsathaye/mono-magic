@@ -1,0 +1,17 @@
+# Buf v2 code generation template for mono-magic wire contracts.
+# Keep `plugins: []` until target consumers enable language-specific codegen plugins
+# (e.g., remote BSR plugins or local protoc-gen-* binaries) so `buf generate` remains
+# offline-safe and deterministic across CI environments.
+version: v2
+clean: true
+managed:
+  enabled: true
+inputs:
+  - directory: proto
+plugins: []
+# Example plugin configuration when enabling codegen:
+#   - remote: buf.build/bufbuild/es:v2.2.3
+#     out: ../../../dist/libs/data-access/proto-contracts/ts
+#     opt: target=ts
+#   - remote: buf.build/protocolbuffers/python:v29.3
+#     out: ../../../dist/libs/data-access/proto-contracts/python

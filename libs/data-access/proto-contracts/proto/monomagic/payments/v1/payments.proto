@@ -1,0 +1,58 @@
+// Canonical monetary value, payment status, and payment intent contracts.
+syntax = "proto3";
+
+package monomagic.payments.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// Monetary amount represented in the currency's smallest integer unit.
+message Money {
+  // Integer amount in minor currency units (e.g., cents for USD).
+  int64 amount_minor = 1;
+  // Three-letter ISO 4217 currency code (e.g., "USD", "EUR").
+  string currency = 2;
+}
+
+// Lifecycle status of a payment intent across payment providers.
+enum PaymentStatus {
+  // Unspecified payment status (default zero value).
+  PAYMENT_STATUS_UNSPECIFIED = 0;
+  // Payment intent created and awaiting payment method attachment.
+  PAYMENT_STATUS_REQUIRES_PAYMENT_METHOD = 1;
+  // Payment method attached and awaiting explicit confirmation.
+  PAYMENT_STATUS_REQUIRES_CONFIRMATION = 2;
+  // Payment is currently being processed asynchronously.
+  PAYMENT_STATUS_PROCESSING = 3;
+  // Payment completed and captured successfully.
+  PAYMENT_STATUS_SUCCEEDED = 4;
+  // Payment intent was canceled prior to capture.
+  PAYMENT_STATUS_CANCELED = 5;
+  // Payment attempt failed.
+  PAYMENT_STATUS_FAILED = 6;
+  // Full amount was refunded to the payer.
+  PAYMENT_STATUS_REFUNDED = 7;
+  // Partial amount was refunded to the payer.
+  PAYMENT_STATUS_PARTIALLY_REFUNDED = 8;
+}
+
+// Provider-agnostic payment intent tracking authorization and settlement state.
+message PaymentIntent {
+  // Unique payment intent identifier.
+  string id = 1;
+  // Authorized or requested monetary amount.
+  Money amount = 2;
+  // Current lifecycle status.
+  PaymentStatus status = 3;
+  // Client-side secret token for confirming payment in frontend SDKs, if applicable.
+  string client_secret = 4;
+  // Optional customer identifier associated with the payment.
+  string customer_id = 5;
+  // Optional human-readable description or statement summary.
+  string description = 6;
+  // Arbitrary key-value metadata for reconciliation and correlation.
+  map<string, string> metadata = 7;
+  // UTC timestamp when the payment intent was created.
+  google.protobuf.Timestamp created_at = 8;
+  // UTC timestamp when the payment intent was last updated.
+  google.protobuf.Timestamp updated_at = 9;
+}

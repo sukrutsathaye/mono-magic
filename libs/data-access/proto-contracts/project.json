@@ -1,0 +1,41 @@
+{
+  "name": "proto-contracts",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/data-access/proto-contracts/proto",
+  "tags": ["scope:data-access", "type:interfaces", "lang:proto"],
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/buf.yaml",
+        "{projectRoot}/proto/**/*.proto"
+      ],
+      "options": {
+        "cwd": "libs/data-access/proto-contracts",
+        "command": "pnpm exec buf lint"
+      }
+    },
+    "breaking": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/data-access/proto-contracts",
+        "command": "BASE_REF=\"\"; if git rev-parse --verify --quiet main >/dev/null; then BASE_REF=\"main\"; elif git rev-parse --verify --quiet origin/main >/dev/null; then BASE_REF=\"origin/main\"; fi; if [ -n \"$BASE_REF\" ] && git ls-tree -r --name-only \"$BASE_REF\" -- proto 2>/dev/null | grep -q '\\.proto$'; then pnpm exec buf breaking --against \"../../../.git#ref=${BASE_REF},subdir=libs/data-access/proto-contracts\"; else echo \"Skipping buf breaking: no baseline proto files found on main/origin/main.\"; fi"
+      }
+    },
+    "generate": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/buf.yaml",
+        "{projectRoot}/buf.gen.yaml",
+        "{projectRoot}/proto/**/*.proto"
+      ],
+      "options": {
+        "cwd": "libs/data-access/proto-contracts",
+        "command": "pnpm exec buf generate"
+      }
+    }
+  }
+}

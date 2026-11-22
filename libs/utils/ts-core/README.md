@@ -1,0 +1,31 @@
+# `@mono-magic/utils-ts-core`
+
+Pure, stateless, framework-agnostic TypeScript core primitives (`Result<T, E>`, `AppError`, `ErrorCode`, `invariant`, `retryWithBackoff`, `TypedEventBus`).
+
+- **Nx project**: `utils-ts-core`
+- **Tags**: `scope:utils`, `type:util`, `lang:ts`
+- **Coverage minimum**: `>= 90%` across lines, statements, functions, and branches.
+
+## Nx Targets
+
+```bash
+pnpm nx lint utils-ts-core
+pnpm nx typecheck utils-ts-core
+pnpm nx test utils-ts-core -- --coverage
+```
+
+## Usage
+
+```ts
+import { ok, err, AppError, invariant, retryWithBackoff, TypedEventBus } from '@mono-magic/utils-ts-core';
+
+const res = ok(42);
+invariant(res.ok, 'Expected ok result');
+
+const bus = new TypedEventBus<{ saved: { id: string } }>();
+const unsubscribe = bus.on('saved', ({ id }) => console.log(id));
+bus.emit('saved', { id: '123' });
+unsubscribe();
+
+const value = await retryWithBackoff(async () => 'done', { maxAttempts: 3, baseDelayMs: 10 });
+```
