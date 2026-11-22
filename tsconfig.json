@@ -14,6 +14,12 @@
     },
     {
       "path": "./libs/ui/rn-paper"
+    },
+    {
+      "path": "./libs/utils/ts-core"
+    },
+    {
+      "path": "./libs/data-access/ts-interfaces"
     }
   ]
 }

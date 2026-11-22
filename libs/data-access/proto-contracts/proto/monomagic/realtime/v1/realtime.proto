@@ -1,0 +1,39 @@
+// Canonical realtime pub/sub message envelope and presence state contracts.
+syntax = "proto3";
+
+package monomagic.realtime.v1;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+// Standard event envelope published and subscribed over realtime channels.
+message RealtimeEnvelope {
+  // Unique message/event identifier.
+  string id = 1;
+  // Target channel or topic name.
+  string channel = 2;
+  // Domain event name (e.g., "message.created", "cursor.moved").
+  string event = 3;
+  // Arbitrary JSON-compatible event payload.
+  google.protobuf.Value payload = 4;
+  // Optional identifier of the user or service that emitted the event.
+  string sender_id = 5;
+  // UTC timestamp when the event was emitted.
+  google.protobuf.Timestamp timestamp = 6;
+  // Additional routing or tracing headers.
+  map<string, string> metadata = 7;
+}
+
+// Presence status snapshot for a participant on a realtime channel.
+message PresenceState {
+  // Identifier of the connected participant.
+  string user_id = 1;
+  // Channel or room identifier where presence is tracked.
+  string channel = 2;
+  // Canonical status string (e.g., "online", "away", "offline").
+  string status = 3;
+  // UTC timestamp of the participant's most recent heartbeat or state update.
+  google.protobuf.Timestamp last_seen_at = 4;
+  // Optional participant presence metadata (e.g., display name, active view).
+  google.protobuf.Struct metadata = 5;
+}

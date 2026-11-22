@@ -1,0 +1,84 @@
+// Canonical query, filtering, sorting, and pagination primitives.
+syntax = "proto3";
+
+package monomagic.common.v1;
+
+import "google/protobuf/struct.proto";
+
+// Sort ordering direction for repository queries.
+enum SortDirection {
+  // Unspecified sort direction (default zero value).
+  SORT_DIRECTION_UNSPECIFIED = 0;
+  // Ascending order (smallest or earliest first).
+  SORT_DIRECTION_ASC = 1;
+  // Descending order (largest or latest first).
+  SORT_DIRECTION_DESC = 2;
+}
+
+// Field-level sort instruction applied to a repository query.
+message SortSpec {
+  // Entity field path to sort by.
+  string field = 1;
+  // Sort ordering direction.
+  SortDirection direction = 2;
+}
+
+// Supported predicate operators for structured repository filters.
+enum FilterOperator {
+  // Unspecified filter operator (default zero value).
+  FILTER_OPERATOR_UNSPECIFIED = 0;
+  // Exact equality match.
+  FILTER_OPERATOR_EQ = 1;
+  // Inequality match.
+  FILTER_OPERATOR_NEQ = 2;
+  // Membership test against a list of values.
+  FILTER_OPERATOR_IN = 3;
+  // Strictly greater than.
+  FILTER_OPERATOR_GT = 4;
+  // Greater than or equal to.
+  FILTER_OPERATOR_GTE = 5;
+  // Strictly less than.
+  FILTER_OPERATOR_LT = 6;
+  // Less than or equal to.
+  FILTER_OPERATOR_LTE = 7;
+  // Substring or collection containment match.
+  FILTER_OPERATOR_CONTAINS = 8;
+}
+
+// Single predicate filter applied to a repository query.
+message FilterSpec {
+  // Entity field path to filter on.
+  string field = 1;
+  // Comparison operator.
+  FilterOperator operator = 2;
+  // Dynamic comparison value (scalar or list for IN operator).
+  google.protobuf.Value value = 3;
+}
+
+// Provider-agnostic query specification combining filtering, sorting, and pagination.
+message QuerySpec {
+  // Conjunctive (AND) filter predicates.
+  repeated FilterSpec filters = 1;
+  // Ordered list of sort directives.
+  repeated SortSpec sort = 2;
+  // Maximum number of items to return per page.
+  int32 limit = 3;
+  // Zero-based item offset for offset-based pagination.
+  int32 offset = 4;
+  // Opaque pagination cursor for cursor-based pagination.
+  string cursor = 5;
+}
+
+// Pagination metadata accompanying a list or query response.
+message PageInfo {
+  // Total number of matching records when known.
+  int64 total = 1;
+  // Effective page size limit applied to the query.
+  int32 limit = 2;
+  // Effective offset applied to the query.
+  int32 offset = 3;
+  // Whether additional results exist beyond the current page.
+  bool has_more = 4;
+  // Opaque cursor for fetching the subsequent page, if any.
+  string next_cursor = 5;
+}

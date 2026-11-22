@@ -9,6 +9,7 @@ packages:
 allowBuilds:
   nx: true
   esbuild: true
+  "@bufbuild/buf": true
   "@parcel/watcher": false
   unrs-resolver: false
   lmdb: false

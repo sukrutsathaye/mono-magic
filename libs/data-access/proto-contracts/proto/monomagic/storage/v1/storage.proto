@@ -1,0 +1,38 @@
+// Canonical object storage metadata and signed URL response contracts.
+syntax = "proto3";
+
+package monomagic.storage.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// Metadata describing an object persisted in an object storage bucket.
+message StorageObjectMeta {
+  // Object path/key within the bucket.
+  string key = 1;
+  // Storage bucket or container name.
+  string bucket = 2;
+  // MIME content type (e.g., "application/pdf", "image/png").
+  string content_type = 3;
+  // Payload size in bytes.
+  int64 size_bytes = 4;
+  // Entity tag or content hash reported by the storage backend.
+  string etag = 5;
+  // UTC timestamp when the object was created.
+  google.protobuf.Timestamp created_at = 6;
+  // UTC timestamp when the object was last modified.
+  google.protobuf.Timestamp updated_at = 7;
+  // Custom key-value metadata attached to the object.
+  map<string, string> metadata = 8;
+}
+
+// Pre-signed URL payload enabling time-bounded direct upload or download.
+message SignedUrlResponse {
+  // Pre-signed HTTP URL.
+  string url = 1;
+  // UTC timestamp after which the URL is no longer valid.
+  google.protobuf.Timestamp expires_at = 2;
+  // HTTP method permitted for the signed URL (e.g., "GET", "PUT").
+  string method = 3;
+  // Required HTTP headers that the client must send with the signed request.
+  map<string, string> headers = 4;
+}

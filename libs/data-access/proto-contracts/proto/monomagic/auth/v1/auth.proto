@@ -1,0 +1,75 @@
+// Canonical authentication claims, session, and sign-in request contracts.
+syntax = "proto3";
+
+package monomagic.auth.v1;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+// Supported federated OAuth / OIDC identity providers.
+enum OAuthProvider {
+  // Unspecified OAuth provider (default zero value).
+  O_AUTH_PROVIDER_UNSPECIFIED = 0;
+  // Google Sign-In / OIDC.
+  O_AUTH_PROVIDER_GOOGLE = 1;
+  // GitHub OAuth.
+  O_AUTH_PROVIDER_GITHUB = 2;
+  // Sign in with Apple.
+  O_AUTH_PROVIDER_APPLE = 3;
+  // Microsoft Entra / Azure AD.
+  O_AUTH_PROVIDER_MICROSOFT = 4;
+  // Generic OpenID Connect provider (e.g., Keycloak).
+  O_AUTH_PROVIDER_OIDC = 5;
+}
+
+// Verified identity claims extracted from an authenticated session or token.
+message UserClaims {
+  // Stable unique user identifier across the identity provider.
+  string user_id = 1;
+  // Primary email address associated with the account.
+  string email = 2;
+  // Whether the provider has verified ownership of the email address.
+  bool email_verified = 3;
+  // Human-friendly display name.
+  string display_name = 4;
+  // Optional profile avatar URL.
+  string avatar_url = 5;
+  // Assigned role identifiers for RBAC checks.
+  repeated string roles = 6;
+  // Optional multi-tenant organization or workspace identifier.
+  string tenant_id = 7;
+  // Additional provider-specific or custom claims.
+  google.protobuf.Struct custom_claims = 8;
+}
+
+// Active authentication session issued after sign-in or token refresh.
+message AuthSession {
+  // Bearer access token (e.g., JWT).
+  string access_token = 1;
+  // Optional opaque or JWT refresh token.
+  string refresh_token = 2;
+  // Token scheme (typically "Bearer").
+  string token_type = 3;
+  // UTC timestamp when the access token expires.
+  google.protobuf.Timestamp expires_at = 4;
+  // Verified claims for the authenticated user.
+  UserClaims user = 5;
+}
+
+// Provider-agnostic sign-in request supporting email/password or OAuth flows.
+message SignInRequest {
+  // Email address for password-based authentication.
+  string email = 1;
+  // Plaintext password submitted over a secure channel.
+  string password = 2;
+  // Federated OAuth provider when initiating or completing an OAuth sign-in.
+  OAuthProvider oauth_provider = 3;
+  // Callback redirect URI for OAuth authorization code flows.
+  string redirect_uri = 4;
+  // Optional authorization code returned by the OAuth provider.
+  string authorization_code = 5;
+  // Requested OAuth/OIDC scopes.
+  repeated string scopes = 6;
+  // Optional tenant or realm identifier.
+  string tenant_id = 7;
+}

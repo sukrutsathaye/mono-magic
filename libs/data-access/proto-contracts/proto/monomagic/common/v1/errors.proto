@@ -1,0 +1,42 @@
+// Canonical error envelope and error codes for mono-magic data-access contracts.
+syntax = "proto3";
+
+package monomagic.common.v1;
+
+import "google/protobuf/struct.proto";
+
+// Canonical error classification shared across all polyglot data-access providers.
+enum ErrorCode {
+  // Unspecified error code (default zero value).
+  ERROR_CODE_UNSPECIFIED = 0;
+  // Request payload, query filter, or schema validation failed.
+  ERROR_CODE_VALIDATION = 1;
+  // Requested entity, record, or storage object does not exist.
+  ERROR_CODE_NOT_FOUND = 2;
+  // Caller is unauthenticated or credentials/token expired.
+  ERROR_CODE_UNAUTHORIZED = 3;
+  // Caller is authenticated but lacks permission for the operation.
+  ERROR_CODE_FORBIDDEN = 4;
+  // Operation conflicted with existing state (e.g., unique constraint or version mismatch).
+  ERROR_CODE_CONFLICT = 5;
+  // Upstream provider or service rejected the request due to rate limiting.
+  ERROR_CODE_RATE_LIMITED = 6;
+  // Operation exceeded the configured deadline or upstream timeout.
+  ERROR_CODE_TIMEOUT = 7;
+  // Upstream provider or backing store is temporarily unavailable.
+  ERROR_CODE_UNAVAILABLE = 8;
+  // Unexpected internal failure in the adapter or provider.
+  ERROR_CODE_INTERNAL = 9;
+}
+
+// Structured error envelope returned by data-access operations across boundaries.
+message DataAccessError {
+  // Canonical error classification.
+  ErrorCode code = 1;
+  // Human-readable diagnostic summary safe for logging and error propagation.
+  string message = 2;
+  // Optional structured metadata providing field errors or provider diagnostics.
+  google.protobuf.Struct details = 3;
+  // Whether the caller may safely retry this operation with backoff.
+  bool retryable = 4;
+}
