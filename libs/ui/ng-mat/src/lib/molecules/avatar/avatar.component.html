@@ -1,0 +1,34 @@
+<div
+  class="magic-avatar__root"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.role]="showImage() ? null : 'img'"
+  [attr.aria-label]="showImage() ? null : resolvedAriaLabel()"
+>
+  <div class="magic-avatar__frame" [class]="'magic-avatar__frame magic-avatar__frame--' + shape()">
+    @if (showImage()) {
+      <img
+        class="magic-avatar__img"
+        [src]="src()"
+        [alt]="resolvedAlt()"
+        (error)="onImageError()"
+      />
+    } @else if (resolvedInitials()) {
+      <span class="magic-avatar__initials">{{ resolvedInitials() }}</span>
+    } @else {
+      <mat-icon class="magic-avatar__icon" aria-hidden="true">{{
+        resolvedIcon()
+      }}</mat-icon>
+    }
+  </div>
+
+  @if (status(); as currentStatus) {
+    <span
+      class="magic-avatar__status"
+      [class]="'magic-avatar__status magic-avatar__status--' + currentStatus"
+      [attr.role]="'status'"
+      [attr.aria-label]="resolvedStatusLabel()"
+      [attr.data-testid]="testId() ? testId() + '-status' : null"
+    ></span>
+  }
+</div>

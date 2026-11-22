@@ -1,0 +1,76 @@
+:host {
+  display: contents;
+}
+
+.magic-dialog__surface {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+  background: var(--mat-sys-surface-container-high, #ece6f0);
+  color: var(--mat-sys-on-surface, #1d1b20);
+  border-radius: var(--mat-sys-corner-extra-large, 28px);
+  overflow: hidden;
+
+  &--fullscreen {
+    height: 100%;
+    border-radius: 0;
+  }
+}
+
+.magic-dialog__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 24px 8px;
+}
+
+.magic-dialog__titles {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.magic-dialog__title {
+  margin: 0;
+  padding: 0;
+  font: var(--mat-sys-headline-small, 500 1.5rem / 2rem sans-serif);
+  color: var(--mat-sys-on-surface, #1d1b20);
+
+  &::before {
+    display: none;
+  }
+}
+
+.magic-dialog__subtitle {
+  margin: 4px 0 0;
+  font: var(--mat-sys-body-medium, 400 0.875rem / 1.25rem sans-serif);
+  color: var(--mat-sys-on-surface-variant, #49454f);
+}
+
+.magic-dialog__close {
+  flex: 0 0 auto;
+  margin-top: -4px;
+  margin-right: -8px;
+}
+
+.magic-dialog__body {
+  padding: 12px 24px 16px;
+  font: var(--mat-sys-body-medium, 400 0.875rem / 1.25rem sans-serif);
+  color: var(--mat-sys-on-surface-variant, #49454f);
+
+  &--scrollable {
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}
+
+.magic-dialog__text {
+  margin: 0;
+}
+
+.magic-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 24px 20px;
+}

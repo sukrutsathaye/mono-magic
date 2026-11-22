@@ -51,12 +51,12 @@ vis.setup({
           fontLink.addEventListener('load', () => resolve(), { once: true });
           fontLink.addEventListener('error', () => resolve(), { once: true });
         }),
-        1500
+        4000
       );
     }
     if ('fonts' in document) {
-      await withTimeout(document.fonts.load('24px "Material Icons"'), 1500);
-      await withTimeout(document.fonts.ready, 1500);
+      await withTimeout(document.fonts.load('24px "Material Icons"'), 4000);
+      await withTimeout(document.fonts.ready, 4000);
     }
   },
 });

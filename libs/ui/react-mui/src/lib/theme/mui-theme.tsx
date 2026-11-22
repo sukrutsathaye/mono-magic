@@ -166,6 +166,25 @@ declare module '@mui/material/Icon' {
   }
 }
 
+declare module '@mui/material/Alert' {
+  interface AlertPropsColorOverrides {
+    primary: true;
+    secondary: true;
+    tertiary: true;
+    neutral: true;
+  }
+}
+
+declare module '@mui/material/Tabs' {
+  interface TabsPropsIndicatorColorOverrides {
+    tertiary: true;
+    neutral: true;
+    success: true;
+    warning: true;
+    error: true;
+  }
+}
+
 /**
  * Supported Material 3 palette identifiers matching `ng-mat` Storybook palettes.
  */
@@ -527,6 +546,78 @@ export function createMagicMuiTheme(
             textTransform: 'none',
             borderRadius: 9999,
             fontWeight: 600,
+          },
+        },
+      },
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: def.surface,
+            color: def.onSurface,
+            backgroundImage: 'none',
+            borderRadius: 24,
+            border: `1px solid ${def.outline}`,
+          },
+        },
+      },
+      MuiAlert: {
+        styleOverrides: {
+          root: {
+            borderRadius: 12,
+          },
+        },
+      },
+      MuiTabs: {
+        styleOverrides: {
+          root: {
+            minHeight: 44,
+          },
+          indicator: {
+            height: 3,
+            borderTopLeftRadius: 3,
+            borderTopRightRadius: 3,
+          },
+        },
+      },
+      MuiTab: {
+        styleOverrides: {
+          root: {
+            textTransform: 'none',
+            fontWeight: 600,
+            minHeight: 44,
+            color: def.onSurfaceVariant,
+          },
+        },
+      },
+      MuiAccordion: {
+        styleOverrides: {
+          root: {
+            backgroundColor: def.surface,
+            color: def.onSurface,
+            backgroundImage: 'none',
+            borderColor: def.outline,
+            borderRadius: 12,
+            '&::before': {
+              display: 'none',
+            },
+          },
+        },
+      },
+      MuiAvatar: {
+        styleOverrides: {
+          root: {
+            fontWeight: 600,
+          },
+          colorDefault: {
+            backgroundColor: def.primaryContainer,
+            color: def.onPrimaryContainer,
+          },
+        },
+      },
+      MuiSnackbar: {
+        styleOverrides: {
+          root: {
+            borderRadius: 12,
           },
         },
       },

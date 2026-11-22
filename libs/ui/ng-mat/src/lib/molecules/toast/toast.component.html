@@ -1,0 +1,50 @@
+@if (open()) {
+  <div
+    class="magic-toast__surface"
+    [class]="'magic-toast__surface magic-toast__surface--' + position()"
+    [attr.role]="liveRole()"
+    [attr.aria-live]="ariaLive()"
+    aria-atomic="true"
+    [attr.id]="id() || null"
+    [attr.data-testid]="testId() || null"
+    [attr.aria-label]="ariaLabel() || null"
+  >
+    <mat-icon class="magic-toast__icon" aria-hidden="true">{{
+      resolvedIcon()
+    }}</mat-icon>
+
+    <div class="magic-toast__content">
+      @if (title()) {
+        <div class="magic-toast__title">{{ title() }}</div>
+      }
+      <div class="magic-toast__message">{{ message() }}</div>
+    </div>
+
+    @if (actionLabel() || dismissible()) {
+      <div class="magic-toast__actions">
+        @if (actionLabel()) {
+          <magic-button
+            variant="text"
+            size="sm"
+            [color]="severity() === 'info' ? 'primary' : severity()"
+            [label]="actionLabel() ?? ''"
+            [testId]="testId() ? testId() + '-action' : undefined"
+            (clicked)="actionClicked.emit()"
+          />
+        }
+        @if (dismissible()) {
+          <magic-button
+            kind="icon"
+            variant="text"
+            size="sm"
+            color="neutral"
+            leadingIcon="close"
+            ariaLabel="Dismiss notification"
+            [testId]="testId() ? testId() + '-dismiss' : undefined"
+            (clicked)="onDismiss()"
+          />
+        }
+      </div>
+    }
+  </div>
+}
