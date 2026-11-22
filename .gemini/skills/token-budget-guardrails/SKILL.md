@@ -72,7 +72,27 @@ Use this skill as a **mandatory operating framework** for `/teamwork` coordinato
 
 ---
 
-## 4. Hard Stop Checklist (Forbidden Actions)
+## 4. Git Branching, Continuous Commit/Push & Handover Protocol
+
+1. **Immediate Meaningful Branching & Grouping**:
+   - Before making any edits, check `git branch --show-current`. If on `main` or an unrelated branch, immediately `git checkout -b <type>/<scope>-<short-slug>` (e.g., `feat/ui-tooltip-parity`, `fix/ts-interfaces-auth`, `chore/ci-repo-index`, `docs/roadmap-sync`, `refactor/ts-core-result`).
+   - Group cohesive, related changes on one scoped branch; never mix unrelated tasks on the same branch or commit directly to `main`.
+2. **Continuous Commits & Pushes (Conventional Commits)**:
+   - Commit and push incrementally as each logical slice/milestone passes its targeted checks—do **not** hoard all changes until the end of a long `/teamwork` run.
+   - Use **Conventional Commits**: `<type>(<scope>): <imperative summary>` (e.g., `feat(react-mui): add Tooltip atom with a11y tests`), with a brief body when the *why* is non-obvious.
+   - Push each checkpoint to the remote feature branch (`git push -u origin <branch>`). In multi-worker runs, workers commit to their assigned workspace/branch and the coordinator lands and pushes cleanly.
+3. **Periodic Rate-Limit Checks & Sequential Fallback**:
+   - The `/teamwork` orchestrator MUST periodically check rate-limit / quota headroom between waves and immediately upon any `429`, quota warning, or latency spike.
+   - When limits tighten: **pause or stop** excess parallel child agents, halt new parallel fan-outs, and **continue remaining tasks one by one** (sequentially) to preserve quota.
+4. **Near-Limit Handover & WIP Push**:
+   - If usage or rate limits are almost reached before completion:
+     1. Stop launching new tasks and stabilize the current in-flight edit.
+     2. Write a concise handover doc at `.gemini/handovers/<branch-slug>.md` covering: active branch, completed vs. remaining tasks, exact modified files, last verification command + outcome, and the exact next step to resume.
+     3. Commit remaining WIP + the handover doc (`wip(<scope>): checkpoint <short-desc> and add handover`) and `git push -u origin <branch>` before stopping.
+
+---
+
+## 5. Hard Stop Checklist (Forbidden Actions)
 
 - [ ] Running `find .`, `ls -R`, or `rg` at repo root when `REPO_INDEX.md` answers the question
 - [ ] Reading full files >200 lines when only one function/class is needed
@@ -80,3 +100,5 @@ Use this skill as a **mandatory operating framework** for `/teamwork` coordinato
 - [ ] Sending vague worker briefs that force each worker to re-explore the codebase
 - [ ] Running `pnpm nx run-many` across unaffected projects during feature iteration
 - [ ] Pasting full files or verbose logs in subagent/swarm messages
+- [ ] Editing directly on `main` or hoarding unpushed work across long multi-agent runs
+- [ ] Continuing parallel fan-out during rate-limit pressure instead of falling back to 1-by-1 execution or writing a handover + WIP push

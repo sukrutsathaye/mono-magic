@@ -29,6 +29,7 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 5. **Token-Budget & `/teamwork` Guardrails (Mandatory)**:
    - **Index-First**: Always read [REPO_INDEX.md](REPO_INDEX.md) first; never run full-repo `find`/`ls -R`/root `grep`. Scope `rg -n` to a single project and read `<=150`-line slices.
    - **Parallel `/teamwork` Discipline**: Follow [.gemini/skills/token-budget-guardrails/SKILL.md](.gemini/skills/token-budget-guardrails/SKILL.md) — coordinator pre-reads shared contracts once and embeds exact paths/symbols in briefs; cap parallel waves to `3–4` workers (or 1:1 UI library sharding) with disjoint file ownership; tier models (`flash` for mechanical/verification, `inherit`/`pro` for architecture); never poll; run `pnpm nx affected` or targeted `pnpm nx test <project>` instead of repo-wide `run-many`.
+   - **Git & Adaptive Rate-Limit Protocol**: Immediately checkout a meaningful grouped branch (`<type>/<scope>-<slug>`, never work directly on `main`); continuously commit using Conventional Commits (`<type>(<scope>): <summary>`) and push verified slices; orchestrators must periodically check rate limits, pause/stop child agents on pressure and continue sequentially 1-by-1, and if limits are nearly exhausted, write `.gemini/handovers/<branch-slug>.md` and push remaining WIP before stopping.
    - **Keep Index Fresh**: After adding/removing projects, components, protos, or skills, run `node tools/ci/generate-repo-index.mjs` once at the end.
 
 ---
