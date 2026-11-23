@@ -12,6 +12,7 @@ export default defineConfig(() => ({
     reporters: ['default'],
     coverage: {
       provider: 'v8' as const,
+      reporter: ['text', 'html', 'lcov', 'json-summary'],
       reporters: ['text', 'html', 'lcov', 'json-summary'],
       reportsDirectory: './test-output/vitest/coverage',
       thresholds: {

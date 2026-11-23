@@ -19,6 +19,22 @@
         "cwd": "libs/ui/react-mui",
         "command": "vitest run --project=react-mui-storybook"
       }
+    },
+    "update-snapshots": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "cwd": "libs/ui/react-mui",
+        "command": "vitest run --project=react-mui-storybook -u"
+      }
+    },
+    "test-storybook-coverage": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "cwd": "libs/ui/react-mui",
+        "command": "vitest run --project=react-mui-storybook --coverage.enabled=true --coverage.reportsDirectory=./test-output/storybook/coverage --coverage.thresholds.lines=0 --coverage.thresholds.statements=0 --coverage.thresholds.functions=0 --coverage.thresholds.branches=0"
+      }
     }
   }
 }

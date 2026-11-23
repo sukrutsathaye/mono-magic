@@ -47,7 +47,7 @@ Execution is sequential across milestones to honor the global `<= 2 tasks in par
 | M2 | Track A — UI Molecules Batch 2 | `wave2/track-a-ui-molecules` → `dev` | Feature #3 | M1 | DONE (12/12 JS tasks + 3 Storybook builds + 137/137 fl-mat tests PASS, PR #17 merged into `dev`) |
 | M3 | Track D — Vue & Svelte Atoms | `wave2/track-d-vue-svelte` → `dev` | Feature #4 | M1 | DONE (all 11 atoms in `vue-vuetify` & `svelte-tw` verified, `lint`/`typecheck`/`test`/`build-storybook` PASS, PR #18 → `dev`, Gate PASS) |
 | M4 | Track C — Data-Access Providers | `wave2/track-c-data-access` → `dev` | Features #5, #6, #7, #8 | M1 | DONE (`ts-supabase`, `ts-firebase`, `ts-reflective-api`, `py-reflective-nlp` implemented with >90% coverage, 14/14 tasks PASS, PR #19 → `dev`, Gate PASS) |
-| M5 | Track E — Phase 1 Closure & Index | `wave2/track-e-phase1-closure` → `dev` | Features #9, #10, #11 | M1, M2, M3, M4 | IN_PROGRESS |
+| M5 | Track E — Phase 1 Closure & Index | `wave2/track-e-phase1-closure` → `dev` | Features #9, #10, #11 | M1, M2, M3, M4 | DONE (Visual baselines tracked, coverage standardized, README/roadmap updated, PR #20 ready) |
 
 ## Interface Contracts
 - **UI Contracts**: `@mono-magic/atomic-design-interfaces` (`libs/ui/atomic-design-interfaces`) defines framework-agnostic TypeScript interfaces for all 11 atoms and 11 molecules (Batch 1 + Batch 2). All UI libraries (`react-mui`, `ng-mat`, `rn-paper`, `fl-mat`, `vue-vuetify`, `svelte-tw`) must maintain 1:1 prop/event parity.

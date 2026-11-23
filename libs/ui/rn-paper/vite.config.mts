@@ -140,6 +140,8 @@ export default defineConfig(() => ({
     coverage: {
       reportsDirectory: './test-output/vitest/coverage',
       provider: 'v8' as const,
+      reporter: ['text', 'html', 'lcov', 'json-summary'],
+      reporters: ['text', 'html', 'lcov', 'json-summary'],
       include: ['src/lib/**/*.{ts,tsx}'],
       exclude: [
         '**/*.stories.*',
