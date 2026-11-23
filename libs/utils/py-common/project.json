@@ -1,0 +1,21 @@
+{
+  "name": "py-utils-common",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/utils/py-common/src",
+  "tags": ["scope:utils", "type:util", "lang:py"],
+  "targets": {
+    "lint": {
+      "cache": true,
+      "command": "uv run --package py-utils-common ruff check --config libs/utils/py-common/pyproject.toml libs/utils/py-common && uv run --package py-utils-common ruff format --check --config libs/utils/py-common/pyproject.toml libs/utils/py-common"
+    },
+    "typecheck": {
+      "cache": true,
+      "command": "uv run --package py-utils-common pyright --project libs/utils/py-common/pyproject.toml"
+    },
+    "test": {
+      "cache": true,
+      "command": "COVERAGE_FILE=libs/utils/py-common/.coverage uv run --package py-utils-common pytest -c libs/utils/py-common/pyproject.toml libs/utils/py-common/tests --cov=libs/utils/py-common/src --cov-report=term-missing --cov-fail-under=90"
+    }
+  }
+}

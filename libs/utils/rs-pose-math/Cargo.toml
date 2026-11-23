@@ -1,0 +1,8 @@
+[package]
+name = "rs-pose-math"
+version = "0.1.0"
+edition = "2021"
+description = "Pure, stateless, FFI/WASM-ready 2D/3D pose math, landmark similarity, and temporal smoothing filters."
+license = "MIT"
+
+[dependencies]

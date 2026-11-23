@@ -7,14 +7,17 @@
   "targets": {
     "lint": {
       "cache": true,
+      "outputs": [],
       "command": "uv run --package py-data-access-interfaces ruff check --config libs/data-access/py-interfaces/pyproject.toml libs/data-access/py-interfaces && uv run --package py-data-access-interfaces ruff format --check --config libs/data-access/py-interfaces/pyproject.toml libs/data-access/py-interfaces"
     },
     "typecheck": {
       "cache": true,
+      "outputs": [],
       "command": "uv run --package py-data-access-interfaces pyright --project libs/data-access/py-interfaces/pyproject.toml"
     },
     "test": {
       "cache": true,
+      "outputs": ["{projectRoot}/.coverage"],
       "command": "COVERAGE_FILE=libs/data-access/py-interfaces/.coverage uv run --package py-data-access-interfaces pytest -c libs/data-access/py-interfaces/pyproject.toml libs/data-access/py-interfaces/tests --cov=libs/data-access/py-interfaces/src --cov-report=term-missing --cov-fail-under=80"
     }
   }
