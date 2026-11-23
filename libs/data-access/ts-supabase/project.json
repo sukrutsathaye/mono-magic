@@ -1,0 +1,34 @@
+{
+  "name": "data-access-ts-supabase",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/data-access/ts-supabase/src",
+  "projectType": "library",
+  "tags": [
+    "scope:data-access",
+    "type:data-access",
+    "lang:ts"
+  ],
+  "targets": {
+    "emulator-up": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/data-access/ts-supabase/docker",
+        "command": "docker compose up -d"
+      }
+    },
+    "emulator-down": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/data-access/ts-supabase/docker",
+        "command": "docker compose down -v"
+      }
+    },
+    "test-integration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/data-access/ts-supabase",
+        "command": "SUPABASE_INTEGRATION=true pnpm exec vitest run"
+      }
+    }
+  }
+}

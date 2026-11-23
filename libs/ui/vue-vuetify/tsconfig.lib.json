@@ -21,5 +21,14 @@
     "eslint.config.mjs",
     "src/test-setup.ts"
   ],
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.vue"
+  ],
+  "references": [
+    {
+      "path": "../atomic-design-interfaces/tsconfig.lib.json"
+    }
+  ]
 }

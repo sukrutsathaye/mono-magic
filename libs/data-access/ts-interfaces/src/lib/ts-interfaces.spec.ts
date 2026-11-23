@@ -5,22 +5,35 @@ import {
   BaseDataRepository,
   BasePaymentProvider,
   BaseRealtimeProvider,
+  BaseReflectiveLearningService,
   BaseStorageProvider,
   createDataAccessError,
   type AuthSession,
   type CreatePaymentIntentInput,
   type DataAccessError,
+  type ExtractorComparisonDTO,
+  type IngestTopicAcceptedDTO,
+  type IngestTopicInput,
+  type IngestionProgressEvent,
+  type McqAnswerSubmissionItem,
+  type McqQuizSubmissionResultDTO,
   type OAuthProvider,
   type PaginatedResult,
   type PaymentIntent,
   type PresenceState,
   type QuerySpec,
   type RealtimeEnvelope,
+  type ReflectiveKeywordDTO,
+  type ReflectiveMcqQuizSessionDTO,
+  type ReflectiveSubjectiveGradeResultDTO,
+  type ReflectiveSubjectiveQuestionDTO,
+  type ReflectiveTopicSummaryDTO,
   type SignInWithEmailInput,
   type SignUpWithEmailInput,
   type SignedUrlOptions,
   type SignedUrlResponse,
   type StorageObjectMeta,
+  type TopicChapterPageDTO,
   type UploadOptions,
   type UserClaims,
 } from '../index.js';
@@ -28,6 +41,7 @@ import {
   expectOk,
   runAuthProviderContractTests,
   runDataRepositoryContractTests,
+  runReflectiveLearningServiceContractTests,
   runStorageProviderContractTests,
   type ContractTestEntity,
 } from '../testing.js';
@@ -335,6 +349,193 @@ describe('createDataAccessError', () => {
 runDataRepositoryContractTests(async () => new InMemoryRepository());
 runAuthProviderContractTests(async () => new InMemoryAuthProvider());
 runStorageProviderContractTests(async () => new InMemoryStorageProvider());
+
+class InMemoryReflectiveLearningService extends BaseReflectiveLearningService {
+  public async ingestTopic(
+    input: IngestTopicInput,
+  ): Promise<Result<IngestTopicAcceptedDTO, DataAccessError>> {
+    return ok({
+      topicId: 'topic-1',
+      title: input.title,
+      sourceKind: input.sourceKind ?? 'wikipedia',
+      status: 'pending',
+    });
+  }
+
+  public async subscribeIngestionEvents(
+    topicId: string,
+    listener: (event: IngestionProgressEvent) => void,
+  ): Promise<Result<() => void, DataAccessError>> {
+    listener({ topicId, status: 'ready', progressPercent: 100 });
+    return ok(() => undefined);
+  }
+
+  public async listTopics(): Promise<
+    Result<PaginatedResult<ReflectiveTopicSummaryDTO>, DataAccessError>
+  > {
+    return ok({
+      items: [
+        {
+          id: 'topic-1',
+          title: 'Black Hole',
+          slug: 'black-hole',
+          sourceKind: 'wikipedia',
+          paragraphCount: 10,
+          keywordCount: 5,
+          approvedKeywordCount: 3,
+          status: 'ready',
+          updatedAt: new Date(0).toISOString(),
+        },
+      ],
+      total: 1,
+      hasMore: false,
+    });
+  }
+
+  public async getChapters(
+    topicId: string,
+    page = 1,
+    pageSize = 10,
+  ): Promise<Result<TopicChapterPageDTO, DataAccessError>> {
+    return ok({
+      topicId,
+      page,
+      pageSize,
+      totalParagraphs: 1,
+      totalChapters: 1,
+      paragraphs: [{ index: 0, heading: 'Intro', text: 'A black hole is a region of spacetime.' }],
+    });
+  }
+
+  public async createMcqQuiz(
+    topicId: string,
+    maxParagraphIndex: number,
+  ): Promise<Result<ReflectiveMcqQuizSessionDTO, DataAccessError>> {
+    return ok({
+      sessionId: 'sess-1',
+      topicId,
+      maxParagraphIndex,
+      questions: [
+        {
+          id: 'q-1',
+          paragraphIndex: 0,
+          keyword: 'spacetime',
+          prompt: 'A black hole is a region of ____.',
+          options: [
+            { id: 'opt-1', text: 'spacetime' },
+            { id: 'opt-2', text: 'vacuum' },
+            { id: 'opt-3', text: 'plasma' },
+            { id: 'opt-4', text: 'nebula' },
+          ],
+        },
+      ],
+    });
+  }
+
+  public async submitMcqQuiz(
+    sessionId: string,
+    answers: ReadonlyArray<McqAnswerSubmissionItem>,
+  ): Promise<Result<McqQuizSubmissionResultDTO, DataAccessError>> {
+    return ok({
+      sessionId,
+      correctCount: answers.length,
+      totalCount: answers.length,
+      scorePercent: 100,
+      evaluations: answers.map((a) => ({
+        questionId: a.questionId,
+        prompt: 'A black hole is a region of ____.',
+        selectedAnswer: a.selectedAnswer,
+        correctAnswer: 'spacetime',
+        isCorrect: true,
+      })),
+    });
+  }
+
+  public async listSubjectiveQuestions(): Promise<
+    Result<ReadonlyArray<ReflectiveSubjectiveQuestionDTO>, DataAccessError>
+  > {
+    return ok([
+      {
+        id: 'sq-1',
+        keyword: 'black hole',
+        prompt: 'What is a black hole?',
+        referenceSentences: ['A black hole is a region of spacetime.'],
+        approved: true,
+      },
+    ]);
+  }
+
+  public async gradeSubjectiveAnswer(
+    questionId: string,
+  ): Promise<Result<ReflectiveSubjectiveGradeResultDTO, DataAccessError>> {
+    return ok({
+      questionId,
+      similarityScore: 0.9,
+      band: 'correct',
+      referenceAnswer: 'A black hole is a region of spacetime.',
+    });
+  }
+
+  public async listKeywordsForCuration(): Promise<
+    Result<ReadonlyArray<ReflectiveKeywordDTO>, DataAccessError>
+  > {
+    return ok([
+      {
+        id: 'kw-1',
+        term: 'spacetime',
+        paragraphIndices: [0],
+        isPerson: false,
+        posPattern: 'NOUN',
+        frequency: 2,
+        approved: null,
+      },
+    ]);
+  }
+
+  public async curateKeyword(
+    _topicId: string,
+    keywordId: string,
+    approved: boolean,
+  ): Promise<Result<ReflectiveKeywordDTO, DataAccessError>> {
+    return ok({
+      id: keywordId,
+      term: 'spacetime',
+      paragraphIndices: [0],
+      isPerson: false,
+      posPattern: 'NOUN',
+      frequency: 2,
+      approved,
+    });
+  }
+
+  public async curateSubjectiveQuestion(
+    _topicId: string,
+    questionId: string,
+    patch: { readonly prompt?: string; readonly approved: boolean },
+  ): Promise<Result<ReflectiveSubjectiveQuestionDTO, DataAccessError>> {
+    return ok({
+      id: questionId,
+      keyword: 'black hole',
+      prompt: patch.prompt ?? 'What is a black hole?',
+      referenceSentences: ['A black hole is a region of spacetime.'],
+      approved: patch.approved,
+    });
+  }
+
+  public async compareExtractors(
+    topicId: string,
+  ): Promise<Result<ExtractorComparisonDTO, DataAccessError>> {
+    return ok({
+      topicId,
+      extractors: {
+        yake: ['spacetime'],
+        textrank: ['spacetime'],
+      },
+    });
+  }
+}
+
+runReflectiveLearningServiceContractTests(async () => new InMemoryReflectiveLearningService());
 
 describe('Realtime and Payment Base Providers', () => {
   it('supports publish/subscribe/presence on BaseRealtimeProvider', async () => {

@@ -1,0 +1,24 @@
+{
+  "name": "py-reflective-nlp",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/data-access/py-reflective-nlp/src",
+  "tags": ["scope:data-access", "type:data-access", "lang:py"],
+  "targets": {
+    "lint": {
+      "cache": true,
+      "outputs": [],
+      "command": "uv run --package py-reflective-nlp ruff check --config libs/data-access/py-reflective-nlp/pyproject.toml libs/data-access/py-reflective-nlp && uv run --package py-reflective-nlp ruff format --check --config libs/data-access/py-reflective-nlp/pyproject.toml libs/data-access/py-reflective-nlp"
+    },
+    "typecheck": {
+      "cache": true,
+      "outputs": [],
+      "command": "uv run --package py-reflective-nlp pyright --project libs/data-access/py-reflective-nlp/pyproject.toml"
+    },
+    "test": {
+      "cache": true,
+      "outputs": ["{projectRoot}/.coverage"],
+      "command": "COVERAGE_FILE=libs/data-access/py-reflective-nlp/.coverage uv run --package py-reflective-nlp pytest -c libs/data-access/py-reflective-nlp/pyproject.toml libs/data-access/py-reflective-nlp/tests --cov=libs/data-access/py-reflective-nlp/src --cov-report=term-missing --cov-fail-under=80"
+    }
+  }
+}
