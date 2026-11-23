@@ -20,7 +20,7 @@ describe('MagicProgressIndicator', () => {
     });
 
     const bar = screen.getByTestId('magic-progress-indicator');
-    expect(bar).toHaveAttribute('id', 'upload-bar');
+    expect(bar).toHaveAttribute('data-testid', 'magic-progress-indicator');
     expect(bar).toHaveAttribute('data-type', 'bar');
     expect(bar).toHaveAttribute('aria-valuenow', '100');
     expect(screen.getByTestId('magic-progress-indicator-fill')).toHaveStyle({

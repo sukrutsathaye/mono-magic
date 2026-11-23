@@ -138,7 +138,7 @@
   </div>
 {:else}
   <Progress.Root
-    {id}
+    id={id}
     value={isIndeterminate ? null : clampedValue}
     min={0}
     max={100}

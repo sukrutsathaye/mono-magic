@@ -30,3 +30,20 @@ if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {
     }),
   });
 }
+
+if (typeof window !== 'undefined' && !window.visualViewport) {
+  Object.defineProperty(window, 'visualViewport', {
+    writable: true,
+    value: {
+      width: 1024,
+      height: 768,
+      offsetLeft: 0,
+      offsetTop: 0,
+      pageScale: 1,
+      scale: 1,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      dispatchEvent: () => false,
+    },
+  });
+}
