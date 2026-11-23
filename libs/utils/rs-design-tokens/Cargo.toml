@@ -1,0 +1,16 @@
+[package]
+name = "rs-design-tokens"
+version = "0.1.0"
+edition = "2021"
+description = "Color space conversions (sRGB/HSL/OKLCH), WCAG 2.1 contrast auditing, and deterministic CSS/TypeScript/Flutter token emitter."
+license = "MIT"
+
+[lib]
+name = "rs_design_tokens"
+path = "src/lib.rs"
+
+[[bin]]
+name = "rs-design-tokens"
+path = "src/main.rs"
+
+[dependencies]

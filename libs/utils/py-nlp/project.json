@@ -1,0 +1,21 @@
+{
+  "name": "py-utils-nlp",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/utils/py-nlp/src",
+  "tags": ["scope:utils", "type:util", "lang:py"],
+  "targets": {
+    "lint": {
+      "cache": true,
+      "command": "uv run --package py-utils-nlp ruff check --config libs/utils/py-nlp/pyproject.toml libs/utils/py-nlp && uv run --package py-utils-nlp ruff format --check --config libs/utils/py-nlp/pyproject.toml libs/utils/py-nlp"
+    },
+    "typecheck": {
+      "cache": true,
+      "command": "uv run --package py-utils-nlp pyright --project libs/utils/py-nlp/pyproject.toml"
+    },
+    "test": {
+      "cache": true,
+      "command": "COVERAGE_FILE=libs/utils/py-nlp/.coverage uv run --package py-utils-nlp pytest -c libs/utils/py-nlp/pyproject.toml libs/utils/py-nlp/tests --cov=libs/utils/py-nlp/src --cov-report=term-missing --cov-fail-under=90"
+    }
+  }
+}
