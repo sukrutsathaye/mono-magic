@@ -462,6 +462,15 @@ importers:
         specifier: workspace:*
         version: link:../../utils/ts-core
 
+  libs/data-access/ts-reflective-api:
+    dependencies:
+      '@mono-magic/data-access-ts-interfaces':
+        specifier: workspace:*
+        version: link:../ts-interfaces
+      '@mono-magic/utils-ts-core':
+        specifier: workspace:*
+        version: link:../../utils/ts-core
+
   libs/data-access/ts-supabase:
     dependencies:
       '@mono-magic/data-access-ts-interfaces':

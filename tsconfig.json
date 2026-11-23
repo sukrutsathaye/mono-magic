@@ -31,6 +31,9 @@
       "path": "./libs/data-access/ts-supabase"
     },
     {
+      "path": "./libs/data-access/ts-reflective-api"
+    },
+    {
       "path": "./libs/ui/vue-vuetify"
     },
     {

@@ -1,0 +1,12 @@
+{
+  "name": "data-access-ts-reflective-api",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/data-access/ts-reflective-api/src",
+  "projectType": "library",
+  "tags": [
+    "scope:data-access",
+    "type:data-access",
+    "lang:ts"
+  ],
+  "targets": {}
+}
