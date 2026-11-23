@@ -1,0 +1,127 @@
+<div class="magic-date-picker__container">
+  <mat-form-field
+    class="magic-date-picker__field"
+    [appearance]="matAppearance()"
+    [floatLabel]="floatLabel()"
+    [subscriptSizing]="subscriptSizing()"
+    [hideRequiredMarker]="hideRequiredMarker()"
+    [attr.id]="id() || null"
+    [attr.data-testid]="testId() || null"
+  >
+    @if (label()) {
+      <mat-label>{{ label() }}</mat-label>
+    }
+
+    @if (mode() === 'range') {
+      <mat-date-range-input
+        [rangePicker]="rangePicker"
+        [min]="minDateObj()"
+        [max]="maxDateObj()"
+        [required]="required()"
+        [disabled]="disabled()"
+      >
+        <input
+          matStartDate
+          [value]="rangeStartObj()"
+          [placeholder]="startPlaceholder()"
+          [readonly]="readOnly()"
+          [attr.aria-label]="ariaLabel() ? ariaLabel() + ' start' : startPlaceholder()"
+          [attr.aria-invalid]="errorText() ? 'true' : null"
+          [attr.data-testid]="testId() ? testId() + '-start' : null"
+          (dateChange)="onRangeStartChange($event)"
+        />
+        <input
+          matEndDate
+          [value]="rangeEndObj()"
+          [placeholder]="endPlaceholder()"
+          [readonly]="readOnly()"
+          [attr.aria-label]="ariaLabel() ? ariaLabel() + ' end' : endPlaceholder()"
+          [attr.aria-invalid]="errorText() ? 'true' : null"
+          [attr.data-testid]="testId() ? testId() + '-end' : null"
+          (dateChange)="onRangeEndChange($event)"
+        />
+      </mat-date-range-input>
+
+      <div matSuffix class="magic-date-picker__actions">
+        @if (showClearButton()) {
+          <button
+            mat-icon-button
+            type="button"
+            class="magic-date-picker__clear"
+            aria-label="Clear date range"
+            [attr.data-testid]="testId() ? testId() + '-clear' : null"
+            (click)="clearValue($event)"
+          >
+            <mat-icon aria-hidden="true">close</mat-icon>
+          </button>
+        }
+        <mat-datepicker-toggle
+          [for]="rangePicker"
+          [disabled]="disabled() || readOnly()"
+        />
+      </div>
+      <mat-date-range-picker #rangePicker [disabled]="disabled() || readOnly()" />
+    } @else {
+      <input
+        matInput
+        [matDatepicker]="singlePicker"
+        [value]="singleDateObj()"
+        [min]="minDateObj()"
+        [max]="maxDateObj()"
+        [placeholder]="placeholder()"
+        [required]="required()"
+        [disabled]="disabled()"
+        [readonly]="readOnly()"
+        [errorStateMatcher]="errorStateMatcher"
+        [attr.aria-label]="ariaLabel() || label() || placeholder()"
+        [attr.aria-invalid]="errorText() ? 'true' : null"
+        [attr.data-testid]="testId() ? testId() + '-input' : null"
+        (dateChange)="onSingleDateChange($event)"
+      />
+
+      <div matSuffix class="magic-date-picker__actions">
+        @if (showClearButton()) {
+          <button
+            mat-icon-button
+            type="button"
+            class="magic-date-picker__clear"
+            aria-label="Clear date"
+            [attr.data-testid]="testId() ? testId() + '-clear' : null"
+            (click)="clearValue($event)"
+          >
+            <mat-icon aria-hidden="true">close</mat-icon>
+          </button>
+        }
+        <mat-datepicker-toggle
+          [for]="singlePicker"
+          [disabled]="disabled() || readOnly()"
+        />
+      </div>
+      <mat-datepicker #singlePicker [disabled]="disabled() || readOnly()" />
+    }
+
+    @if (errorText()) {
+      <mat-error>{{ errorText() }}</mat-error>
+    }
+    @if (hint()) {
+      <mat-hint>{{ hint() }}</mat-hint>
+    }
+  </mat-form-field>
+
+  @if (enableTime() && mode() === 'single') {
+    <label class="magic-date-picker__time-wrap">
+      <span class="magic-date-picker__time-label">Time</span>
+      <input
+        type="time"
+        class="magic-date-picker__time-input"
+        aria-label="Select time"
+        [value]="currentTime()"
+        [disabled]="disabled()"
+        [readonly]="readOnly()"
+        [attr.data-testid]="testId() ? testId() + '-time' : null"
+        (change)="onTimeChange($event)"
+        (input)="onTimeChange($event)"
+      />
+    </label>
+  }
+</div>

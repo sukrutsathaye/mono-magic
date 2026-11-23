@@ -1,0 +1,146 @@
+<mat-list class="magic-list-item__list">
+  @if (isActivatable()) {
+    <button
+      type="button"
+      mat-list-item
+      class="magic-list-item__row magic-list-item__row--interactive"
+      [class.magic-list-item__row--selected]="selected()"
+      [activated]="selected()"
+      [disabled]="disabled()"
+      [attr.id]="id() || null"
+      [attr.data-testid]="testId() || null"
+      [attr.aria-label]="ariaLabel() || primaryText()"
+      [attr.aria-pressed]="selectable() ? selected() : null"
+      (click)="onActivate($event)"
+    >
+      @if (hasLeadingAvatar()) {
+        <span matListItemAvatar class="magic-list-item__leading-avatar">
+          <magic-avatar
+            [src]="leadingAvatarSrc()"
+            [initials]="leadingAvatarText()"
+            [name]="primaryText()"
+            [color]="color()"
+            [size]="avatarSize()"
+          />
+        </span>
+      } @else if (leadingIcon()) {
+        <mat-icon matListItemIcon class="magic-list-item__leading-icon" aria-hidden="true">{{
+          leadingIcon()
+        }}</mat-icon>
+      }
+
+      @if (overlineText()) {
+        <span matListItemLine class="magic-list-item__overline">{{
+          overlineText()
+        }}</span>
+      }
+
+      <span matListItemTitle class="magic-list-item__primary">{{
+        primaryText()
+      }}</span>
+
+      @if (secondaryText()) {
+        <span matListItemLine class="magic-list-item__secondary">{{
+          secondaryText()
+        }}</span>
+      }
+
+      @if (hasTrailing()) {
+        <span matListItemMeta class="magic-list-item__trailing">
+          @if (trailingText()) {
+            <span class="magic-list-item__trailing-text">{{
+              trailingText()
+            }}</span>
+          }
+          @if (trailingBadge() !== undefined) {
+            <magic-badge
+              class="magic-list-item__trailing-badge"
+              size="sm"
+              [color]="color()"
+              [content]="trailingBadge()"
+              [overlap]="false"
+            >
+              <span class="magic-list-item__badge-anchor" aria-hidden="true"></span>
+            </magic-badge>
+          }
+          @if (trailingIcon()) {
+            <mat-icon class="magic-list-item__trailing-icon" aria-hidden="true">{{
+              trailingIcon()
+            }}</mat-icon>
+          }
+        </span>
+      }
+    </button>
+  } @else {
+    <mat-list-item
+      class="magic-list-item__row"
+      [class.magic-list-item__row--selected]="selected()"
+      [disabled]="disabled()"
+      [attr.id]="id() || null"
+      [attr.data-testid]="testId() || null"
+      [attr.aria-label]="ariaLabel() || null"
+    >
+      @if (hasLeadingAvatar()) {
+        <span matListItemAvatar class="magic-list-item__leading-avatar">
+          <magic-avatar
+            [src]="leadingAvatarSrc()"
+            [initials]="leadingAvatarText()"
+            [name]="primaryText()"
+            [color]="color()"
+            [size]="avatarSize()"
+          />
+        </span>
+      } @else if (leadingIcon()) {
+        <mat-icon matListItemIcon class="magic-list-item__leading-icon" aria-hidden="true">{{
+          leadingIcon()
+        }}</mat-icon>
+      }
+
+      @if (overlineText()) {
+        <span matListItemLine class="magic-list-item__overline">{{
+          overlineText()
+        }}</span>
+      }
+
+      <span matListItemTitle class="magic-list-item__primary">{{
+        primaryText()
+      }}</span>
+
+      @if (secondaryText()) {
+        <span matListItemLine class="magic-list-item__secondary">{{
+          secondaryText()
+        }}</span>
+      }
+
+      @if (hasTrailing()) {
+        <span matListItemMeta class="magic-list-item__trailing">
+          @if (trailingText()) {
+            <span class="magic-list-item__trailing-text">{{
+              trailingText()
+            }}</span>
+          }
+          @if (trailingBadge() !== undefined) {
+            <magic-badge
+              class="magic-list-item__trailing-badge"
+              size="sm"
+              [color]="color()"
+              [content]="trailingBadge()"
+              [overlap]="false"
+            >
+              <span class="magic-list-item__badge-anchor" aria-hidden="true"></span>
+            </magic-badge>
+          }
+          @if (trailingIcon()) {
+            <mat-icon class="magic-list-item__trailing-icon" aria-hidden="true">{{
+              trailingIcon()
+            }}</mat-icon>
+          }
+        </span>
+      }
+    </mat-list-item>
+  }
+
+  @if (divider()) {
+    <mat-divider class="magic-list-item__divider" />
+  }
+</mat-list>

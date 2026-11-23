@@ -1,0 +1,119 @@
+<nav
+  class="magic-pagination__nav"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || 'Pagination'"
+>
+  @if (showTotalCount()) {
+    <span
+      class="magic-pagination__total"
+      [attr.data-testid]="testId() ? testId() + '-total' : null"
+    >
+      {{ totalSummary() }}
+    </span>
+  }
+
+  @if (showPageSizeSelector()) {
+    <div class="magic-pagination__page-size">
+      <span
+        class="magic-pagination__page-size-label"
+        [attr.id]="(id() || 'magic-pg') + '-rows-label'"
+      >
+        Rows:
+      </span>
+      <mat-select
+        class="magic-pagination__page-size-select"
+        aria-label="Items per page"
+        [value]="currentPageSize()"
+        [disabled]="disabled()"
+        [attr.data-testid]="testId() ? testId() + '-page-size' : null"
+        (selectionChange)="onPageSizeSelected($event)"
+      >
+        @for (option of resolvedPageSizeOptions(); track option) {
+          <mat-option [value]="option">{{ option }}</mat-option>
+        }
+      </mat-select>
+    </div>
+  }
+
+  <ul class="magic-pagination__list">
+    @if (showFirstLast()) {
+      <li>
+        <button
+          type="button"
+          class="magic-pagination__btn magic-pagination__btn--nav"
+          aria-label="First page"
+          [disabled]="!canGoPrevious()"
+          [attr.data-testid]="testId() ? testId() + '-first' : null"
+          (click)="goToPage(1)"
+        >
+          <mat-icon aria-hidden="true">first_page</mat-icon>
+        </button>
+      </li>
+    }
+
+    <li>
+      <button
+        type="button"
+        class="magic-pagination__btn magic-pagination__btn--nav"
+        aria-label="Previous page"
+        [disabled]="!canGoPrevious()"
+        [attr.data-testid]="testId() ? testId() + '-prev' : null"
+        (click)="goToPage(currentPage() - 1)"
+      >
+        <mat-icon aria-hidden="true">chevron_left</mat-icon>
+      </button>
+    </li>
+
+    @for (token of tokens(); track token.kind === 'page' ? 'p-' + token.page : token.key) {
+      @if (token.kind === 'ellipsis') {
+        <li>
+          <span class="magic-pagination__ellipsis" aria-hidden="true">…</span>
+        </li>
+      } @else {
+        <li>
+          <button
+            type="button"
+            class="magic-pagination__btn magic-pagination__btn--page"
+            [class.magic-pagination__btn--active]="token.page === currentPage()"
+            [disabled]="disabled()"
+            [attr.aria-label]="'Page ' + token.page"
+            [attr.aria-current]="token.page === currentPage() ? 'page' : null"
+            [attr.data-testid]="testId() ? testId() + '-page-' + token.page : null"
+            (click)="goToPage(token.page)"
+          >
+            {{ token.page }}
+          </button>
+        </li>
+      }
+    }
+
+    <li>
+      <button
+        type="button"
+        class="magic-pagination__btn magic-pagination__btn--nav"
+        aria-label="Next page"
+        [disabled]="!canGoNext()"
+        [attr.data-testid]="testId() ? testId() + '-next' : null"
+        (click)="goToPage(currentPage() + 1)"
+      >
+        <mat-icon aria-hidden="true">chevron_right</mat-icon>
+      </button>
+    </li>
+
+    @if (showFirstLast()) {
+      <li>
+        <button
+          type="button"
+          class="magic-pagination__btn magic-pagination__btn--nav"
+          aria-label="Last page"
+          [disabled]="!canGoNext()"
+          [attr.data-testid]="testId() ? testId() + '-last' : null"
+          (click)="goToPage(totalPages())"
+        >
+          <mat-icon aria-hidden="true">last_page</mat-icon>
+        </button>
+      </li>
+    }
+  </ul>
+</nav>
