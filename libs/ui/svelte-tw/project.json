@@ -38,7 +38,7 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
-      "dependsOn": ["^build"],
+      "dependsOn": ["^typecheck", "^build"],
       "options": {
         "cwd": "libs/ui/svelte-tw",
         "command": "svelte-check --tsconfig ./tsconfig.lib.json"

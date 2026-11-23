@@ -38,7 +38,7 @@
     },
     "typecheck": {
       "executor": "nx:run-commands",
-      "dependsOn": ["^build"],
+      "dependsOn": ["^typecheck", "^build"],
       "options": {
         "cwd": "libs/ui/vue-vuetify",
         "command": "vue-tsc --noEmit -p tsconfig.lib.json"
