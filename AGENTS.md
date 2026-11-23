@@ -26,7 +26,7 @@
 # mono-magic AI Orchestration & Workspace Guide
 
 - Read [REPO_INDEX.md](REPO_INDEX.md) **first** before exploring the repo (do not run full-repo `find`/`ls -R`/`grep`). Refresh it with `node tools/ci/generate-repo-index.mjs` after adding/removing projects or exports.
-- **Keep `README.md` Up to Date**: Whenever adding or removing libraries or apps across any domain (`libs/ui`, `libs/utils`, `libs/data-access`, `libs/features`, `apps`), update [README.md](README.md) in the same PR so it accurately reflects all workspace libraries, languages, and capabilities (not just `libs/ui`).
+- **Keep `README.md` Up to Date**: Whenever adding or removing libraries or apps across any domain (`libs/ui`, `libs/utils`, `libs/data-access`, `libs/features`, `apps`), update **both** the `Workspace Structure` directory tree **and** the domain library tables/commands in [README.md](README.md) in the same PR so it stays 100% in sync with [REPO_INDEX.md](REPO_INDEX.md) across all workspace libraries, languages, and capabilities.
 - Read [GEMINI.md](GEMINI.md) for the complete architecture rules, strict 4-domain `libs/` boundaries (`libs/ui`, `libs/utils`, `libs/data-access`, `libs/features`, `apps`), `libs/<domain>/<lang>-<name>` naming & tagging, and Storybook visual testing conventions.
 - **Mandatory Skills**: Always apply [`engineering-standards`](.gemini/skills/engineering-standards/SKILL.md) across all changes, [`token-budget-guardrails`](.gemini/skills/token-budget-guardrails/SKILL.md) for `/teamwork` and parallel subagents, and [`python-uv-service`](.gemini/skills/python-uv-service/SKILL.md) for Python (`libs/*/py-*`, `apps/api-*`).
 - **Git, Branching (`dev` as Integration Branch) & Rate-Limit Discipline (All Agents)**:
