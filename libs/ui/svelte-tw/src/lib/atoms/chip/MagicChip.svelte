@@ -189,7 +189,7 @@
       role={chipSelectable ? 'option' : 'listitem'}
       aria-selected={chipSelectable ? Boolean(chip.selected) : undefined}
       aria-disabled={chipDisabled ? 'true' : undefined}
-      tabindex={chipDisabled ? -1 : 0}
+      tabindex={(chipSelectable || chipEditable) && !chipDisabled ? 0 : undefined}
       draggable={isDraggableGroup && !chipDisabled}
       data-testid={`${testId}-item-${index}`}
       onclick={() => handleChipClick(index)}

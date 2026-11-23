@@ -111,7 +111,7 @@ const singleModel = computed<number>({
 });
 
 const rangeModel = computed<[number, number]>({
-  get() {
+  get(): [number, number] {
     if (Array.isArray(props.modelValue) && props.modelValue.length === 2) {
       return [props.modelValue[0], props.modelValue[1]];
     }
@@ -123,7 +123,7 @@ const rangeModel = computed<[number, number]>({
     }
     return internalRange.value;
   },
-  set(next) {
+  set(next: [number, number]) {
     if (props.disabled) {
       return;
     }

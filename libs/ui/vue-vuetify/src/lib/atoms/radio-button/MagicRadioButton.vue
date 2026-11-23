@@ -72,37 +72,43 @@ const nativeDisabled = computed(
 const ariaDisabled = computed(() =>
   props.disabled && props.disabledInteractive ? 'true' : undefined,
 );
+const accessibleLabel = computed(() => props.ariaLabel ?? props.name);
 </script>
 
 <template>
-  <v-radio-group
+  <div
     :id="id"
-    v-model="currentValue"
     :data-testid="testId"
-    :aria-label="ariaLabel ?? name"
+    role="radiogroup"
+    :aria-label="accessibleLabel"
     :aria-disabled="ariaDisabled"
-    :name="name"
-    :inline="!vertical"
-    :color="vuetifyColor"
-    :density="vuetifyDensity"
-    :disabled="nativeDisabled"
-    hide-details
     :class="{ 'opacity-60': disabled && disabledInteractive }"
   >
-    <v-radio
-      v-for="option in options"
-      :key="option.value"
-      :label="option.label"
-      :value="option.value"
-      :disabled="nativeDisabled || Boolean(option.disabled)"
-      :ripple="!disableRipple"
+    <v-radio-group
+      v-model="currentValue"
+      :name="name"
+      :inline="!vertical"
       :color="vuetifyColor"
-      :class="{
-        'magic-radio--label-before':
-          (option.labelPosition ?? labelPosition) === 'before',
-      }"
-    />
-  </v-radio-group>
+      :density="vuetifyDensity"
+      :disabled="nativeDisabled"
+      :readonly="disabled && disabledInteractive"
+      hide-details
+    >
+      <v-radio
+        v-for="option in options"
+        :key="option.value"
+        :label="option.label"
+        :value="option.value"
+        :disabled="nativeDisabled || Boolean(option.disabled)"
+        :ripple="!disableRipple"
+        :color="vuetifyColor"
+        :class="{
+          'magic-radio--label-before':
+            (option.labelPosition ?? labelPosition) === 'before',
+        }"
+      />
+    </v-radio-group>
+  </div>
 </template>
 
 <style scoped>

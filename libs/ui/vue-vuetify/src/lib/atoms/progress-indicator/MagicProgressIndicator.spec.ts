@@ -55,7 +55,8 @@ describe('MagicProgressIndicator', () => {
       mode: 'query',
       color: 'warning',
     });
-    expect(query.find('.v-progress-linear--indeterminate').exists()).toBe(true);
+    expect(query.find('.v-progress-linear__indeterminate').exists()).toBe(true);
+    expect(query.find('.v-progress-linear--reverse').exists()).toBe(true);
     expect(query.attributes('aria-valuenow')).toBeUndefined();
   });
 

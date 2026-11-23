@@ -103,7 +103,7 @@
     <span
       role="status"
       aria-label={effectiveAriaLabel}
-      aria-description={description}
+      aria-describedby={description ? `${testId}-desc` : undefined}
       data-testid={`${testId}-indicator`}
       class={cn(
         'inline-flex items-center justify-center rounded-full font-semibold leading-none shadow-sm transition-transform',
@@ -116,5 +116,8 @@
         {badgeText}
       {/if}
     </span>
+  {/if}
+  {#if description}
+    <span id={`${testId}-desc`} class="sr-only">{description}</span>
   {/if}
 </span>

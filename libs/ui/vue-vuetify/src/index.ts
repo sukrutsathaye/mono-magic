@@ -4,4 +4,7 @@ export {
   mapAtomicSizeToDensity,
   mapAtomicSizeToVuetify,
   mapColorIntentToVuetify,
+  normalizeMdiIcon,
 } from './lib/theme';
+
+export * from './lib/atoms';

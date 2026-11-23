@@ -64,6 +64,7 @@ const accessibleLabel = computed(() => props.ariaLabel ?? 'Progress indicator');
     v-if="type === 'spinner'"
     :id="id"
     :data-testid="testId"
+    :data-mode="mode"
     role="progressbar"
     :aria-label="accessibleLabel"
     :aria-valuenow="isIndeterminate ? undefined : clampedValue"
@@ -81,6 +82,7 @@ const accessibleLabel = computed(() => props.ariaLabel ?? 'Progress indicator');
     v-else
     :id="id"
     :data-testid="testId"
+    :data-mode="mode"
     role="progressbar"
     :aria-label="accessibleLabel"
     :aria-valuenow="isIndeterminate ? undefined : clampedValue"
