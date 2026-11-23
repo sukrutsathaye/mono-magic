@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, within } from 'storybook/test';
 import { MagicRating } from './rating';
 
 /**
