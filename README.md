@@ -33,6 +33,13 @@ mono-magic/
 ├── apps/                             # Deployable applications & polyglot microservices
 ├── libs/                             # Strictly 4 domain directories:
 │   ├── data-access/                  # Contract-first Protobuf/TS/Py interfaces & BaaS/domain providers
+│   │   ├── proto-contracts/          # Canonical Protobuf (buf) wire schemas & DTOs
+│   │   ├── ts-interfaces/            # TypeScript data-access interfaces & contract test suites
+│   │   ├── py-interfaces/            # Python async Protocol interfaces & pytest contract suites
+│   │   ├── ts-firebase/              # Firebase Auth, Firestore, Realtime & Storage providers
+│   │   ├── ts-supabase/              # Supabase Auth, Data, Realtime & Storage providers
+│   │   ├── ts-reflective-api/        # Reflective Learning TypeScript API client
+│   │   └── py-reflective-nlp/        # Reflective Learning Python NLP & repository providers
 │   ├── features/                     # Domain feature modules composing ui, data-access, and utils
 │   ├── ui/
 │   │   ├── atomic-design-interfaces/ # Framework-agnostic Atomic Design TypeScript contracts
