@@ -83,3 +83,22 @@ export function mapColorIntentToVuetify(
 ): string {
   return VUETIFY_COLOR_MAP[color];
 }
+
+/**
+ * Normalizes an icon name to Vuetify's MDI prefix format (`mdi-*`) unless it
+ * already carries an MDI prefix or Vuetify alias prefix (`$`).
+ */
+export function normalizeMdiIcon(icon?: string): string | undefined {
+  if (!icon) {
+    return undefined;
+  }
+  const trimmed = icon.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+  if (trimmed.startsWith('mdi-') || trimmed.startsWith('$')) {
+    return trimmed;
+  }
+  return `mdi-${trimmed}`;
+}
+

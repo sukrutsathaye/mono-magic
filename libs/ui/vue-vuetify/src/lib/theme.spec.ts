@@ -8,6 +8,7 @@ import {
   mapAtomicSizeToDensity,
   mapAtomicSizeToVuetify,
   mapColorIntentToVuetify,
+  normalizeMdiIcon,
 } from './theme';
 import { createMagicVuetify } from './vuetify';
 
@@ -56,9 +57,18 @@ describe('vue-vuetify theme helpers', () => {
     expect(mapColorIntentToVuetify()).toBe('primary');
   });
 
+  it('normalizes icon names to Vuetify MDI format', () => {
+    expect(normalizeMdiIcon()).toBeUndefined();
+    expect(normalizeMdiIcon('   ')).toBeUndefined();
+    expect(normalizeMdiIcon('home')).toBe('mdi-home');
+    expect(normalizeMdiIcon('mdi-star')).toBe('mdi-star');
+    expect(normalizeMdiIcon('$close')).toBe('$close');
+  });
+
   it('creates a configured Vuetify 3 plugin instance with magic themes', () => {
     const vuetify = createMagicVuetify();
     expect(vuetify).toBeDefined();
     expect(typeof vuetify.install).toBe('function');
   });
 });
+
