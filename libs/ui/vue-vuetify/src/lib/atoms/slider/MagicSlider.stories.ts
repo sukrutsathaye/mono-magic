@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, within } from 'storybook/test';
 import MagicSlider from './MagicSlider.vue';
 
 const meta: Meta<typeof MagicSlider> = {
@@ -93,4 +94,11 @@ export const InteractiveVolumeAndPriceRange: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('Volume: 65%')).toBeInTheDocument();
+    await expect(canvas.getByText(/Price Range: \$25 – \$75/)).toBeInTheDocument();
+    const sliders = canvas.getAllByRole('slider');
+    await expect(sliders.length).toBeGreaterThanOrEqual(2);
+  },
 };

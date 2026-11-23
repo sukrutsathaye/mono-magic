@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
+import { expect, within } from 'storybook/test';
 import MagicSlider from './MagicSlider.svelte';
 import SliderStoryDemo from './SliderStoryDemo.svelte';
 
@@ -66,4 +67,11 @@ export const InteractiveVolumeAndPriceRange: Story = {
   render: () => ({
     Component: SliderStoryDemo,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId('slider-volume-status')).toHaveTextContent('Volume: 65%');
+    await expect(canvas.getByTestId('slider-price-status')).toHaveTextContent('Price Range: $25 – $75');
+    const sliders = canvas.getAllByRole('slider');
+    await expect(sliders.length).toBeGreaterThanOrEqual(2);
+  },
 };

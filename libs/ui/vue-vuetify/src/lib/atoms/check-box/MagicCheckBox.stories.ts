@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import type { CheckBoxTask } from '@mono-magic/atomic-design-interfaces';
 import MagicCheckBox from './MagicCheckBox.vue';
 
@@ -92,4 +93,11 @@ export const InteractiveTaskTree: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const docsCheckbox = canvas.getByLabelText(/README updated/i);
+    await expect(docsCheckbox).not.toBeChecked();
+    await userEvent.click(docsCheckbox);
+    await expect(docsCheckbox).toBeChecked();
+  },
 };

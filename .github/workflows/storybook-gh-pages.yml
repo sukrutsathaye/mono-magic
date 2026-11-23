@@ -59,6 +59,7 @@ jobs:
         with:
           name: showcase-${{ matrix.name }}
           path: dist/storybook-pages
+          include-hidden-files: true
           if-no-files-found: error
 
   assemble:

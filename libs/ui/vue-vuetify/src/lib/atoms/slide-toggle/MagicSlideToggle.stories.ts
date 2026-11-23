@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import MagicSlideToggle from './MagicSlideToggle.vue';
 
 const meta: Meta<typeof MagicSlideToggle> = {
@@ -83,4 +84,10 @@ export const InteractiveSettingsPanel: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText(/Push: OFF/)).toBeInTheDocument();
+    await userEvent.click(canvas.getByLabelText(/Push notifications/i));
+    await expect(canvas.getByText(/Push: ON/)).toBeInTheDocument();
+  },
 };

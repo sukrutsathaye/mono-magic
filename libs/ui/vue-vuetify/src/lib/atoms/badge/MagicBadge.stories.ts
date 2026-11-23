@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import MagicBadge from './MagicBadge.vue';
 
 const meta: Meta<typeof MagicBadge> = {
@@ -132,4 +133,12 @@ export const InteractiveCounter: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText(/Current count: 3/)).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: /\+1 Notification/i }));
+    await expect(canvas.getByText(/Current count: 4/)).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: /Clear/i }));
+    await expect(canvas.getByText(/Current count: 0/)).toBeInTheDocument();
+  },
 };

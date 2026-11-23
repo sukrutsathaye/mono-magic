@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import MagicRadioButton from './MagicRadioButton.vue';
 
 const meta: Meta<typeof MagicRadioButton> = {
@@ -82,4 +83,10 @@ export const InteractivePlanSelector: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText('pro')).toBeInTheDocument();
+    await userEvent.click(canvas.getByLabelText(/Team — \$49\/mo/i));
+    await expect(canvas.getByText('team')).toBeInTheDocument();
+  },
 };

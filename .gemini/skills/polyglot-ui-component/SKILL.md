@@ -26,6 +26,8 @@ Before starting a Molecule, Organism, or Template, verify that every lower-tier 
 - `libs/ui/ng-mat`
 - `libs/ui/rn-paper`
 - `libs/ui/fl-mat`
+- `libs/ui/vue-vuetify`
+- `libs/ui/svelte-tw`
 
 ---
 
@@ -87,16 +89,26 @@ Before starting a Molecule, Organism, or Template, verify that every lower-tier 
    pnpm nx run-many -t lint test build-widgetbook -p fl-mat
    ```
 
+### Step 5b — Implement in `vue-vuetify` (`libs/ui/vue-vuetify`) & `svelte-tw` (`libs/ui/svelte-tw`)
+1. Mirror the contract in `libs/ui/vue-vuetify/src/lib/<tier>/<kebab-name>/Magic<Component>.vue` and `libs/ui/svelte-tw/src/lib/<tier>/<kebab-name>/Magic<Component>.svelte` (with unit tests `*.spec.ts` `>=80%` coverage and CSF3 stories `Magic<Component>.stories.ts`).
+2. **Mandatory Interactive Story & `play` Function Rule (All Storybook Libraries)**:
+   - Every component's `*.stories.ts(x)` across `react-mui`, `ng-mat`, `rn-paper`, `vue-vuetify`, and `svelte-tw` **MUST** include:
+     1. Full `argTypes` + `args` so Storybook **Controls** interactively update the component.
+     2. At least one **stateful interactive story** (using `useState`, Angular `signal`, Vue `ref`, or a Svelte `$state` demo wrapper) so users can click, type, toggle, or drag in the live preview.
+     3. At least one Storybook `play` function (using `expect`, `userEvent`, `within` from `storybook/test`) that exercises real user interaction and asserts DOM/state changes in the Storybook **Interactions** panel and `test-storybook`.
+
 ### Step 6 — Generate Visual Baselines & Verify Showcases
 1. Generate/update Storybook visual baselines (`storybook-addon-vis`):
    ```bash
    pnpm nx test-storybook react-mui -- -u
    pnpm nx test-storybook ng-mat -- -u
    pnpm nx test-storybook rn-paper -- -u
+   pnpm nx test-storybook vue-vuetify -- -u
+   pnpm nx test-storybook svelte-tw -- -u
    ```
 2. Run Storybook visual & interaction tests:
    ```bash
-   pnpm nx run-many -t test-storybook -p react-mui,ng-mat,rn-paper
+   pnpm nx run-many -t test-storybook -p react-mui,ng-mat,rn-paper,vue-vuetify,svelte-tw
    ```
 3. Build static Storybooks and Widgetbook:
    ```bash

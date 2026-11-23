@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import MagicTextInput from './MagicTextInput.vue';
 
 const meta: Meta<typeof MagicTextInput> = {
@@ -166,4 +167,10 @@ export const InteractiveValidatedForm: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const emailInput = canvas.getByPlaceholderText('ada@mono-magic.dev');
+    await userEvent.type(emailInput, 'ada@mono-magic.dev');
+    await expect(canvas.getByText(/Email: "ada@mono-magic\.dev"/)).toBeInTheDocument();
+  },
 };

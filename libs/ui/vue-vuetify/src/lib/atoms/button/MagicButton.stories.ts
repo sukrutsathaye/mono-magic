@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import MagicButton from './MagicButton.vue';
 
 const meta: Meta<typeof MagicButton> = {
@@ -151,4 +152,10 @@ export const InteractiveClickAndLoading: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText(/Total saves triggered: 0/)).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: /Save Draft/i }));
+    await expect(canvas.getByText(/Total saves triggered: 1/)).toBeInTheDocument();
+  },
 };
