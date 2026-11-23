@@ -1,15 +1,5 @@
-name: CI
-
-on:
-  pull-requests:
-    event: PR
-    branches: [main]
-  main-pushes:
-    event: PUSH
-    branches: [main]
-
 launch-templates:
-  linux-large-flutter:
+  linux-large-polyglot:
     resource-class: 'docker_linux_amd64/large'
     image: 'ubuntu22.04-node24.14-v1'
     init-steps:
@@ -34,33 +24,70 @@ launch-templates:
           base-branch: 'main'
       - name: Setup Flutter 3.50.0
         script: |
+          set -eu
           if [ ! -x "$HOME/flutter/bin/flutter" ]; then
             mkdir -p "$HOME/flutter"
             curl -fSL https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.50.0-stable.tar.xz | tar -xJf - -C "$HOME"
           fi
           export PATH="$HOME/flutter/bin:$PATH"
-          echo "PATH=$HOME/flutter/bin:$PATH" >> "$NX_CLOUD_ENV"
+          if [ -n "${NX_CLOUD_PATH:-}" ]; then
+            echo "$HOME/flutter/bin" >> "$NX_CLOUD_PATH"
+          else
+            echo "PATH=$HOME/flutter/bin:$PATH" >> "$NX_CLOUD_ENV"
+          fi
           flutter config --no-analytics --enable-web
-          while IFS= read -r pubspec; do
+          find apps libs -maxdepth 4 -name "pubspec.yaml" -not -path "*/.*/*" -not -path "*/build/*" 2>/dev/null | while IFS= read -r pubspec; do
             dir=$(dirname "$pubspec")
             echo "Running flutter pub get in $dir"
             (cd "$dir" && flutter pub get)
-          done < <(find apps libs -maxdepth 4 -name "pubspec.yaml" -not -path "*/.*/*" -not -path "*/build/*" 2>/dev/null || true)
+          done || true
+      - name: Restore uv, Cargo & Go Caches
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/cache/main.yaml'
+        inputs:
+          key: 'uv.lock|Cargo.lock|go.work|pyproject.toml|"py312-uv-rust-stable-go-1.24.3"'
+          paths: |
+            ~/.cache/uv
+            ~/.local/share/uv/python
+            ~/.local/bin
+            ~/.cargo
+            ~/.rustup
+            ~/go-sdk
+          base-branch: 'main'
+      - name: Setup Python (uv), Rust & Go
+        script: |
+          set -eu
+          export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/go-sdk/go/bin:$HOME/flutter/bin:$PATH"
+          # uv + managed Python 3.12 (required by pyproject.toml >=3.12 on Ubuntu 22.04)
+          if [ ! -x "$HOME/.local/bin/uv" ]; then
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+          fi
+          uv python install 3.12
+          # Rust stable + clippy/rustfmt
+          if [ ! -x "$HOME/.cargo/bin/cargo" ]; then
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable --component clippy,rustfmt
+          fi
+          # Go 1.24.3
+          if [ ! -x "$HOME/go-sdk/go/bin/go" ]; then
+            mkdir -p "$HOME/go-sdk"
+            curl -fSL https://go.dev/dl/go1.24.3.linux-amd64.tar.gz | tar -xzf - -C "$HOME/go-sdk"
+          fi
+          if [ -n "${NX_CLOUD_PATH:-}" ]; then
+            {
+              echo "$HOME/.local/bin"
+              echo "$HOME/.cargo/bin"
+              echo "$HOME/go-sdk/go/bin"
+            } >> "$NX_CLOUD_PATH"
+          else
+            echo "PATH=$HOME/.local/bin:$HOME/.cargo/bin:$HOME/go-sdk/go/bin:$PATH" >> "$NX_CLOUD_ENV"
+          fi
+          uv --version && cargo --version && rustc --version && go version
+          uv sync --frozen --all-packages --python 3.12
 
 worker-templates:
   default:
-    # Distribute across 3 workers using the linux-large-flutter launch template
-    workers: 3 linux-large-flutter
+    # Distribute across 3 workers using the linux-large-polyglot launch template
+    workers: 3 linux-large-polyglot
     # Shut idle workers down once every build task has been requested
     stop-after:
       - build
 
-jobs:
-  main:
-    # Checks out the repository and installs dependencies
-    runs-on: linux-medium-js
-    workers: default
-    steps:
-      # Runs lint, test, and build only for projects affected by this change.
-      # Nx Cloud distributes these tasks across the workers started above.
-      - run: npx nx affected -t lint test build

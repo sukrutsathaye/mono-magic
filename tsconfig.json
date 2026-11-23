@@ -20,6 +20,9 @@
     },
     {
       "path": "./libs/data-access/ts-interfaces"
+    },
+    {
+      "path": "./libs/utils/ts-formatters"
     }
   ]
 }

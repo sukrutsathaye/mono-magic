@@ -1,0 +1,33 @@
+{
+  "name": "go-utils-core",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/utils/go-core",
+  "tags": ["scope:utils", "type:util", "lang:go"],
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "options": {
+        "command": "go vet ./...",
+        "cwd": "libs/utils/go-core"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "options": {
+        "command": "go test -race -cover ./...",
+        "cwd": "libs/utils/go-core"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "options": {
+        "command": "go build ./...",
+        "cwd": "libs/utils/go-core"
+      }
+    }
+  }
+}

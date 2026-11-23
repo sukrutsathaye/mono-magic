@@ -1,0 +1,36 @@
+{
+  "name": "rs-utils-pose-math",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/utils/rs-pose-math/src",
+  "tags": ["scope:utils", "type:util", "lang:rust"],
+  "targets": {
+    "lint": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "outputs": ["{workspaceRoot}/dist/target/rs-pose-math/lint"],
+      "options": {
+        "command": "cargo clippy --all-targets --target-dir ../../../dist/target/rs-pose-math/lint -- -D warnings",
+        "cwd": "libs/utils/rs-pose-math"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "outputs": ["{workspaceRoot}/dist/target/rs-pose-math/test"],
+      "options": {
+        "command": "cargo test --target-dir ../../../dist/target/rs-pose-math/test",
+        "cwd": "libs/utils/rs-pose-math"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "cache": true,
+      "outputs": ["{workspaceRoot}/dist/target/rs-pose-math/build"],
+      "options": {
+        "command": "cargo build --release --target-dir ../../../dist/target/rs-pose-math/build",
+        "cwd": "libs/utils/rs-pose-math"
+      }
+    }
+  }
+}
