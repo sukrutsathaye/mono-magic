@@ -140,6 +140,56 @@ void main() {
         items: <AvatarGroupItem>[groupItem],
       );
       expect(groupProps.items.single.id, 'u1');
+
+      const listItemProps = MagicListItemProps(
+        primaryText: 'Inbox',
+        appearance: MagicListItemAppearance.outlined,
+      );
+      expect(listItemProps.primaryText, 'Inbox');
+
+      const step = MagicStepItem(id: 's1', label: 'Details');
+      final stepCopied = step.copyWith(
+        completed: true,
+        status: MagicStepStatus.completed,
+      );
+      expect(stepCopied.completed, isTrue);
+      expect(stepCopied.status, MagicStepStatus.completed);
+
+      final stepperProps = MagicStepperProps(
+        steps: <MagicStepItem>[stepCopied],
+        orientation: MagicStepperOrientation.vertical,
+      );
+      expect(stepperProps.steps.single.id, 's1');
+
+      const paginationProps = MagicPaginationProps(
+        totalItems: 100,
+        variant: MagicPaginationVariant.filled,
+        shape: MagicPaginationShape.circular,
+      );
+      expect(paginationProps.totalItems, 100);
+
+      const crumb = MagicBreadcrumbItem(id: 'home', label: 'Home');
+      final crumbCopied = crumb.copyWith(current: true);
+      expect(crumbCopied.current, isTrue);
+      final breadcrumbsProps = MagicBreadcrumbsProps(
+        items: <MagicBreadcrumbItem>[crumbCopied],
+      );
+      expect(breadcrumbsProps.items.single.label, 'Home');
+
+      const range = MagicDateRangeValue(start: '2026-11-01', end: '2026-11-10');
+      final rangeCopied = range.copyWith(end: '2026-11-12');
+      expect(rangeCopied.end, '2026-11-12');
+      const datePickerProps = MagicDatePickerProps(
+        mode: MagicDatePickerMode.range,
+        rangeValue: range,
+      );
+      expect(datePickerProps.mode, MagicDatePickerMode.range);
+
+      const ratingProps = MagicRatingProps(
+        value: 4.5,
+        precision: MagicRatingPrecision.half,
+      );
+      expect(ratingProps.precision.value, 0.5);
     });
   });
 }

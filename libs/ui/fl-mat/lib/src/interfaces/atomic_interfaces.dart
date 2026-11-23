@@ -1797,3 +1797,741 @@ class MagicAvatarGroupProps implements BaseAtomicProps {
   final AvatarGroupSpacing spacing;
 }
 
+/// Visual surface treatment for `MagicListItem` rows.
+enum MagicListItemAppearance {
+  /// Standard transparent list row surface.
+  standard,
+
+  /// Outlined surface container with hairline border.
+  outlined,
+
+  /// Tonal filled surface container.
+  filled,
+}
+
+/// Property contract for `MagicListItem`.
+///
+/// Mirrors `ListItemMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicListItemProps implements BaseAtomicProps {
+  /// Creates a list item property contract instance.
+  const MagicListItemProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    required this.primaryText,
+    this.secondaryText,
+    this.overlineText,
+    this.leadingIcon,
+    this.leadingAvatarText,
+    this.leadingAvatarSrc,
+    this.trailingIcon,
+    this.trailingText,
+    this.trailingBadge,
+    this.interactive = false,
+    this.selectable = false,
+    this.selected = false,
+    this.divider = false,
+    this.dense = false,
+    this.color = ColorIntent.primary,
+    this.size = AtomicSize.md,
+    this.appearance = MagicListItemAppearance.standard,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Primary headline text displayed in the list item row.
+  final String primaryText;
+
+  /// Optional supporting text displayed beneath [primaryText].
+  final String? secondaryText;
+
+  /// Optional short overline label displayed above [primaryText].
+  final String? overlineText;
+
+  /// Optional Material icon string name rendered in the leading slot.
+  final String? leadingIcon;
+
+  /// Optional initials or short text rendered inside a leading avatar.
+  final String? leadingAvatarText;
+
+  /// Optional image URL rendered inside a leading avatar.
+  final String? leadingAvatarSrc;
+
+  /// Optional Material icon string name rendered in the trailing slot.
+  final String? trailingIcon;
+
+  /// Optional metadata text rendered in the trailing slot.
+  final String? trailingText;
+
+  /// Optional badge content (`String` or `int`) rendered in the trailing slot.
+  final Object? trailingBadge;
+
+  /// Whether the list item responds to pointer/keyboard activation.
+  final bool interactive;
+
+  /// Whether the list item can be toggled into a selected state.
+  final bool selectable;
+
+  /// Whether the list item is currently selected.
+  final bool selected;
+
+  /// Whether a bottom hairline divider is rendered beneath the row.
+  final bool divider;
+
+  /// Whether compact vertical padding is applied to the row.
+  final bool dense;
+
+  /// Semantic accent color intent applied to selection and icon highlights.
+  final ColorIntent color;
+
+  /// Standardized component density/size preset.
+  final AtomicSize size;
+
+  /// Material 3 surface appearance (`standard`, `outlined`, or `filled`).
+  final MagicListItemAppearance appearance;
+}
+
+/// Layout axis for `MagicStepper` step indicators and connectors.
+enum MagicStepperOrientation {
+  /// Arranges step indicators left-to-right in a horizontal row.
+  horizontal,
+
+  /// Arranges step indicators top-to-bottom in a vertical column.
+  vertical,
+}
+
+/// Explicit lifecycle state of an individual step within `MagicStepper`.
+enum MagicStepStatus {
+  /// Step has not yet been started.
+  pending,
+
+  /// Step is currently active.
+  active,
+
+  /// Step has been completed.
+  completed,
+
+  /// Step is currently in an error state.
+  error,
+}
+
+/// Individual step descriptor rendered inside `MagicStepper`.
+@immutable
+class MagicStepItem {
+  /// Creates a step item descriptor.
+  const MagicStepItem({
+    required this.id,
+    required this.label,
+    this.description,
+    this.optional = false,
+    this.optionalLabel,
+    this.completed = false,
+    this.error = false,
+    this.errorMessage,
+    this.disabled = false,
+    this.icon,
+    this.iconName,
+    this.status,
+  });
+
+  /// Unique identifier for the step.
+  final String id;
+
+  /// Primary step label displayed beside or beneath the step indicator.
+  final String label;
+
+  /// Optional supporting description for the step.
+  final String? description;
+
+  /// Whether the step may be skipped without completing it.
+  final bool optional;
+
+  /// Custom label displayed when [optional] is `true` (defaults to `"Optional"`).
+  final String? optionalLabel;
+
+  /// Whether the step has been completed.
+  final bool completed;
+
+  /// Whether the step is currently in an error state.
+  final bool error;
+
+  /// Optional error message displayed when [error] is `true`.
+  final String? errorMessage;
+
+  /// Whether this individual step is disabled and cannot be selected.
+  final bool disabled;
+
+  /// Optional native Material [IconData] overriding the numeric step index.
+  final IconData? icon;
+
+  /// Optional Material icon string name resolved via `MagicIcon`.
+  final String? iconName;
+
+  /// Explicit status override for the step (`pending`, `active`, `completed`, or `error`).
+  final MagicStepStatus? status;
+
+  /// Returns a copy of this step item with the given fields replaced.
+  MagicStepItem copyWith({
+    String? id,
+    String? label,
+    String? description,
+    bool? optional,
+    String? optionalLabel,
+    bool? completed,
+    bool? error,
+    String? errorMessage,
+    bool? disabled,
+    IconData? icon,
+    String? iconName,
+    MagicStepStatus? status,
+  }) {
+    return MagicStepItem(
+      id: id ?? this.id,
+      label: label ?? this.label,
+      description: description ?? this.description,
+      optional: optional ?? this.optional,
+      optionalLabel: optionalLabel ?? this.optionalLabel,
+      completed: completed ?? this.completed,
+      error: error ?? this.error,
+      errorMessage: errorMessage ?? this.errorMessage,
+      disabled: disabled ?? this.disabled,
+      icon: icon ?? this.icon,
+      iconName: iconName ?? this.iconName,
+      status: status ?? this.status,
+    );
+  }
+}
+
+/// Property contract for `MagicStepper`.
+///
+/// Mirrors `StepperMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicStepperProps implements BaseAtomicProps {
+  /// Creates a stepper property contract instance.
+  const MagicStepperProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    required this.steps,
+    this.activeStep,
+    this.defaultActiveStep = 0,
+    this.orientation = MagicStepperOrientation.horizontal,
+    this.linear = true,
+    this.alternativeLabel = false,
+    this.color = ColorIntent.primary,
+    this.size = AtomicSize.md,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Ordered list of workflow steps to display.
+  final List<MagicStepItem> steps;
+
+  /// Controlled zero-based index of the currently active step.
+  final int? activeStep;
+
+  /// Initial zero-based active step index for uncontrolled usage.
+  final int defaultActiveStep;
+
+  /// Layout orientation (`horizontal` or `vertical`).
+  final MagicStepperOrientation orientation;
+
+  /// When `true`, users must complete preceding steps before advancing.
+  final bool linear;
+
+  /// When `true` in horizontal orientation, places step labels beneath the step icon.
+  final bool alternativeLabel;
+
+  /// Semantic accent color intent for active and completed step indicators.
+  final ColorIntent color;
+
+  /// Standardized component density/size preset.
+  final AtomicSize size;
+}
+
+/// Visual button treatment for `MagicPagination` page items.
+enum MagicPaginationVariant {
+  /// Borderless text page buttons.
+  text,
+
+  /// Outlined page buttons with hairline border.
+  outlined,
+
+  /// Tonal/solid filled page buttons.
+  filled,
+}
+
+/// Corner geometry for `MagicPagination` page buttons.
+enum MagicPaginationShape {
+  /// Rounded-rectangle page buttons.
+  rounded,
+
+  /// Fully circular page buttons.
+  circular,
+}
+
+/// Property contract for `MagicPagination`.
+///
+/// Mirrors `PaginationMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicPaginationProps implements BaseAtomicProps {
+  /// Creates a pagination property contract instance.
+  const MagicPaginationProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    this.page,
+    this.defaultPage = 1,
+    required this.totalItems,
+    this.pageSize = 10,
+    this.pageSizeOptions = const <int>[10, 25, 50, 100],
+    this.siblingCount = 1,
+    this.boundaryCount = 1,
+    this.showFirstLast = false,
+    this.showPageSizeSelector = false,
+    this.showTotalCount = false,
+    this.variant = MagicPaginationVariant.text,
+    this.shape = MagicPaginationShape.rounded,
+    this.color = ColorIntent.primary,
+    this.size = AtomicSize.md,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Controlled 1-indexed current page number.
+  final int? page;
+
+  /// Initial 1-indexed page number for uncontrolled usage.
+  final int defaultPage;
+
+  /// Total number of items across all pages.
+  final int totalItems;
+
+  /// Number of items displayed per page.
+  final int pageSize;
+
+  /// Available page-size choices when [showPageSizeSelector] is enabled.
+  final List<int> pageSizeOptions;
+
+  /// Number of always-visible page buttons on either side of the active page.
+  final int siblingCount;
+
+  /// Number of always-visible page buttons at the start and end of the range.
+  final int boundaryCount;
+
+  /// Whether to render first-page and last-page jump controls.
+  final bool showFirstLast;
+
+  /// Whether to render a page-size selector control.
+  final bool showPageSizeSelector;
+
+  /// Whether to display a summary range/total count label.
+  final bool showTotalCount;
+
+  /// Visual button style (`text`, `outlined`, or `filled`).
+  final MagicPaginationVariant variant;
+
+  /// Button corner geometry (`rounded` or `circular`).
+  final MagicPaginationShape shape;
+
+  /// Semantic accent color intent for the active page indicator.
+  final ColorIntent color;
+
+  /// Standardized component density/size preset.
+  final AtomicSize size;
+}
+
+/// Individual navigation crumb descriptor rendered inside `MagicBreadcrumbs`.
+@immutable
+class MagicBreadcrumbItem {
+  /// Creates a breadcrumb item descriptor.
+  const MagicBreadcrumbItem({
+    required this.id,
+    required this.label,
+    this.href,
+    this.icon,
+    this.iconName,
+    this.disabled = false,
+    this.current = false,
+  });
+
+  /// Unique identifier for the breadcrumb segment.
+  final String id;
+
+  /// Visible text label for the breadcrumb segment.
+  final String label;
+
+  /// Optional target URL when rendered as a navigational link.
+  final String? href;
+
+  /// Optional native Material [IconData] displayed before [label].
+  final IconData? icon;
+
+  /// Optional Material icon string name resolved via `MagicIcon`.
+  final String? iconName;
+
+  /// Whether this individual breadcrumb segment is disabled.
+  final bool disabled;
+
+  /// Whether this segment represents the current active location.
+  final bool current;
+
+  /// Returns a copy of this breadcrumb item with the given fields replaced.
+  MagicBreadcrumbItem copyWith({
+    String? id,
+    String? label,
+    String? href,
+    IconData? icon,
+    String? iconName,
+    bool? disabled,
+    bool? current,
+  }) {
+    return MagicBreadcrumbItem(
+      id: id ?? this.id,
+      label: label ?? this.label,
+      href: href ?? this.href,
+      icon: icon ?? this.icon,
+      iconName: iconName ?? this.iconName,
+      disabled: disabled ?? this.disabled,
+      current: current ?? this.current,
+    );
+  }
+}
+
+/// Property contract for `MagicBreadcrumbs`.
+///
+/// Mirrors `BreadcrumbsMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicBreadcrumbsProps implements BaseAtomicProps {
+  /// Creates a breadcrumbs property contract instance.
+  const MagicBreadcrumbsProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    required this.items,
+    this.separator = '/',
+    this.maxItems,
+    this.itemsBeforeCollapse = 1,
+    this.itemsAfterCollapse = 1,
+    this.color = ColorIntent.primary,
+    this.size = AtomicSize.md,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Ordered trail of navigation breadcrumb items from root to current location.
+  final List<MagicBreadcrumbItem> items;
+
+  /// Separator string rendered between breadcrumb items.
+  final String separator;
+
+  /// Maximum number of visible items before collapsing middle items behind an ellipsis.
+  final int? maxItems;
+
+  /// Number of leading items kept visible when the trail is collapsed.
+  final int itemsBeforeCollapse;
+
+  /// Number of trailing items kept visible when the trail is collapsed.
+  final int itemsAfterCollapse;
+
+  /// Semantic accent color intent for interactive breadcrumb links.
+  final ColorIntent color;
+
+  /// Standardized component density/size preset.
+  final AtomicSize size;
+}
+
+/// Selection mode for `MagicDatePicker` (`single` date or `range` of dates).
+enum MagicDatePickerMode {
+  /// Selects a single date or datetime value.
+  single,
+
+  /// Selects a start/end date range.
+  range,
+}
+
+/// Framework-agnostic ISO date/datetime range value.
+///
+/// Dates are serialized as `YYYY-MM-DD` (or `YYYY-MM-DDTHH:mm` when time
+/// selection is enabled).
+@immutable
+class MagicDateRangeValue {
+  /// Creates an ISO date range value.
+  const MagicDateRangeValue({
+    this.start,
+    this.end,
+  });
+
+  /// Start of the selected range as an ISO date/datetime string, or `null`.
+  final String? start;
+
+  /// End of the selected range as an ISO date/datetime string, or `null`.
+  final String? end;
+
+  /// Returns a copy of this range value with the given fields replaced.
+  MagicDateRangeValue copyWith({
+    String? start,
+    String? end,
+  }) {
+    return MagicDateRangeValue(
+      start: start ?? this.start,
+      end: end ?? this.end,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    return other is MagicDateRangeValue &&
+        other.start == start &&
+        other.end == end;
+  }
+
+  @override
+  int get hashCode => Object.hash(start, end);
+}
+
+/// Property contract for `MagicDatePicker`.
+///
+/// Mirrors `DatePickerMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicDatePickerProps implements BaseAtomicProps {
+  /// Creates a date picker property contract instance.
+  const MagicDatePickerProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    this.label,
+    this.hint,
+    this.errorText,
+    this.appearance = FormFieldAppearance.outlined,
+    this.size = AtomicSize.md,
+    this.mode = MagicDatePickerMode.single,
+    this.value,
+    this.defaultValue,
+    this.rangeValue,
+    this.defaultRangeValue,
+    this.minDate,
+    this.maxDate,
+    this.enableTime = false,
+    this.placeholder,
+    this.startPlaceholder,
+    this.endPlaceholder,
+    this.format,
+    this.requiredField = false,
+    this.readOnly = false,
+    this.clearable = false,
+    this.color = ColorIntent.primary,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Floating field label text.
+  final String? label;
+
+  /// Helper hint text displayed beneath the field.
+  final String? hint;
+
+  /// Validation error message replacing [hint].
+  final String? errorText;
+
+  /// Material 3 container style (`outlined` or `filled`).
+  final FormFieldAppearance appearance;
+
+  /// Standardized component size preset.
+  final AtomicSize size;
+
+  /// Selection mode (`single` or `range`).
+  final MagicDatePickerMode mode;
+
+  /// Controlled single date/datetime ISO string.
+  final String? value;
+
+  /// Initial uncontrolled single date/datetime ISO string.
+  final String? defaultValue;
+
+  /// Controlled date range value when [mode] is [MagicDatePickerMode.range].
+  final MagicDateRangeValue? rangeValue;
+
+  /// Initial uncontrolled date range value when [mode] is [MagicDatePickerMode.range].
+  final MagicDateRangeValue? defaultRangeValue;
+
+  /// Earliest selectable ISO date/datetime boundary.
+  final String? minDate;
+
+  /// Latest selectable ISO date/datetime boundary.
+  final String? maxDate;
+
+  /// Whether time-of-day selection (`HH:mm`) is enabled alongside the date picker.
+  final bool enableTime;
+
+  /// Placeholder text shown in single-date mode when empty.
+  final String? placeholder;
+
+  /// Placeholder text shown for the start input in range mode.
+  final String? startPlaceholder;
+
+  /// Placeholder text shown for the end input in range mode.
+  final String? endPlaceholder;
+
+  /// Display format hint (e.g. `'YYYY-MM-DD'`).
+  final String? format;
+
+  /// Whether a value is required for form validation.
+  final bool requiredField;
+
+  /// Whether the date picker displays its value without allowing edits.
+  final bool readOnly;
+
+  /// Whether a clear button is displayed when a value is set.
+  final bool clearable;
+
+  /// Semantic accent color intent for selected dates and focus indicators.
+  final ColorIntent color;
+}
+
+/// Step increment precision supported by `MagicRating` (`0.5` or `1.0`).
+enum MagicRatingPrecision {
+  /// Half-unit increment precision (`0.5`).
+  half(0.5),
+
+  /// Whole-unit increment precision (`1.0`).
+  full(1.0);
+
+  const MagicRatingPrecision(this.value);
+
+  /// Numeric step increment value.
+  final double value;
+}
+
+/// Property contract for `MagicRating`.
+///
+/// Mirrors `RatingMoleculeProps` from `@mono-magic/atomic-design-interfaces`.
+@immutable
+class MagicRatingProps implements BaseAtomicProps {
+  /// Creates a rating property contract instance.
+  const MagicRatingProps({
+    this.id,
+    this.testId,
+    this.ariaLabel,
+    this.disabled = false,
+    this.value,
+    this.defaultValue,
+    this.max = 5,
+    this.precision = MagicRatingPrecision.full,
+    this.readOnly = false,
+    this.showValue = false,
+    this.reviewCount,
+    this.icon,
+    this.emptyIcon,
+    this.color = ColorIntent.warning,
+    this.size = AtomicSize.md,
+    this.label,
+  });
+
+  @override
+  final String? id;
+
+  @override
+  final String? testId;
+
+  @override
+  final String? ariaLabel;
+
+  @override
+  final bool disabled;
+
+  /// Controlled numeric rating value (between `0` and [max]).
+  final double? value;
+
+  /// Initial uncontrolled numeric rating value.
+  final double? defaultValue;
+
+  /// Maximum number of rating icons displayed.
+  final int max;
+
+  /// Rating increment precision (`half` or `full`).
+  final MagicRatingPrecision precision;
+
+  /// Whether the rating is display-only and ignores user input.
+  final bool readOnly;
+
+  /// Whether to render the numeric rating value beside the icons.
+  final bool showValue;
+
+  /// Optional total review count displayed beside the rating.
+  final int? reviewCount;
+
+  /// Optional Material icon string name for filled rating units.
+  final String? icon;
+
+  /// Optional Material icon string name for unfilled rating units.
+  final String? emptyIcon;
+
+  /// Semantic accent color intent for filled rating icons.
+  final ColorIntent color;
+
+  /// Standardized component density/size preset.
+  final AtomicSize size;
+
+  /// Optional visible or accessible label describing what is being rated.
+  final String? label;
+}
