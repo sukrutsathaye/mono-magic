@@ -1,27 +1,48 @@
-# @mono-magic/vue-vuetify
+# `@mono-magic/vue-vuetify` (`vue-vuetify`)
 
-Vue 3 + Vuetify 3 design-system component library adhering to **Atomic Design** and contract-first interfaces from `@mono-magic/atomic-design-interfaces`.
+Vue 3 (`3.5.x`) + Vuetify 3 (`3.12.x`) Material 3 design-system component library adhering to **Atomic Design**, **contract-first interfaces** from `@mono-magic/atomic-design-interfaces`, and interactive Storybook visual regression testing (`storybook-addon-vis`).
+
+## Implemented Component Catalog
+
+### Atoms (11)
+
+| Component | Contract | Description |
+| --- | --- | --- |
+| `MagicBadge` | `BadgeAtomProps` | Notification badge overlay supporting numeric counts, `maxCount`, dot mode, 4 corner positions, overlap, and hidden/disabled states. |
+| `MagicButton` | `ButtonAtomProps` | Material 3 button supporting 5 variants (`filled`, `tonal`, `outlined`, `elevated`, `text`), 5 kinds (`default`, `icon`, `fab`, `mini-fab`, `extended-fab`), 4 shapes, loading spinner, and `disabledInteractive`. |
+| `MagicButtonToggle` | `ButtonToggleAtomProps` | Segmented toggle group supporting single and multi-select (`multiple`), horizontal/vertical layout, and per-option icons. |
+| `MagicCheckBox` | `CheckBoxAtomProps` | Tri-state checkbox (`checked`, `indeterminate`) and recursive hierarchical `CheckBoxTask` checklists. |
+| `MagicChip` | `ChipAtomProps` | Interactive Material 3 chip supporting `selectable`, `removable`, `editable`, `draggable` reordering, and chip lists. |
+| `MagicProgressIndicator` | `ProgressIndicatorAtomProps` | Linear (`bar`) and circular (`spinner`) progress indicators across `determinate`, `indeterminate`, `buffer`, and `query` modes. |
+| `MagicRadioButton` | `RadioButtonAtomProps` | Accessible radio group supporting horizontal/vertical orientation, label placement, and `disabledInteractive`. |
+| `MagicSlideToggle` | `SlideToggleAtomProps` | Material 3 switch control with track icons (`hideIcon`), label placement, and `disabledInteractive`. |
+| `MagicSlider` | `SliderAtomProps` | Single-thumb and dual-thumb (`range`) slider with discrete steps, tick marks, and custom tooltip formatting. |
+| `MagicTextInput` | `TextInputAtomProps` | Bare input control supporting `text`, `email`, `password`, `number`, `search`, `tel`, `url`, and multiline mode. |
+| `MagicToolTip` | `ToolTipAtomProps` | Accessible tooltip wrapper supporting 6 placements, show/hide delays, and standalone fallback trigger. |
+
+---
 
 ## Development & Verification Commands
 
 Run all commands from the workspace root via Nx:
 
 ```bash
-# Lint the library (TypeScript & Vue SFCs)
 pnpm nx lint vue-vuetify
-
-# Typecheck library with vue-tsc
 pnpm nx typecheck vue-vuetify
-
-# Run unit tests with V8 coverage (>= 80% threshold enforced)
 pnpm nx test vue-vuetify -- --coverage
-
-# Launch interactive Storybook dev server
 pnpm nx storybook vue-vuetify
-
-# Build static Storybook showcase
 pnpm nx build-storybook vue-vuetify
-
-# Run Storybook interaction and visual tests in headless Chromium
 pnpm nx test-storybook vue-vuetify
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `vue-vuetify` | Vitest V8 + Storybook Vitest | **80.0%** | **80.0%** | **80.0%** | **80.0%** | `>= 80%` | Passing |
+<!-- COVERAGE_TABLE_END -->

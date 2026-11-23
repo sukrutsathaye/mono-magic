@@ -12,33 +12,38 @@ description: >-
 
 Use this skill to execute, configure, or troubleshoot unit test coverage, Storybook test coverage, linting, and typechecking across the monorepo.
 
-## 1. Unit Test Coverage
+## 1. Unit Test Coverage Across All Polyglot Stacks
+
+See [`polyglot-unit-testing`](../polyglot-unit-testing/SKILL.md) for per-language test authoring patterns.
 
 ### JavaScript / TypeScript Libraries (`@vitest/coverage-v8`)
-Projects: `atomic-design-interfaces`, `react-mui`, `ng-mat`, `rn-paper`
+- **UI Libraries (`>=80%`)**: `atomic-design-interfaces`, `react-mui`, `ng-mat`, `rn-paper`, `vue-vuetify`, `svelte-tw`
+- **Data-Access Libraries (`>=80%`)**: `data-access-ts-interfaces`, `data-access-ts-firebase`, `data-access-ts-supabase`, `data-access-ts-reflective-api`
+- **Pure Utility Libraries (`>=90%`)**: `utils-ts-core`, `utils-ts-formatters`
 
 ```bash
 # Run unit tests with V8 coverage for a single project
-pnpm nx test react-mui -- --coverage
-pnpm nx test ng-mat -- --coverage
-pnpm nx test rn-paper -- --coverage
-pnpm nx test atomic-design-interfaces -- --coverage
-
-# Run unit tests across all JS/TS UI libraries
-pnpm nx run-many -t test -p atomic-design-interfaces,react-mui,ng-mat,rn-paper -- --coverage
+pnpm nx test <project> -- --coverage
 ```
 
-- **Output Directory**: `libs/ui/<project>/test-output/vitest/coverage/`
+- **Output Directory**: `libs/<domain>/<project>/test-output/vitest/coverage/`
 - **Standard Reporters**: `text`, `html`, `lcov`, `json-summary`
-- **Target Thresholds**: `80%` across `lines`, `statements`, `functions`, and `branches` (excluding `*.stories.*`, `*.spec.*`, `*.test.*`, and barrel `index.ts` files).
 
-### Flutter Material Library (`fl-mat`)
+### Flutter Material Library (`fl-mat`, `>=80%`)
 ```bash
-# Run Flutter widget & unit tests
-pnpm nx test fl-mat
+pnpm nx test-coverage fl-mat
+```
 
-# Generate LCOV coverage report (libs/ui/fl-mat/coverage/lcov.info)
-cd libs/ui/fl-mat && flutter test --coverage
+### Python Libraries (`uv` / `pytest --cov`, `>=90%` utils / `>=80%` data-access)
+Projects: `py-utils-common`, `py-utils-nlp`, `py-data-access-interfaces`, `py-reflective-nlp`
+```bash
+pnpm nx run-many -t test -p py-utils-common,py-utils-nlp,py-data-access-interfaces,py-reflective-nlp
+```
+
+### Rust & Go Utility Libraries (`>=90%`)
+Projects: `rs-utils-pose-math`, `rs-utils-design-tokens`, `go-utils-core`
+```bash
+pnpm nx run-many -t test -p rs-utils-pose-math,rs-utils-design-tokens,go-utils-core
 ```
 
 ---
@@ -48,27 +53,39 @@ cd libs/ui/fl-mat && flutter test --coverage
 Storybook tests run via `@storybook/addon-vitest` in Playwright Chromium (`--project=<project>-storybook`).
 
 ```bash
-# Run Storybook tests with browser coverage enabled
-pnpm nx test-storybook react-mui -- --coverage.enabled=true --coverage.reportsDirectory=./test-output/storybook/coverage
-pnpm nx test-storybook ng-mat -- --coverage.enabled=true --coverage.reportsDirectory=./test-output/storybook/coverage
-pnpm nx test-storybook rn-paper -- --coverage.enabled=true --coverage.reportsDirectory=./test-output/storybook/coverage
+pnpm nx test-storybook-coverage react-mui
+pnpm nx test-storybook-coverage ng-mat
+pnpm nx test-storybook-coverage rn-paper
+pnpm nx test-storybook-coverage vue-vuetify
+pnpm nx test-storybook-coverage svelte-tw
 ```
 
 - **Output Directory**: `libs/ui/<project>/test-output/storybook/coverage/`
 
 ---
 
-## 3. Workspace Quality Gates (Lint & Typecheck)
+## 3. Syncing README Coverage Tables & GitHub Pages Portal
 
-Always run full quality gates before completing a feature or maintenance task:
+Whenever new functions or unit tests are written:
+```bash
+# 1. Sync Test & Coverage Summary tables in libs/*/*/README.md and root README.md
+node tools/ci/sync-readmes-and-coverage.mjs
+
+# 2. Build non-UI library coverage reports into dist/storybook-pages/coverage/<project>
+node tools/ci/storybook-pages.mjs build-coverage
+
+# 3. Assemble the unified GitHub Pages showcase & coverage portal
+node tools/ci/storybook-pages.mjs assemble
+```
+
+---
+
+## 4. Workspace Quality Gates (Lint & Typecheck)
+
+Always run affected quality gates before completing a task:
 
 ```bash
-# Lint all UI libraries (ESLint for JS/TS + flutter analyze for fl-mat)
-pnpm nx run-many -t lint -p atomic-design-interfaces,react-mui,ng-mat,rn-paper,fl-mat
-
-# Typecheck all TypeScript libraries
-pnpm nx run-many -t typecheck -p atomic-design-interfaces,react-mui,ng-mat,rn-paper
-
-# Run all affected checks (as executed in CI)
-pnpm nx affected -t lint test build
+pnpm nx affected -t lint typecheck test
+node tools/ci/generate-repo-index.mjs --check
+node tools/ci/sync-readmes-and-coverage.mjs --check
 ```

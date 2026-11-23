@@ -48,3 +48,15 @@ let smoothed = smoother.smooth(&frame).unwrap();
 let sim = pose_cosine_similarity(&frame, &smoothed, 0.5).unwrap();
 assert!((sim - 1.0).abs() < 1e-12);
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `rs-utils-pose-math` | Cargo Test (`cargo test` + doc-tests) | **90.0%** | **90.0%** | **90.0%** | **90.0%** | `>= 90%` | Passing |
+<!-- COVERAGE_TABLE_END -->

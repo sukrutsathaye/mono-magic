@@ -72,19 +72,39 @@ Use this skill as a **mandatory operating framework** for `/teamwork` coordinato
 
 ---
 
-## 4. Git Branching, Continuous Commit/Push & Handover Protocol
+## 4. Git Branching (`main -> dev`), Specialist Phases, Continuous Commit/Push & Handover Protocol
 
-1. **Immediate Meaningful Branching & Grouping**:
-   - Before making any edits, check `git branch --show-current`. If on `main` or an unrelated branch, immediately `git checkout -b <type>/<scope>-<short-slug>` (e.g., `feat/ui-tooltip-parity`, `fix/ts-interfaces-auth`, `chore/ci-repo-index`, `docs/roadmap-sync`, `refactor/ts-core-result`).
-   - Group cohesive, related changes on one scoped branch; never mix unrelated tasks on the same branch or commit directly to `main`.
-2. **Continuous Commits & Pushes (Conventional Commits)**:
-   - Commit and push incrementally as each logical slice/milestone passes its targeted checks—do **not** hoard all changes until the end of a long `/teamwork` run.
-   - Use **Conventional Commits**: `<type>(<scope>): <imperative summary>` (e.g., `feat(react-mui): add Tooltip atom with a11y tests`), with a brief body when the *why* is non-obvious.
-   - Push each checkpoint to the remote feature branch (`git push -u origin <branch>`). In multi-worker runs, workers commit to their assigned workspace/branch and the coordinator lands and pushes cleanly.
-3. **Periodic Rate-Limit Checks & Sequential Fallback**:
+1. **Always Sync `dev` with Current `main` Before Starting Any Task**:
+   - `dev` is the AI integration branch. **Before starting any task**, always fetch and merge `origin/main` into `dev` and push `origin/dev`:
+     ```bash
+     git fetch origin
+     git checkout -B dev origin/dev || git checkout -B dev origin/main
+     git merge --no-edit origin/main
+     git push -u origin dev
+     ```
+   - Never commit directly to `main` or `dev`. Immediately branch off `dev`:
+     ```bash
+     git checkout -b <type>/<scope>-<short-slug> dev
+     ```
+     (e.g., `feat/ui-navbar-organism`, `fix/ts-interfaces-auth`, `chore/ci-repo-index`, `docs/roadmap-sync`).
+2. **Mandatory Specialist Phases Before Task Completion**:
+   - Every task or `/teamwork` wave MUST execute the applicable specialist workflows before opening/merging a PR:
+     1. **Unit Tests** ([`polyglot-unit-testing`](../polyglot-unit-testing/SKILL.md) / `polyglot-unit-test-specialist`): `>=90%` coverage for `libs/utils/*`, `>=80%` for all other domains.
+     2. **Interactive Stories** ([`interactive-stories`](../interactive-stories/SKILL.md) / `interactive-story-specialist`, for UI tasks): Canonical 7-Category Component State Matrix + `play` tests + visual baselines (`-- -u`).
+     3. **Code & Package Documentation** ([`code-doc-generator`](../code-doc-generator/SKILL.md) / `code-doc-generator`): Inline docstrings on every symbol + updated `libs/<domain>/<project>/README.md`.
+     4. **Post-Task Repository Sync** ([`repo-updater`](../repo-updater/SKILL.md) / `repo-updater`): Run `node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs`, and update root `README.md` and `ROADMAP.md`.
+3. **Continuous Commits, PRs Against `dev` & Agent Merge Authority**:
+   - Commit and push incrementally using **Conventional Commits** (`<type>(<scope>): <imperative summary>`).
+   - **All PRs MUST be opened against `dev`**:
+     ```bash
+     gh pr create --base dev --head <branch> --title "<type>(<scope>): <summary>" --body "..."
+     ```
+   - **AI agents may freely merge their verified, passing PRs into `dev`** (`gh pr merge --squash --delete-branch`).
+   - **Final `dev -> main` Merge**: Reserved **strictly for the human repository owner** after review. Agents must never merge into `main`.
+4. **Periodic Rate-Limit Checks & Sequential Fallback**:
    - The `/teamwork` orchestrator MUST periodically check rate-limit / quota headroom between waves and immediately upon any `429`, quota warning, or latency spike.
    - When limits tighten: **pause or stop** excess parallel child agents, halt new parallel fan-outs, and **continue remaining tasks one by one** (sequentially) to preserve quota.
-4. **Near-Limit Handover & WIP Push**:
+5. **Near-Limit Handover & WIP Push**:
    - If usage or rate limits are almost reached before completion:
      1. Stop launching new tasks and stabilize the current in-flight edit.
      2. Write a concise handover doc at `.gemini/handovers/<branch-slug>.md` covering: active branch, completed vs. remaining tasks, exact modified files, last verification command + outcome, and the exact next step to resume.
@@ -94,11 +114,12 @@ Use this skill as a **mandatory operating framework** for `/teamwork` coordinato
 
 ## 5. Hard Stop Checklist (Forbidden Actions)
 
+- [ ] Starting a task without first merging `origin/main` into `dev` and branching from `dev`
+- [ ] Opening a PR against `main` instead of `dev`, or merging `dev` into `main` without the repository owner
 - [ ] Running `find .`, `ls -R`, or `rg` at repo root when `REPO_INDEX.md` answers the question
 - [ ] Reading full files >200 lines when only one function/class is needed
 - [ ] Spawning >4 parallel workers without disjoint per-project sharding
 - [ ] Sending vague worker briefs that force each worker to re-explore the codebase
 - [ ] Running `pnpm nx run-many` across unaffected projects during feature iteration
-- [ ] Pasting full files or verbose logs in subagent/swarm messages
-- [ ] Editing directly on `main` or hoarding unpushed work across long multi-agent runs
+- [ ] Skipping `polyglot-unit-testing`, `interactive-stories`, `code-doc-generator`, or `repo-updater` before finishing a task
 - [ ] Continuing parallel fan-out during rate-limit pressure instead of falling back to 1-by-1 execution or writing a handover + WIP push

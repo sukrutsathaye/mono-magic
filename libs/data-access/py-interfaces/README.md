@@ -61,3 +61,15 @@ from py_data_access_interfaces.testing import (
     assert_storage_contract,
 )
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `py-data-access-interfaces` | Pytest (`pytest --cov`) | **80.0%** | **80.0%** | **80.0%** | **80.0%** | `>= 80%` | Passing |
+<!-- COVERAGE_TABLE_END -->

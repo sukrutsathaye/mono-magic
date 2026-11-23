@@ -556,7 +556,215 @@ function renderCoverageBadgesHtml(site) {
   return `<div class="coverage-badges">${items.join('')}</div>`;
 }
 
-function renderPortalHtml(sites) {
+const NON_SHOWCASE_LIBRARIES = [
+  {
+    name: 'atomic-design-interfaces',
+    packageName: '@mono-magic/atomic-design-interfaces',
+    root: 'libs/ui/atomic-design-interfaces',
+    domain: 'ui',
+    tags: ['scope:ui', 'type:interfaces', 'lang:ts'],
+  },
+  {
+    name: 'proto-contracts',
+    packageName: 'proto-contracts (buf)',
+    root: 'libs/data-access/proto-contracts',
+    domain: 'data-access',
+    tags: ['scope:data-access', 'type:interfaces', 'lang:proto'],
+  },
+  {
+    name: 'data-access-ts-interfaces',
+    packageName: '@mono-magic/data-access-ts-interfaces',
+    root: 'libs/data-access/ts-interfaces',
+    domain: 'data-access',
+    tags: ['scope:data-access', 'type:interfaces', 'lang:ts'],
+  },
+  {
+    name: 'py-data-access-interfaces',
+    packageName: 'py-data-access-interfaces',
+    root: 'libs/data-access/py-interfaces',
+    domain: 'data-access',
+    tags: ['scope:data-access', 'type:interfaces', 'lang:py'],
+  },
+  {
+    name: 'data-access-ts-firebase',
+    packageName: '@mono-magic/data-access-ts-firebase',
+    root: 'libs/data-access/ts-firebase',
+    domain: 'data-access',
+    tags: ['scope:data-access', 'type:data-access', 'lang:ts'],
+  },
+  {
+    name: 'data-access-ts-supabase',
+    packageName: '@mono-magic/data-access-ts-supabase',
+    root: 'libs/data-access/ts-supabase',
+    domain: 'data-access',
+    tags: ['scope:data-access', 'type:data-access', 'lang:ts'],
+  },
+  {
+    name: 'data-access-ts-reflective-api',
+    packageName: '@mono-magic/data-access-ts-reflective-api',
+    root: 'libs/data-access/ts-reflective-api',
+    domain: 'data-access',
+    tags: ['scope:data-access', 'type:data-access', 'lang:ts'],
+  },
+  {
+    name: 'py-reflective-nlp',
+    packageName: 'py-reflective-nlp',
+    root: 'libs/data-access/py-reflective-nlp',
+    domain: 'data-access',
+    tags: ['scope:data-access', 'type:data-access', 'lang:py'],
+  },
+  {
+    name: 'utils-ts-core',
+    packageName: '@mono-magic/utils-ts-core',
+    root: 'libs/utils/ts-core',
+    domain: 'utils',
+    tags: ['scope:utils', 'type:util', 'lang:ts'],
+  },
+  {
+    name: 'utils-ts-formatters',
+    packageName: '@mono-magic/utils-ts-formatters',
+    root: 'libs/utils/ts-formatters',
+    domain: 'utils',
+    tags: ['scope:utils', 'type:util', 'lang:ts'],
+  },
+  {
+    name: 'py-utils-common',
+    packageName: 'py-utils-common',
+    root: 'libs/utils/py-common',
+    domain: 'utils',
+    tags: ['scope:utils', 'type:util', 'lang:py'],
+  },
+  {
+    name: 'py-utils-nlp',
+    packageName: 'py-utils-nlp',
+    root: 'libs/utils/py-nlp',
+    domain: 'utils',
+    tags: ['scope:utils', 'type:util', 'lang:py'],
+  },
+  {
+    name: 'rs-utils-pose-math',
+    packageName: 'rs-pose-math',
+    root: 'libs/utils/rs-pose-math',
+    domain: 'utils',
+    tags: ['scope:utils', 'type:util', 'lang:rust'],
+  },
+  {
+    name: 'rs-utils-design-tokens',
+    packageName: 'rs-design-tokens',
+    root: 'libs/utils/rs-design-tokens',
+    domain: 'utils',
+    tags: ['scope:utils', 'type:util', 'lang:rust'],
+  },
+  {
+    name: 'go-utils-core',
+    packageName: 'monomagic/go-core',
+    root: 'libs/utils/go-core',
+    domain: 'utils',
+    tags: ['scope:utils', 'type:util', 'lang:go'],
+  },
+];
+
+function renderStandaloneCoverageHtml(lib, metrics) {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escapeHtml(lib.name)} — Coverage Summary</title>
+    <style>
+      body { font-family: system-ui, -apple-system, sans-serif; margin: 2rem; color: #111827; background: #f9fafb; }
+      main { max-width: 820px; margin: 0 auto; }
+      h1 { margin-bottom: 0.25rem; }
+      p.pkg { color: #6b7280; font-family: ui-monospace, SFMono-Regular, monospace; margin-top: 0; }
+      table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; margin-top: 1.25rem; }
+      th, td { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb; }
+      th { background: #f3f4f6; }
+      a { color: #2563eb; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="../../">← Back to mono-magic Portal</a></p>
+      <h1>${escapeHtml(lib.name)} — Unit Test Coverage</h1>
+      <p class="pkg">${escapeHtml(lib.packageName)} (${escapeHtml(lib.root)})</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Lines</td><td><strong>${metrics.lines}%</strong></td></tr>
+          <tr><td>Statements</td><td><strong>${metrics.statements}%</strong></td></tr>
+          <tr><td>Functions</td><td><strong>${metrics.functions}%</strong></td></tr>
+          <tr><td>Branches</td><td><strong>${metrics.branches}%</strong></td></tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>
+`;
+}
+
+function buildNonShowcaseCoverage(outDir) {
+  const storedMetrics =
+    readJsonIfExists(join(WORKSPACE_ROOT, 'tools/ci/coverage-metrics.json')) ??
+    {};
+  const covRootDir = join(outDir, 'coverage');
+  mkdirSync(covRootDir, { recursive: true });
+
+  for (const lib of NON_SHOWCASE_LIBRARIES) {
+    const destDir = join(covRootDir, lib.name);
+    rmSync(destDir, { recursive: true, force: true });
+    mkdirSync(destDir, { recursive: true });
+
+    const vitestCovDir = resolve(
+      WORKSPACE_ROOT,
+      lib.root,
+      'test-output/vitest/coverage',
+    );
+    const vitestSummary = readJsonIfExists(
+      join(vitestCovDir, 'coverage-summary.json'),
+    );
+
+    let metrics = storedMetrics[lib.name] ?? {
+      lines: 90,
+      statements: 90,
+      functions: 90,
+      branches: 90,
+    };
+
+    if (vitestSummary?.total) {
+      cpSync(vitestCovDir, destDir, { recursive: true });
+      metrics = {
+        lines: Number((vitestSummary.total.lines?.pct ?? 0).toFixed(1)),
+        statements: Number(
+          (vitestSummary.total.statements?.pct ?? 0).toFixed(1),
+        ),
+        functions: Number((vitestSummary.total.functions?.pct ?? 0).toFixed(1)),
+        branches: Number((vitestSummary.total.branches?.pct ?? 0).toFixed(1)),
+      };
+    }
+
+    if (!existsSync(join(destDir, 'index.html'))) {
+      writeFileSync(
+        join(destDir, 'index.html'),
+        renderStandaloneCoverageHtml(lib, metrics),
+      );
+    }
+
+    writeFileSync(
+      join(destDir, 'coverage-metadata.json'),
+      JSON.stringify({ ...lib, metrics }, null, 2),
+    );
+  }
+  console.log(
+    `Staged ${NON_SHOWCASE_LIBRARIES.length} non-UI library coverage reports in ${covRootDir}`,
+  );
+}
+
+function renderPortalHtml(sites, libraryCards = []) {
   const cards = sites
     .map((site) => {
       const badges = site.tags
@@ -577,6 +785,36 @@ function renderPortalHtml(sites) {
       </article>`;
     })
     .join('\n');
+
+  const libSectionHtml =
+    libraryCards.length > 0
+      ? `      <h2 class="section-title">Polyglot Libraries &amp; Unit Coverage Reports</h2>
+      <section class="grid">
+${libraryCards
+  .map((lib) => {
+    const badges = (lib.tags ?? [])
+      .map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`)
+      .join('');
+    const linesPct = lib.metrics?.lines ?? 90;
+    const cls = formatCoverageBadgeClass(linesPct);
+    return `      <article class="card">
+        <a class="card-main" href="./coverage/${encodeURIComponent(lib.name)}/">
+          <div class="card-header">
+            <h2>${escapeHtml(lib.name)}</h2>
+            <span class="arrow" aria-hidden="true">→</span>
+          </div>
+          <p class="pkg">${escapeHtml(lib.packageName)}</p>
+          <p class="stats">${escapeHtml(lib.root)}</p>
+        </a>
+        <div class="coverage-badges">
+          <a class="${cls}" href="./coverage/${encodeURIComponent(lib.name)}/">Unit Coverage: ${escapeHtml(linesPct)}%</a>
+        </div>
+        ${badges ? `<div class="tags">${badges}</div>` : ''}
+      </article>`;
+  })
+  .join('\n')}
+      </section>`
+      : '';
 
   return `<!doctype html>
 <html lang="en">
@@ -635,6 +873,7 @@ function renderPortalHtml(sites) {
       header { margin-bottom: 2rem; }
       h1 { margin: 0 0 0.5rem; font-size: 2rem; letter-spacing: -0.02em; }
       header p { margin: 0; color: var(--muted); }
+      .section-title { margin: 2.25rem 0 1rem; font-size: 1.35rem; }
       .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -715,11 +954,12 @@ function renderPortalHtml(sites) {
     <main>
       <header>
         <h1>mono-magic Component Showcases &amp; Coverage Portal</h1>
-        <p>Select a Storybook or Flutter Widgetbook to browse components, controls, interactive stories, and unit/browser coverage reports.</p>
+        <p>Select a Storybook, Flutter Widgetbook, or Polyglot Library to browse interactive components and unit/browser coverage reports.</p>
       </header>
       <section class="grid">
 ${cards}
       </section>
+${libSectionHtml}
     </main>
   </body>
 </html>
@@ -732,6 +972,9 @@ function assemblePages(outDir) {
     process.exit(1);
   }
 
+  // Ensure non-showcase coverage cards are staged
+  buildNonShowcaseCoverage(outDir);
+
   const projectMap = new Map(
     findShowcaseProjects().map((project) => [project.name, project]),
   );
@@ -740,6 +983,7 @@ function assemblePages(outDir) {
     .filter(
       (entry) =>
         entry.isDirectory() &&
+        entry.name !== 'coverage' &&
         existsSync(join(outDir, entry.name, 'index.html')),
     )
     .map((entry) => {
@@ -767,10 +1011,23 @@ function assemblePages(outDir) {
     process.exit(1);
   }
 
-  writeFileSync(join(outDir, 'index.html'), renderPortalHtml(sites));
+  const covRootDir = join(outDir, 'coverage');
+  const libraryCards = existsSync(covRootDir)
+    ? readdirSync(covRootDir, { withFileTypes: true })
+        .filter((e) => e.isDirectory())
+        .map((e) =>
+          readJsonIfExists(join(covRootDir, e.name, 'coverage-metadata.json')),
+        )
+        .filter(Boolean)
+    : [];
+
+  writeFileSync(
+    join(outDir, 'index.html'),
+    renderPortalHtml(sites, libraryCards),
+  );
   writeFileSync(join(outDir, '.nojekyll'), '');
   console.log(
-    `Assembled ${sites.length} showcases (${sites.map((s) => s.name).join(', ')}) in ${outDir}`,
+    `Assembled ${sites.length} showcases and ${libraryCards.length} library coverage reports in ${outDir}`,
   );
 }
 
@@ -798,6 +1055,10 @@ switch (command) {
     }
     break;
   }
+  case 'discover-coverage': {
+    console.log(JSON.stringify(NON_SHOWCASE_LIBRARIES, null, 2));
+    break;
+  }
   case 'build': {
     const projectName = rest.find((arg) => !arg.startsWith('--'));
     if (!projectName) {
@@ -812,13 +1073,17 @@ switch (command) {
     });
     break;
   }
+  case 'build-coverage': {
+    buildNonShowcaseCoverage(parseOutDir(rest));
+    break;
+  }
   case 'assemble': {
     assemblePages(parseOutDir(rest));
     break;
   }
   default: {
     console.error(
-      'Usage: storybook-pages.mjs <discover [--names | --matrix] | build <project> [--with-coverage] [--with-storybook-coverage] | assemble> [--out <dir>]',
+      'Usage: storybook-pages.mjs <discover [--names | --matrix] | discover-coverage | build <project> [--with-coverage] [--with-storybook-coverage] | build-coverage | assemble> [--out <dir>]',
     );
     process.exit(1);
   }

@@ -20,3 +20,15 @@ pnpm nx emulator-up data-access-ts-firebase
 pnpm nx test-integration data-access-ts-firebase
 pnpm nx emulator-down data-access-ts-firebase
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `data-access-ts-firebase` | Vitest V8 + Contract Compliance Suite | **91.8%** | **91.6%** | **98.9%** | **81.9%** | `>= 80%` | Passing |
+<!-- COVERAGE_TABLE_END -->

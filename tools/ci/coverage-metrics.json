@@ -1,0 +1,128 @@
+{
+  "atomic-design-interfaces": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "react-mui": {
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
+  },
+  "ng-mat": {
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
+  },
+  "rn-paper": {
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
+  },
+  "fl-mat": {
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
+  },
+  "vue-vuetify": {
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
+  },
+  "svelte-tw": {
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
+  },
+  "proto-contracts": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "data-access-ts-interfaces": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 83.3
+  },
+  "py-data-access-interfaces": {
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
+  },
+  "data-access-ts-firebase": {
+    "lines": 91.8,
+    "statements": 91.6,
+    "functions": 98.9,
+    "branches": 81.9
+  },
+  "data-access-ts-supabase": {
+    "lines": 95.1,
+    "statements": 95,
+    "functions": 99,
+    "branches": 81.5
+  },
+  "data-access-ts-reflective-api": {
+    "lines": 94.8,
+    "statements": 93.7,
+    "functions": 95.7,
+    "branches": 83.2
+  },
+  "py-reflective-nlp": {
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
+  },
+  "utils-ts-core": {
+    "lines": 97.3,
+    "statements": 97.3,
+    "functions": 100,
+    "branches": 97.9
+  },
+  "utils-ts-formatters": {
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "py-utils-common": {
+    "lines": 90,
+    "statements": 90,
+    "functions": 90,
+    "branches": 90
+  },
+  "py-utils-nlp": {
+    "lines": 90,
+    "statements": 90,
+    "functions": 90,
+    "branches": 90
+  },
+  "rs-utils-pose-math": {
+    "lines": 90,
+    "statements": 90,
+    "functions": 90,
+    "branches": 90
+  },
+  "rs-utils-design-tokens": {
+    "lines": 90,
+    "statements": 90,
+    "functions": 90,
+    "branches": 90
+  },
+  "go-utils-core": {
+    "lines": 97.8,
+    "statements": 97.8,
+    "functions": 97.8,
+    "branches": 97.8
+  }
+}

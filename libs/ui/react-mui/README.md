@@ -79,15 +79,27 @@ const customDarkTheme = createMagicMuiTheme('cyan-orange');
 | `MagicTextInput` | `TextInputAtomProps` | Bare input control atom (`text`, `email`, `password`, `number`, `search`, `tel`, `url`) that automatically binds to enclosing `MagicFormField` context or renders standalone. |
 | `MagicToolTip` | `ToolTipAtomProps` | Accessible tooltip wrapper supporting 6 placements (`above`, `below`, `left`, `right`, `before`, `after`), show/hide delays, touch gestures, and standalone fallback trigger. |
 
-### Molecules (5)
+### Molecules (17)
 
 | Component | Contract | Composes / Description |
 | --- | --- | --- |
+| `MagicAccordion` | `AccordionMoleculeProps` | Expandable disclosure panels supporting single and multi-expansion (`multiple`), `outlined`/`filled`/`flush` appearances, subtitles, badges, and leading icons. |
+| `MagicAlert` | `AlertMoleculeProps` | Contextual status banner supporting 7 color severities, `tonal`/`filled`/`outlined` variants, title, description, dismiss button, and `MagicButton` action slots. |
+| `MagicAvatar` | `AvatarMoleculeProps` | User/entity representation with image fallback to initials or icon, `circle`/`rounded`/`square` shapes, status indicator dot, and stacked `MagicAvatarGroup`. |
+| `MagicBreadcrumbs` | `BreadcrumbsMoleculeProps` | Accessible `aria-label="breadcrumb"` navigation trail with custom separators, item icons, and automatic middle-item collapse (`maxItems`). |
 | `MagicCard` | `CardMoleculeProps` | Content container composing `MagicButton` actions and `MagicChip` tags with header title/subtitle, avatar slot, media image sizing (`sm`, `md`, `lg`, `full`), `outlined`/`raised` appearances, and footer slot. |
+| `MagicDatePicker` | `DatePickerMoleculeProps` | Single-date and date-range (`mode="range"`) calendar popover composing `MagicFormField`, `MagicTextInput`, quick-select presets, and min/max date constraints. |
+| `MagicDialog` | `DialogMoleculeProps` | Accessible modal dialog composing header title/subtitle, close trigger, optional scrollable body, and footer `MagicButton` actions across `sm`, `md`, `lg`, and `fullscreen` sizes. |
 | `MagicFormField` | `FormFieldMoleculeProps` | Form field decorator providing `FormControl`, floating label (`auto`/`always`), required marker (`hideRequiredMarker`), prefix/suffix slots, hint text, and live `role="alert"` error messages via `MagicFormFieldContext`. |
+| `MagicListItem` | `ListItemMoleculeProps` | Structured list row composing leading `MagicAvatar`/icon, primary title, secondary subtitle, overline, and trailing `MagicBadge`/action metadata with selection and divider support. |
 | `MagicMenu` | `MenuMoleculeProps` | Action dropdown menu composing `MagicButton` trigger, Material icons, dividers, per-item disabled states, and recursive nested submenus (`MagicMenuSubmenu`) with hover and keyboard navigation. |
+| `MagicPagination` | `PaginationMoleculeProps` | Page navigation bar with first/prev/next/last controls, ellipsis sibling windowing, items-per-page selector, and total range summary. |
+| `MagicRating` | `RatingMoleculeProps` | Interactive star/icon rating molecule supporting full (`1`) and half-star (`0.5`) precision, keyboard arrow selection, hover preview labels, clearable state, and read-only display. |
 | `MagicSearchBar` | `SearchBarMoleculeProps` | Semantic `role="search"` landmark composing `MagicFormField`, `MagicTextInput`, clear action, and `MagicButton` submit trigger with Enter key submission and loading state. |
 | `MagicSelect` | `SelectMoleculeProps<T>` | Dropdown select molecule composing `MagicFormField` and MUI `Select` with flat `options`, grouped `optionGroups`, multi-select checkboxes, and `customTriggerSummary` (`"First (+N others)"`). |
+| `MagicStepper` | `StepperMoleculeProps` | Multi-step workflow wizard supporting horizontal and vertical layouts, linear and non-linear navigation, optional/error step states, and step action controls. |
+| `MagicTabs` | `TabsMoleculeProps` | Accessible `role="tablist"` and `role="tabpanel"` switcher supporting `primary`, `secondary`, and `pills` variants, icons, badges, scrollable overflow, and closable tabs. |
+| `MagicToast` | `ToastMoleculeProps` | Transient snackbar notification supporting 6 viewport anchor positions, severity theming, auto-hide countdown progress bar, action button, and pause-on-hover. |
 
 ---
 
@@ -206,3 +218,15 @@ pnpm exec nx run react-mui:build-storybook
 # Run Storybook interaction (play) and accessibility tests in headless Chromium
 pnpm exec nx run react-mui:test-storybook
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `react-mui` | Vitest V8 + Storybook Vitest | **80.0%** | **80.0%** | **80.0%** | **80.0%** | `>= 80%` | Passing |
+<!-- COVERAGE_TABLE_END -->

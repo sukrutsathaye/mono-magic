@@ -62,6 +62,8 @@ Use this skill as a **mandatory quality baseline** whenever creating, refactorin
   - TypeScript: `strict: true`, zero `any` (use `unknown` + narrowing or generics).
   - Python: full parameter and return type annotations verified with `pyright` (`from __future__ import annotations`).
   - Dart: sound null safety, zero `dynamic` unless decoding raw JSON at boundary.
+  - Rust: zero `unwrap()`/`expect()` in library code, `#[repr(C)]` on FFI/WASM structs, `cargo clippy --all-targets -- -D warnings` (see [`rust-go-systems`](../rust-go-systems/SKILL.md)).
+  - Go: explicit error wrapping (`%w`), `context.Context` propagation, `go vet` and `go test -race` (see [`rust-go-systems`](../rust-go-systems/SKILL.md)).
 - **Zero Hardcoded Secrets or Magic Numbers**: Read credentials and endpoints from typed config/environment schemas (`pydantic-settings`, `@nestjs/config`); extract threshold constants with descriptive names.
 - **Performance & Scalability Hygiene**:
   - Avoid N+1 queries (batch DB reads/writes, use `Promise.all` / `asyncio.gather` with bounded concurrency).
@@ -71,22 +73,26 @@ Use this skill as a **mandatory quality baseline** whenever creating, refactorin
 
 ---
 
-## 4. Documentation Gates
+## 4. Documentation Gates (Enforced via [`code-doc-generator`](../code-doc-generator/SKILL.md) & [`repo-updater`](../repo-updater/SKILL.md))
 
-- **TypeScript / JavaScript**: JSDoc/TSDoc comments on all exported interfaces, type aliases, functions, classes, and public properties/methods.
+- **TypeScript / JavaScript**: JSDoc/TSDoc comments on all exported interfaces, type aliases, functions, classes, components, and public properties/methods.
 - **Python**: Google-style docstrings on all public modules, classes, `Protocol` methods, functions, and Pydantic schema fields.
 - **Flutter / Dart**: Dartdoc (`///`) comments on all public widgets, classes, enums, and constructor parameters.
-- **Library / App `README.md`**: Every library under `libs/` and application under `apps/` MUST include a `README.md` documenting purpose, installation/Nx targets, architecture/contract dependencies, and usage examples.
+- **Rust**: Rustdoc (`//!` crate docs and `///` symbol docs with compilable `# Examples`) verified via `cargo test --doc`.
+- **Go**: Godoc (`// <SymbolName> ...`) comments on all exported packages, types, functions, and methods.
+- **Protobuf**: Leading comments on all `service`, `rpc`, `message`, `enum`, and field definitions in `libs/data-access/proto-contracts`.
+- **Per-Library & Root `README.md`**: Every library under `libs/` and application under `apps/` MUST include a detailed `README.md` (with component/API catalog tables, usage examples, and an auto-synced `## Test & Coverage Summary` table via `node tools/ci/sync-readmes-and-coverage.mjs`), linked directly from root [README.md](../../../README.md).
 
 ---
 
-## 5. Testing & Coverage Gates
+## 5. Testing, Stories & Coverage Gates (Enforced via [`polyglot-unit-testing`](../polyglot-unit-testing/SKILL.md) & [`interactive-stories`](../interactive-stories/SKILL.md))
 
 - **Standard Coverage Minimum**: `>=80%` across `lines`, `statements`, `functions`, and `branches` for `libs/data-access/*`, `libs/ui/*`, `libs/features/*`, and `apps/*`.
-- **Pure Utility Strict Minimum**: `>=90%` across `lines`, `statements`, `functions`, and `branches` for `libs/utils/*` (`ts-*` and `py-*`).
+- **Pure Utility Strict Minimum**: `>=90%` across `lines`, `statements`, `functions`, and `branches` for `libs/utils/*` (`ts-*`, `py-*`, `rs-*`, `go-*`).
 - **Contract Compliance Tests**: All data-access providers must invoke the shared compliance suite from `@mono-magic/data-access-ts-interfaces/testing` or `py_data_access_interfaces.testing`.
+- **State-Complete Interactive Stories**: Every UI component across `react-mui`, `ng-mat`, `rn-paper`, `vue-vuetify`, `svelte-tw`, and `fl-mat` must implement the Canonical 7-Category Component State Matrix defined in [`interactive-stories`](../interactive-stories/SKILL.md).
 - **End-to-End (E2E) Tests Required for `apps/*`**:
   - Web apps: Playwright E2E suite verifying real user journeys against running services/mocks.
   - Python FastAPI services (`apps/api-*`): ASGI end-to-end tests using `httpx.AsyncClient` + `ASGITransport` with full `lifespan` context.
   - Mobile apps: integration test suites.
-- **Never Circumvent Gates**: Do not exclude source files from coverage or lower thresholds to pass CI; write genuine, behavior-verifying tests.
+- **Never Circumvent Gates**: Do not exclude source files from coverage or lower thresholds to pass CI; write genuine, behavior-verifying tests and run `node tools/ci/sync-readmes-and-coverage.mjs` after every test addition.

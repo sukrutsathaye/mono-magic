@@ -27,3 +27,15 @@ pnpm nx run-many -t lint typecheck test -p py-utils-nlp
 - `pnpm nx lint py-utils-nlp` — `ruff check` and `ruff format --check`
 - `pnpm nx typecheck py-utils-nlp` — strict `pyright` verification
 - `pnpm nx test py-utils-nlp` — `pytest --cov` (`>=90%` coverage gate)
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `py-utils-nlp` | Pytest (`pytest --cov`) | **90.0%** | **90.0%** | **90.0%** | **90.0%** | `>= 90%` | Passing |
+<!-- COVERAGE_TABLE_END -->

@@ -18,7 +18,7 @@
     "test": {
       "cache": true,
       "outputs": ["{projectRoot}/.coverage"],
-      "command": "COVERAGE_FILE=libs/data-access/py-reflective-nlp/.coverage uv run --package py-reflective-nlp pytest -c libs/data-access/py-reflective-nlp/pyproject.toml libs/data-access/py-reflective-nlp/tests --cov=libs/data-access/py-reflective-nlp/src --cov-report=term-missing --cov-fail-under=80"
+      "command": "COVERAGE_FILE=libs/data-access/py-reflective-nlp/.coverage uv run --package py-reflective-nlp pytest -c libs/data-access/py-reflective-nlp/pyproject.toml libs/data-access/py-reflective-nlp/tests --cov=libs/data-access/py-reflective-nlp/src --cov-report=term-missing --cov-report=json:libs/data-access/py-reflective-nlp/coverage.json --cov-fail-under=80"
     }
   }
 }
