@@ -3,7 +3,7 @@ name: Deploy Showcases to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "dev"]
   workflow_dispatch:
 
 permissions:
@@ -63,6 +63,7 @@ jobs:
 
   assemble:
     needs: [discover, build]
+    if: ${{ !cancelled() && needs.discover.result == 'success' && (needs.build.result == 'success' || needs.build.result == 'failure') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
