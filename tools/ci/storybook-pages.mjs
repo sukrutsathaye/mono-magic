@@ -399,11 +399,14 @@ function buildProject(projectName, outDir, options = {}) {
     if (project.type === 'widgetbook') {
       runCommand('pnpm', ['exec', 'nx', 'run', `${project.name}:test-coverage`]);
     } else {
+      // Bypass Nx cache so Vitest always writes test-output/vitest/coverage/
+      // (test targets without outputs can otherwise hit remote cache with no coverage files).
       runCommand('pnpm', [
         'exec',
         'nx',
         'run',
         `${project.name}:test`,
+        '--skip-nx-cache',
         '--',
         '--coverage',
       ]);
