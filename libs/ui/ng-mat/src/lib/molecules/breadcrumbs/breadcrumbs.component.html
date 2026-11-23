@@ -1,0 +1,156 @@
+<nav
+  class="magic-breadcrumbs__nav"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+  [attr.aria-label]="ariaLabel() || 'Breadcrumb'"
+>
+  <ol class="magic-breadcrumbs__list">
+    @for (item of leadingItems(); track item.id; let idx = $index) {
+      <li class="magic-breadcrumbs__item">
+        @if (isCurrentItem(item, idx)) {
+          <span
+            class="magic-breadcrumbs__current"
+            aria-current="page"
+            [attr.data-testid]="testId() ? testId() + '-item-' + item.id : null"
+          >
+            @if (item.icon) {
+              <mat-icon class="magic-breadcrumbs__icon" aria-hidden="true">{{
+                item.icon
+              }}</mat-icon>
+            }
+            <span>{{ item.label }}</span>
+          </span>
+        } @else if (item.href && !disabled() && !item.disabled) {
+          <a
+            class="magic-breadcrumbs__link"
+            [href]="item.href"
+            [attr.data-testid]="testId() ? testId() + '-item-' + item.id : null"
+            (click)="onItemActivate($event, item)"
+          >
+            @if (item.icon) {
+              <mat-icon class="magic-breadcrumbs__icon" aria-hidden="true">{{
+                item.icon
+              }}</mat-icon>
+            }
+            <span>{{ item.label }}</span>
+          </a>
+        } @else {
+          <button
+            type="button"
+            class="magic-breadcrumbs__btn"
+            [disabled]="disabled() || item.disabled"
+            [attr.aria-disabled]="disabled() || item.disabled ? 'true' : null"
+            [attr.data-testid]="testId() ? testId() + '-item-' + item.id : null"
+            (click)="onItemActivate($event, item)"
+          >
+            @if (item.icon) {
+              <mat-icon class="magic-breadcrumbs__icon" aria-hidden="true">{{
+                item.icon
+              }}</mat-icon>
+            }
+            <span>{{ item.label }}</span>
+          </button>
+        }
+
+        @if (isCollapsed() || idx < leadingItems().length - 1) {
+          <span class="magic-breadcrumbs__separator" aria-hidden="true">
+            @if (isSeparatorIcon()) {
+              <mat-icon class="magic-breadcrumbs__sep-icon">{{
+                separator()
+              }}</mat-icon>
+            } @else {
+              {{ separator() }}
+            }
+          </span>
+        }
+      </li>
+    }
+
+    @if (isCollapsed()) {
+      <li class="magic-breadcrumbs__item">
+        <button
+          type="button"
+          class="magic-breadcrumbs__collapse-btn"
+          aria-label="Show hidden breadcrumbs"
+          [disabled]="disabled()"
+          [attr.data-testid]="testId() ? testId() + '-expand' : null"
+          (click)="expand()"
+        >
+          …
+        </button>
+        @if (trailingItems().length > 0) {
+          <span class="magic-breadcrumbs__separator" aria-hidden="true">
+            @if (isSeparatorIcon()) {
+              <mat-icon class="magic-breadcrumbs__sep-icon">{{
+                separator()
+              }}</mat-icon>
+            } @else {
+              {{ separator() }}
+            }
+          </span>
+        }
+      </li>
+
+      @for (item of trailingItems(); track item.id; let idx = $index) {
+        <li class="magic-breadcrumbs__item">
+          @if (isCurrentItem(item, trailingGlobalIndex(idx))) {
+            <span
+              class="magic-breadcrumbs__current"
+              aria-current="page"
+              [attr.data-testid]="testId() ? testId() + '-item-' + item.id : null"
+            >
+              @if (item.icon) {
+                <mat-icon class="magic-breadcrumbs__icon" aria-hidden="true">{{
+                  item.icon
+                }}</mat-icon>
+              }
+              <span>{{ item.label }}</span>
+            </span>
+          } @else if (item.href && !disabled() && !item.disabled) {
+            <a
+              class="magic-breadcrumbs__link"
+              [href]="item.href"
+              [attr.data-testid]="testId() ? testId() + '-item-' + item.id : null"
+              (click)="onItemActivate($event, item)"
+            >
+              @if (item.icon) {
+                <mat-icon class="magic-breadcrumbs__icon" aria-hidden="true">{{
+                  item.icon
+                }}</mat-icon>
+              }
+              <span>{{ item.label }}</span>
+            </a>
+          } @else {
+            <button
+              type="button"
+              class="magic-breadcrumbs__btn"
+              [disabled]="disabled() || item.disabled"
+              [attr.aria-disabled]="disabled() || item.disabled ? 'true' : null"
+              [attr.data-testid]="testId() ? testId() + '-item-' + item.id : null"
+              (click)="onItemActivate($event, item)"
+            >
+              @if (item.icon) {
+                <mat-icon class="magic-breadcrumbs__icon" aria-hidden="true">{{
+                  item.icon
+                }}</mat-icon>
+              }
+              <span>{{ item.label }}</span>
+            </button>
+          }
+
+          @if (idx < trailingItems().length - 1) {
+            <span class="magic-breadcrumbs__separator" aria-hidden="true">
+              @if (isSeparatorIcon()) {
+                <mat-icon class="magic-breadcrumbs__sep-icon">{{
+                  separator()
+                }}</mat-icon>
+              } @else {
+                {{ separator() }}
+              }
+            </span>
+          }
+        </li>
+      }
+    }
+  </ol>
+</nav>

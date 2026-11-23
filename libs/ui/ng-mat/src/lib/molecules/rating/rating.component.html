@@ -1,0 +1,59 @@
+<div
+  class="magic-rating__root"
+  [attr.id]="id() || null"
+  [attr.data-testid]="testId() || null"
+>
+  @if (label()) {
+    <span class="magic-rating__label">{{ label() }}</span>
+  }
+
+  <div
+    class="magic-rating__stars"
+    role="slider"
+    [attr.tabindex]="isInteractive() ? 0 : -1"
+    [attr.aria-label]="ariaLabel() || label() || 'Rating'"
+    [attr.aria-valuemin]="0"
+    [attr.aria-valuemax]="resolvedMax()"
+    [attr.aria-valuenow]="currentValue()"
+    [attr.aria-readonly]="readOnly() ? 'true' : null"
+    [attr.aria-disabled]="disabled() ? 'true' : null"
+    (mouseleave)="onMouseLeave()"
+    (keydown)="onKeydown($event)"
+  >
+    @for (star of stars(); track star) {
+      <button
+        type="button"
+        class="magic-rating__star"
+        [class.magic-rating__star--filled]="isStarFilled(star)"
+        [disabled]="disabled()"
+        [attr.tabindex]="-1"
+        [attr.aria-label]="star + ' out of ' + resolvedMax() + ' stars'"
+        [attr.data-testid]="testId() ? testId() + '-star-' + star : null"
+        (mousemove)="onStarPointerMove($event, star)"
+        (click)="onStarClick($event, star)"
+      >
+        <mat-icon class="magic-rating__icon" aria-hidden="true">{{
+          iconForStar(star)
+        }}</mat-icon>
+      </button>
+    }
+  </div>
+
+  @if (showValue()) {
+    <span
+      class="magic-rating__value"
+      [attr.data-testid]="testId() ? testId() + '-value' : null"
+    >
+      {{ formattedValue() }}
+    </span>
+  }
+
+  @if (reviewCount() !== undefined) {
+    <span
+      class="magic-rating__count"
+      [attr.data-testid]="testId() ? testId() + '-count' : null"
+    >
+      ({{ reviewCount() }})
+    </span>
+  }
+</div>

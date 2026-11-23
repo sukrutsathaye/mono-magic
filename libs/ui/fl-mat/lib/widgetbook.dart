@@ -19,12 +19,18 @@ import 'widgetbook/atoms/tool_tip_use_cases.dart';
 import 'widgetbook/molecules/accordion_use_cases.dart';
 import 'widgetbook/molecules/alert_use_cases.dart';
 import 'widgetbook/molecules/avatar_use_cases.dart';
+import 'widgetbook/molecules/breadcrumbs_use_cases.dart';
 import 'widgetbook/molecules/card_use_cases.dart';
+import 'widgetbook/molecules/date_picker_use_cases.dart';
 import 'widgetbook/molecules/dialog_use_cases.dart';
 import 'widgetbook/molecules/form_field_use_cases.dart';
+import 'widgetbook/molecules/list_item_use_cases.dart';
 import 'widgetbook/molecules/menu_use_cases.dart';
+import 'widgetbook/molecules/pagination_use_cases.dart';
+import 'widgetbook/molecules/rating_use_cases.dart';
 import 'widgetbook/molecules/search_bar_use_cases.dart';
 import 'widgetbook/molecules/select_use_cases.dart';
+import 'widgetbook/molecules/stepper_use_cases.dart';
 import 'widgetbook/molecules/tabs_use_cases.dart';
 import 'widgetbook/molecules/toast_use_cases.dart';
 import 'widgetbook/widgetbook_helpers.dart';
@@ -72,12 +78,18 @@ class MagicWidgetbookApp extends StatelessWidget {
             buildMagicAccordionComponent(),
             buildMagicAlertComponent(),
             buildMagicAvatarComponent(),
+            buildMagicBreadcrumbsComponent(),
             buildMagicCardComponent(),
+            buildMagicDatePickerComponent(),
             buildMagicDialogComponent(),
             buildMagicFormFieldComponent(),
+            buildMagicListItemComponent(),
             buildMagicMenuComponent(),
+            buildMagicPaginationComponent(),
+            buildMagicRatingComponent(),
             buildMagicSearchBarComponent(),
             buildMagicSelectComponent(),
+            buildMagicStepperComponent(),
             buildMagicTabsComponent(),
             buildMagicToastComponent(),
           ],
