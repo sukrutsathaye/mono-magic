@@ -177,7 +177,9 @@ _IRREGULAR_SINGULAR_TO_PLURAL: dict[str, str] = {
 }
 
 _IRREGULAR_PLURAL_TO_SINGULAR: dict[str, str] = {
-    plural: singular for singular, plural in _IRREGULAR_SINGULAR_TO_PLURAL.items()
+    **{plural: singular for singular, plural in _IRREGULAR_SINGULAR_TO_PLURAL.items()},
+    "buses": "bus",
+    "gases": "gas",
 }
 
 _INVARIANT_NOUNS: frozenset[str] = frozenset(

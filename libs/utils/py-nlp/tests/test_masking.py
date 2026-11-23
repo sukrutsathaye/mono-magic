@@ -28,6 +28,12 @@ def test_mask_keyword_multiword_and_punctuation_edges() -> None:
     assert mask_keyword_in_sentence(sentence, "C++") == "We use active  recall, and _____ daily!"
 
 
+def test_mask_keyword_symbol_adjacent_to_punctuation() -> None:
+    sentence = "Use (C++) and C++!"
+    assert mask_keyword_in_sentence(sentence, "C++") == "Use (_____) and _____!"
+    assert mask_keyword_in_sentence("Use C++20 and C++.", "C++") == "Use C++20 and _____."
+
+
 def test_mask_keyword_empty_inputs() -> None:
     assert mask_keyword_in_sentence("", "cat") == ""
     assert mask_keyword_in_sentence("Hello world.", "   ") == "Hello world."

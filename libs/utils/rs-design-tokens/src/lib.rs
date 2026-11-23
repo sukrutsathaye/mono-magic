@@ -15,5 +15,5 @@ pub use emit::{
 };
 pub use wcag::{
     contrast_ratio, evaluate_contrast, meets_aa, meets_aaa, relative_luminance, ContrastReport,
-    WcagLevel, WCAG_AA_LARGE_MIN, WCAG_AA_NORMAL_MIN, WCAG_AAA_NORMAL_MIN,
+    WcagLevel, WCAG_AAA_NORMAL_MIN, WCAG_AA_LARGE_MIN, WCAG_AA_NORMAL_MIN,
 };

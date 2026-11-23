@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
 
 jobs:
@@ -29,7 +30,7 @@ jobs:
           go-version: '1.24.3'
       - run: pnpm nx-cloud start-workers
 
-      - run: pnpm nx affected -t lint test build
+      - run: pnpm nx affected -t lint typecheck test build
 
       # NEW: Add this step at the end of your job
       - run: pnpm nx fix-ci

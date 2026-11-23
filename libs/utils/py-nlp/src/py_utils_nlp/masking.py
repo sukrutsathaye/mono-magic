@@ -35,8 +35,8 @@ def mask_keyword_in_sentence(
     parts = [re.escape(part) for part in cleaned_keyword.split()]
     body = r"\s+".join(parts)
 
-    prefix = r"(?<!\w)" if cleaned_keyword[0].isalnum() or cleaned_keyword[0] == "_" else r"(?<!\S)"
-    suffix = r"(?!\w)" if cleaned_keyword[-1].isalnum() or cleaned_keyword[-1] == "_" else r"(?!\S)"
+    prefix = r"(?<!\w)"
+    suffix = r"(?!\w)"
 
     flags = 0 if case_sensitive else re.IGNORECASE
     pattern = re.compile(f"{prefix}{body}{suffix}", flags)

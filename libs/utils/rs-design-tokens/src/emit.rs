@@ -87,8 +87,7 @@ pub fn to_kebab_case(input: &str) -> String {
     }
 }
 
-/// Converts a token key or theme name to `camelCase`.
-pub fn to_camel_case(input: &str) -> String {
+fn to_raw_camel_case(input: &str) -> String {
     let words = split_identifier_words(input);
     if words.is_empty() {
         return "default".to_string();
@@ -108,7 +107,30 @@ pub fn to_camel_case(input: &str) -> String {
     out
 }
 
-/// Converts a token key or theme name to `PascalCase`.
+fn format_ts_property_key(input: &str) -> String {
+    let key = to_raw_camel_case(input);
+    if key.starts_with(|c: char| c.is_ascii_digit()) {
+        format!("'{key}'")
+    } else {
+        key
+    }
+}
+
+/// Converts a token key or theme name to `camelCase` safe for JS/TS/Dart identifiers.
+///
+/// Identifiers whose sanitized form begins with an ASCII digit are prefixed with `token`.
+pub fn to_camel_case(input: &str) -> String {
+    let out = to_raw_camel_case(input);
+    if out.starts_with(|c: char| c.is_ascii_digit()) {
+        format!("token{out}")
+    } else {
+        out
+    }
+}
+
+/// Converts a token key or theme name to `PascalCase` safe for TS/Dart type identifiers.
+///
+/// Identifiers whose sanitized form begins with an ASCII digit are prefixed with `Token`.
 pub fn to_pascal_case(input: &str) -> String {
     let words = split_identifier_words(input);
     if words.is_empty() {
@@ -122,7 +144,11 @@ pub fn to_pascal_case(input: &str) -> String {
             out.push_str(chars.as_str());
         }
     }
-    out
+    if out.starts_with(|c: char| c.is_ascii_digit()) {
+        format!("Token{out}")
+    } else {
+        out
+    }
 }
 
 fn format_number(value: f64) -> String {
@@ -148,7 +174,12 @@ fn format_dart_double(value: f64) -> String {
 pub fn emit_css(tokens: &TokenSet) -> String {
     let mut out = String::from(":root {\n");
     for (key, color) in &tokens.colors {
-        let _ = writeln!(out, "  --color-{}: {};", to_kebab_case(key), color.to_css_hex());
+        let _ = writeln!(
+            out,
+            "  --color-{}: {};",
+            to_kebab_case(key),
+            color.to_css_hex()
+        );
     }
     for (key, value) in &tokens.spacing {
         let _ = writeln!(
@@ -180,19 +211,34 @@ pub fn emit_ts(tokens: &TokenSet) -> String {
 
     out.push_str("  colors: {\n");
     for (key, color) in &tokens.colors {
-        let _ = writeln!(out, "    {}: '{}',", to_camel_case(key), color.to_css_hex());
+        let _ = writeln!(
+            out,
+            "    {}: '{}',",
+            format_ts_property_key(key),
+            color.to_css_hex()
+        );
     }
     out.push_str("  },\n");
 
     out.push_str("  spacing: {\n");
     for (key, value) in &tokens.spacing {
-        let _ = writeln!(out, "    {}: {},", to_camel_case(key), format_number(*value));
+        let _ = writeln!(
+            out,
+            "    {}: {},",
+            format_ts_property_key(key),
+            format_number(*value)
+        );
     }
     out.push_str("  },\n");
 
     out.push_str("  radii: {\n");
     for (key, value) in &tokens.radii {
-        let _ = writeln!(out, "    {}: {},", to_camel_case(key), format_number(*value));
+        let _ = writeln!(
+            out,
+            "    {}: {},",
+            format_ts_property_key(key),
+            format_number(*value)
+        );
     }
     out.push_str("  },\n");
 
@@ -226,11 +272,21 @@ pub fn emit_dart(tokens: &TokenSet) -> String {
     }
     for (key, value) in &tokens.spacing {
         let field = format!("spacing{}", to_pascal_case(key));
-        field_specs.push((field, "double".to_string(), format_dart_double(*value), false));
+        field_specs.push((
+            field,
+            "double".to_string(),
+            format_dart_double(*value),
+            false,
+        ));
     }
     for (key, value) in &tokens.radii {
         let field = format!("radius{}", to_pascal_case(key));
-        field_specs.push((field, "double".to_string(), format_dart_double(*value), false));
+        field_specs.push((
+            field,
+            "double".to_string(),
+            format_dart_double(*value),
+            false,
+        ));
     }
 
     for (field, ty, _, _) in &field_specs {
@@ -250,9 +306,15 @@ pub fn emit_dart(tokens: &TokenSet) -> String {
 
     // Defaults constant
     if field_specs.is_empty() {
-        let _ = writeln!(out, "\n  static const {class_name} defaults = {class_name}();");
+        let _ = writeln!(
+            out,
+            "\n  static const {class_name} defaults = {class_name}();"
+        );
     } else {
-        let _ = writeln!(out, "\n  static const {class_name} defaults = {class_name}(");
+        let _ = writeln!(
+            out,
+            "\n  static const {class_name} defaults = {class_name}("
+        );
         for (field, _, default_expr, _) in &field_specs {
             let _ = writeln!(out, "    {field}: {default_expr},");
         }
@@ -326,6 +388,10 @@ mod tests {
         assert_eq!(to_kebab_case("primaryMain"), "primary-main");
         assert_eq!(to_camel_case("mono-magic_ui"), "monoMagicUi");
         assert_eq!(to_pascal_case("mono-magic"), "MonoMagic");
+        assert_eq!(to_camel_case("123-brand"), "token123Brand");
+        assert_eq!(to_pascal_case("123-brand"), "Token123Brand");
+        assert_eq!(to_camel_case("1primary"), "token1primary");
+        assert_eq!(to_pascal_case("2xl"), "Token2xl");
         assert_eq!(to_kebab_case("___"), "default");
         assert_eq!(to_camel_case(""), "default");
         assert_eq!(to_pascal_case(""), "Default");
@@ -376,5 +442,31 @@ mod tests {
         let dart = emit_dart(&TokenSet::new("empty"));
         assert!(dart.contains("const EmptyTokens();"));
         assert!(dart.contains("EmptyTokens copyWith() => const EmptyTokens();"));
+    }
+
+    #[test]
+    fn emit_ts_and_dart_handle_digit_leading_names_and_keys() {
+        let tokens = TokenSet::new("123-brand")
+            .with_color("1primary", Srgb::from_hex("#1976d2").unwrap())
+            .with_spacing("4", 16.0)
+            .with_radius("2xl", 24.0);
+
+        let ts = emit_ts(&tokens);
+        assert!(ts.contains("export const token123BrandTokens = {"));
+        assert!(ts.contains("    '1primary': '#1976d2',"));
+        assert!(ts.contains("    '4': 16,"));
+        assert!(ts.contains("    '2xl': 24,"));
+        assert!(ts.contains("export type Token123BrandTokens = typeof token123BrandTokens;"));
+
+        let dart = emit_dart(&tokens);
+        assert!(
+            dart.contains("class Token123BrandTokens extends ThemeExtension<Token123BrandTokens>")
+        );
+        assert!(dart.contains("final Color colorToken1primary;"));
+        assert!(dart.contains("final double spacingToken4;"));
+        assert!(dart.contains("final double radiusToken2xl;"));
+        assert!(dart.contains("colorToken1primary: Color(0xFF1976D2),"));
+        assert!(dart.contains("spacingToken4: 16.0,"));
+        assert!(dart.contains("radiusToken2xl: 24.0,"));
     }
 }

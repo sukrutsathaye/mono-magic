@@ -108,8 +108,8 @@ fn parse_hex_byte(pair: &str, raw: &str) -> Result<u8, ColorError> {
 
 #[inline]
 fn parse_hex_nibble(nibble: &str, raw: &str) -> Result<u8, ColorError> {
-    let v = u8::from_str_radix(nibble, 16)
-        .map_err(|_| ColorError::InvalidHexDigit(raw.to_string()))?;
+    let v =
+        u8::from_str_radix(nibble, 16).map_err(|_| ColorError::InvalidHexDigit(raw.to_string()))?;
     Ok((v << 4) | v)
 }
 
@@ -189,10 +189,7 @@ impl Srgb {
     /// Packs channels into Flutter's `0xAARRGGBB` 32-bit unsigned integer layout.
     #[inline]
     pub const fn to_argb_u32(self) -> u32 {
-        ((self.a as u32) << 24)
-            | ((self.r as u32) << 16)
-            | ((self.g as u32) << 8)
-            | (self.b as u32)
+        ((self.a as u32) << 24) | ((self.r as u32) << 16) | ((self.g as u32) << 8) | (self.b as u32)
     }
 
     /// Converts this `Srgb` color to [`Hsl`].
@@ -327,8 +324,14 @@ mod tests {
     #[test]
     fn hex_parsing_and_formatting() {
         assert_eq!(Srgb::from_hex("#fff").unwrap(), Srgb::rgb(255, 255, 255));
-        assert_eq!(Srgb::from_hex("#0f8c").unwrap(), Srgb::new(0, 255, 136, 204));
-        assert_eq!(Srgb::from_hex("1a2b3c").unwrap(), Srgb::rgb(0x1a, 0x2b, 0x3c));
+        assert_eq!(
+            Srgb::from_hex("#0f8c").unwrap(),
+            Srgb::new(0, 255, 136, 204)
+        );
+        assert_eq!(
+            Srgb::from_hex("1a2b3c").unwrap(),
+            Srgb::rgb(0x1a, 0x2b, 0x3c)
+        );
         assert_eq!(
             Srgb::from_hex("  #1A2B3C80  ").unwrap(),
             Srgb::new(0x1a, 0x2b, 0x3c, 0x80)
@@ -353,8 +356,12 @@ mod tests {
             Srgb::from_hex("#😀😀😀"),
             Err(ColorError::InvalidHexDigit(_))
         ));
-        assert!(!ColorError::InvalidHexFormat("x".into()).to_string().is_empty());
-        assert!(!ColorError::InvalidHexDigit("z".into()).to_string().is_empty());
+        assert!(!ColorError::InvalidHexFormat("x".into())
+            .to_string()
+            .is_empty());
+        assert!(!ColorError::InvalidHexDigit("z".into())
+            .to_string()
+            .is_empty());
     }
 
     #[test]
@@ -399,7 +406,10 @@ mod tests {
         for orig in palette {
             let oklch = orig.to_oklch();
             let back = Srgb::from_oklch(oklch);
-            assert_eq!(orig, back, "OKLCH roundtrip mismatch for {orig:?} -> {oklch:?}");
+            assert_eq!(
+                orig, back,
+                "OKLCH roundtrip mismatch for {orig:?} -> {oklch:?}"
+            );
         }
 
         // White should have L ≈ 1.0 and C ≈ 0.0
