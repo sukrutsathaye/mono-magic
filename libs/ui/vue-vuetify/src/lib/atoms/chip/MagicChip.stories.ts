@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import type { ChipItem } from '@mono-magic/atomic-design-interfaces';
 import MagicChip from './MagicChip.vue';
 
@@ -113,4 +114,11 @@ export const InteractiveTagInput: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText(/Tag count: 2/)).toBeInTheDocument();
+    const input = canvas.getByPlaceholderText('Type & press Enter...');
+    await userEvent.type(input, 'Vuetify{enter}');
+    await expect(canvas.getByText(/Tag count: 3/)).toBeInTheDocument();
+  },
 };

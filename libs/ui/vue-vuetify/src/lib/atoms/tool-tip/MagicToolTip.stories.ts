@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import type { ToolTipPosition } from '@mono-magic/atomic-design-interfaces';
 import MagicButton from '../button/MagicButton.vue';
 import MagicToolTip from './MagicToolTip.vue';
@@ -135,4 +136,11 @@ export const InteractiveControlledAndPositionSwitcher: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText(/Open: false \| Position: above/)).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: 'below' }));
+    await userEvent.click(canvas.getByRole('button', { name: /Show Tooltip/i }));
+    await expect(canvas.getByText(/Open: true \| Position: below/)).toBeInTheDocument();
+  },
 };

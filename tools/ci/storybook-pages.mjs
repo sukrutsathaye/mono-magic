@@ -471,7 +471,7 @@ function buildProject(projectName, outDir, options = {}) {
   const coverage = stageProjectCoverage(project, destDir);
 
   writeFileSync(
-    join(destDir, '.metadata.json'),
+    join(destDir, 'showcase-metadata.json'),
     JSON.stringify(
       {
         name: project.name,
@@ -741,7 +741,7 @@ function assemblePages(outDir) {
     )
     .map((entry) => {
       const dir = join(outDir, entry.name);
-      const metadataPath = join(dir, '.metadata.json');
+      const metadataPath = join(dir, 'showcase-metadata.json');
       const projectInfo = projectMap.get(entry.name);
       const metadata = readJsonIfExists(metadataPath) ?? projectInfo;
       let coverage = metadata?.coverage ?? null;

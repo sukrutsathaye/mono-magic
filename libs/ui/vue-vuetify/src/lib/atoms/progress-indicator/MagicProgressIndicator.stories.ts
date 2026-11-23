@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import MagicProgressIndicator from './MagicProgressIndicator.vue';
 
 const meta: Meta<typeof MagicProgressIndicator> = {
@@ -101,4 +102,10 @@ export const InteractiveProgressStepper: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText(/Progress: 35%/)).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: /\+15%/i }));
+    await expect(canvas.getByText(/Progress: 50%/)).toBeInTheDocument();
+  },
 };

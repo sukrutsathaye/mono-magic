@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { expect, userEvent, within } from 'storybook/test';
 import MagicButtonToggle from './MagicButtonToggle.vue';
 
 const meta: Meta<typeof MagicButtonToggle> = {
@@ -84,6 +85,12 @@ export const MultipleFormatting: Story = {
       </div>
     `,
   }),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText(/Active formats: bold/)).toBeInTheDocument();
+    await userEvent.click(canvas.getByRole('button', { name: /Italic/i }));
+    await expect(canvas.getByText(/Active formats: bold, italic/)).toBeInTheDocument();
+  },
 };
 
 export const VerticalLegacy: Story = {
