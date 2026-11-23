@@ -408,11 +408,15 @@ function buildProject(projectName, outDir, options = {}) {
         '--coverage',
       ]);
       if (options.withStorybookCoverage) {
+        // Pass -u so vitest-plugin-vis does not fail on missing OS-specific baselines
+        // (e.g., __vis__/linux on GitHub Actions) when collecting Pages coverage reports.
         runCommand('pnpm', [
           'exec',
           'nx',
           'run',
           `${project.name}:test-storybook-coverage`,
+          '--',
+          '-u',
         ]);
       }
     }
