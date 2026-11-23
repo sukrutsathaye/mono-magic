@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 /// Using constant [IconData] references guarantees compatibility with
 /// `flutter build web --release --tree-shake-icons`.
 const Map<String, IconData> magicIconMap = <String, IconData>{
+  'access_time': Icons.access_time,
   'account_circle': Icons.account_circle,
   'add': Icons.add,
   'add_circle': Icons.add_circle,
@@ -50,6 +51,7 @@ const Map<String, IconData> magicIconMap = <String, IconData>{
   'copy': Icons.content_copy,
   'dark_mode': Icons.dark_mode,
   'dashboard': Icons.dashboard,
+  'date_range': Icons.date_range,
   'delete': Icons.delete,
   'delete_outline': Icons.delete_outline,
   'description': Icons.description,
@@ -67,6 +69,7 @@ const Map<String, IconData> magicIconMap = <String, IconData>{
   'favorite_border': Icons.favorite_border,
   'file_copy': Icons.file_copy,
   'filter_list': Icons.filter_list,
+  'first_page': Icons.first_page,
   'flag': Icons.flag,
   'folder': Icons.folder,
   'folder_open': Icons.folder_open,
@@ -95,6 +98,7 @@ const Map<String, IconData> magicIconMap = <String, IconData>{
   'keyboard_arrow_up': Icons.keyboard_arrow_up,
   'label': Icons.label,
   'language': Icons.language,
+  'last_page': Icons.last_page,
   'launch': Icons.launch,
   'layers': Icons.layers,
   'light_mode': Icons.light_mode,
@@ -140,6 +144,7 @@ const Map<String, IconData> magicIconMap = <String, IconData>{
   'sort': Icons.sort,
   'star': Icons.star,
   'star_border': Icons.star_border,
+  'star_half': Icons.star_half,
   'stop': Icons.stop,
   'sync': Icons.sync,
   'tag': Icons.tag,

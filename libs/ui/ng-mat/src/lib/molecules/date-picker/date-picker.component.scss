@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.magic-date-picker__container {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.magic-date-picker__field {
+  flex: 1 1 240px;
+  min-width: 220px;
+}
+
+.magic-date-picker__actions {
+  display: inline-flex;
+  align-items: center;
+}
+
+.magic-date-picker__time-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.magic-date-picker__time-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface-variant, #49454f);
+}
+
+.magic-date-picker__time-input {
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--mat-sys-outline, #79747e);
+  border-radius: 6px;
+  background: var(--mat-sys-surface, #ffffff);
+  color: var(--mat-sys-on-surface, #1d1b20);
+  font: inherit;
+  font-size: var(--magic-font-size, 0.875rem);
+
+  &:focus-visible {
+    outline: 2px solid var(--magic-intent, var(--mat-sys-primary, #6750a4));
+    outline-offset: 1px;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}

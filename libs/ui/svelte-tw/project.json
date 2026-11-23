@@ -1,0 +1,48 @@
+{
+  "name": "svelte-tw",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "root": "libs/ui/svelte-tw",
+  "sourceRoot": "libs/ui/svelte-tw/src",
+  "projectType": "library",
+  "tags": ["scope:ui", "framework:svelte", "ds:tailwind", "lang:ts"],
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/ui/svelte-tw",
+        "command": "vitest run --project=svelte-tw"
+      }
+    },
+    "test-storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "libs/ui/svelte-tw",
+        "command": "vitest run --project=svelte-tw-storybook"
+      }
+    },
+    "update-snapshots": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "cwd": "libs/ui/svelte-tw",
+        "command": "vitest run --project=svelte-tw-storybook -u"
+      }
+    },
+    "test-storybook-coverage": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "cwd": "libs/ui/svelte-tw",
+        "command": "vitest run --project=svelte-tw-storybook --coverage.enabled=true --coverage.reportsDirectory=./test-output/storybook/coverage --coverage.thresholds.lines=0 --coverage.thresholds.statements=0 --coverage.thresholds.functions=0 --coverage.thresholds.branches=0"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^typecheck", "^build"],
+      "options": {
+        "cwd": "libs/ui/svelte-tw",
+        "command": "svelte-check --tsconfig ./tsconfig.lib.json"
+      }
+    }
+  }
+}

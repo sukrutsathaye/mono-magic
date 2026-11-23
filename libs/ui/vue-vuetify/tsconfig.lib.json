@@ -1,0 +1,34 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "declarationMap": false,
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "types": ["node", "vite/client"],
+    "jsx": "preserve",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "emitDeclarationOnly": false
+  },
+  "exclude": [
+    "out-tsc",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.stories.ts",
+    "vite.config.mts",
+    "eslint.config.mjs",
+    "src/test-setup.ts"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.vue"
+  ],
+  "references": [
+    {
+      "path": "../atomic-design-interfaces/tsconfig.lib.json"
+    }
+  ]
+}

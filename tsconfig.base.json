@@ -25,6 +25,9 @@
       "@mono-magic/atomic-design-interfaces": [
         "./libs/ui/atomic-design-interfaces/src/index.ts"
       ],
+      "@mono-magic/data-access-ts-reflective-api": [
+        "./libs/data-access/ts-reflective-api/src/index.ts"
+      ],
       "@mono-magic/ng-mat": [
         "./libs/ui/ng-mat/src/index.ts"
       ]

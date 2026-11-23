@@ -54,15 +54,15 @@ flowchart TD
 | Phase | Milestone | Primary Directories | Dependencies | Status |
 | --- | --- | --- | --- | --- |
 | **Phase 0** | Monorepo Foundation, 4 UI Libraries (11 Atoms + 5 Molecules), GH Pages Portal | `libs/ui/*`, `tools/ci/*`, `.github/workflows/*` | — | Completed |
-| **Phase 1** | Docs, `.gemini/` Orchestration, Strict Boundaries, Committed Visual Baselines & Coverage Portal | `README.md`, `ROADMAP.md`, `.gemini/*`, `eslint.config.mjs`, `libs/ui/*` | Phase 0 | In Progress |
-| **Phase 2A** | Atomic Design Expansion — Wave 2 Molecules (Batch 1: 5 + Batch 2: 5 × 4 UI Libs) | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 1 | Planned |
+| **Phase 1** | Docs, `.gemini/` Orchestration, Strict Boundaries, Committed Visual Baselines & Coverage Portal | `README.md`, `ROADMAP.md`, `.gemini/*`, `eslint.config.mjs`, `libs/ui/*` | Phase 0 | Completed |
+| **Phase 2A** | Atomic Design Expansion — Wave 2 Molecules (Batch 1: 5 + Batch 2: 5 × 4 UI Libs) | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 1 | Completed |
 | **Phase 2B** | Atomic Design Expansion — Wave 1 Core Organisms (5 Organisms × 4 UI Libs) | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 2A | Planned |
 | **Phase 2C** | Atomic Design Expansion — Wave 2 Domain Organisms (Commerce, Live Conferencing, Reflective Learning) & Templates | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 2B | Planned |
-| **Phase 3A** | Pure Shared Utilities (`ts-core`, `ts-formatters`, `ts-pose-math`, `ts-design-tokens`, `py-common`, `py-nlp`) | `libs/utils/{ts-*,py-*}` | Phase 1 | Planned |
-| **Phase 3B** | Hybrid Data-Access Contracts (`proto-contracts`, `ts-interfaces`, `py-interfaces`) & Compliance Harness | `libs/data-access/{proto-contracts,ts-interfaces,py-interfaces}` | Phase 3A | Planned |
-| **Phase 3C** | Data-Access Implementations (`ts-firebase`, `ts-supabase`, `ts-nestjs-*`, `java-spring-boot-*`, Cloud SDKs, Domain Wrappers) | `libs/data-access/*` | Phase 3B | Planned |
+| **Phase 3A** | Pure Shared Utilities (`ts-core`, `ts-formatters`, `ts-pose-math`, `ts-design-tokens`, `py-common`, `py-nlp`, `go-core`) | `libs/utils/{ts-*,py-*,rs-*,go-*}` | Phase 1 | Completed |
+| **Phase 3B** | Hybrid Data-Access Contracts (`proto-contracts`, `ts-interfaces`, `py-interfaces`) & Compliance Harness | `libs/data-access/{proto-contracts,ts-interfaces,py-interfaces}` | Phase 3A | Completed (TS/Py/Proto) |
+| **Phase 3C** | Data-Access Implementations (`ts-firebase`, `ts-supabase`, `ts-nestjs-*`, `java-spring-boot-*`, Cloud SDKs, Domain Wrappers) | `libs/data-access/*` | Phase 3B | In Progress |
 | **Phase 4A** | Open-Source Realtime & ML Integrations (LiveKit, PoseNet / MediaPipe, Smart Whiteboard / Transcripts, Payments) | `libs/features/ts-*`, `libs/data-access/*` | Phase 2C, 3C | Planned |
-| **Phase 4B** | Additional UI Frameworks & Design Systems (Vue, Svelte, Tailwind + `shadcn/ui`) | `libs/ui/{vue-*,svelte-*,react-shadcn}` | Phase 2C | Planned |
+| **Phase 4B** | Additional UI Frameworks & Design Systems (Vue, Svelte, Tailwind + `shadcn/ui`) | `libs/ui/{vue-*,svelte-*,react-shadcn}` | Phase 2C | In Progress |
 | **Phase 4C** | Polyglot Microservices (`api-pose-coach`, `api-reflective-learning`, Go/Rust Realtime Workers, Spring Boot, NestJS) | `apps/api-*`, `libs/data-access/*` | Phase 3C | Planned |
 | **Phase 5A** | Flagship App 1: Interactive Live Coaching & Learning Platform (Yoga + PoseNet + Multi-Subject + Whiteboard) | `apps/yoga-live*` (or `apps/live-coaching*`) | Phase 2C, 4A, 4C | Planned |
 | **Phase 5B** | Flagship App 2: Hand-Knitted Articles Showcase & Ordering Platform | `apps/knitted-showcase*` | Phase 2C, 3C | Planned |
@@ -92,21 +92,21 @@ flowchart TD
   - Add custom commands in `.gemini/commands/*.toml` and specialist agent profiles in `.gemini/agents/*.md`.
 
 #### Storybook Visual Regression Baseline Setup (`Phase 1.2`)
-- [ ] **Commit & Share Visual Baselines Across Environments**:
+- [x] **Commit & Share Visual Baselines Across Environments**:
   - *Acceptance Criteria*:
     - Update `.gitignore` and `.storybook/main.ts` / `vite.config.mts` in `react-mui`, `ng-mat`, and `rn-paper` so baseline images (`__baselines__/`) are tracked in Git (while `__results__/` and `__diffs__/` remain gitignored) and resolved consistently in both local development and CI.
     - Add an explicit Nx target (`update-snapshots` or `test-storybook -u`) to regenerate baselines across all Storybook projects.
     - Generate and commit initial baseline PNGs for all stories in `react-mui`, `ng-mat`, and `rn-paper` so `pnpm nx run-many -t test-storybook -p react-mui,ng-mat,rn-paper` passes on a fresh clone and every story displays its baseline snapshot in the Storybook Web **Vis** panel.
 
 #### Unit Test & Storybook Test Coverage Reporting (`Phase 1.3`)
-- [ ] **Standardize Unit Test Coverage Across JS/TS & Flutter**:
+- [x] **Standardize Unit Test Coverage Across JS/TS & Flutter**:
   - *Acceptance Criteria*:
     - Configure `@vitest/coverage-v8` consistently across `atomic-design-interfaces`, `react-mui`, `ng-mat`, and `rn-paper` with `reporters: ['text', 'html', 'lcov', 'json-summary']`, uniform `include`/`exclude` globs, and enforced **80% thresholds** (`lines`, `statements`, `functions`, `branches`).
     - Configure `fl-mat` `test` target (or `test-coverage` target) to run `flutter test --coverage` and produce `coverage/lcov.info` plus an HTML coverage report.
-- [ ] **Configure Storybook Browser Test Coverage**:
+- [x] **Configure Storybook Browser Test Coverage**:
   - *Acceptance Criteria*:
     - Add a `test-storybook-coverage` target (or `--coverage` configuration on `test-storybook`) for `react-mui-storybook`, `ng-mat-storybook`, and `rn-paper-storybook` outputting HTML, LCOV, and `json-summary` reports to `test-output/storybook/coverage`.
-- [ ] **Publish Coverage Reports to GitHub Pages Showcase Portal**:
+- [x] **Publish Coverage Reports to GitHub Pages Showcase Portal**:
   - *Acceptance Criteria*:
     - Extend `tools/ci/storybook-pages.mjs` and `.github/workflows/storybook-gh-pages.yml` to collect Unit Test and Storybook Test HTML coverage reports (plus coverage percentage badges from `coverage-summary.json` / `lcov.info`) and link them directly from each project card on the GitHub Pages portal (`https://sukrutsathaye.github.io/mono-magic/`).
 
@@ -119,16 +119,16 @@ flowchart TD
 > Every component must be designed in `@mono-magic/atomic-design-interfaces` first, implemented across all 4 core UI libraries (`react-mui`, `ng-mat`, `rn-paper`, `fl-mat`) with unit tests (>=80% coverage), Storybook/Widgetbook stories, and visual baselines (`__baselines__`), and completed in chronological tier order: **Wave 2 Molecules $\rightarrow$ Wave 1 Core Organisms $\rightarrow$ Wave 2 Domain Organisms $\rightarrow$ Page Templates**.
 
 #### Phase 2A — Wave 2 Molecules (Core UI Molecules)
-- [ ] **`Dialog` / `Modal` (`MagicDialog`)**: Header, scrollable body, action footer, sizes (`sm`, `md`, `lg`, `fullscreen`), dismiss/backdrop behavior, focus trap & ARIA dialog roles.
-- [ ] **`Toast` / `Snackbar` / `Alert` (`MagicAlert` & `MagicToast`)**: Severity variants (`info`, `success`, `warning`, `error`), dismissible action button, auto-hide duration, live region announcements (used for real-time PoseNet posture notifications and order alerts).
-- [ ] **`Tabs` (`MagicTabs`)**: Horizontal/vertical tab bar, icon + label + badge tabs, keyboard arrow navigation, lazy/eager tab panels.
-- [ ] **`Accordion` / `ExpansionPanel` (`MagicAccordion`)**: Single and multi-expand modes, header summary + icon + disabled state (used for product care details and yoga session breakdowns).
-- [ ] **`Avatar` (`MagicAvatar`)**: Image, initials fallback, icon mode, status indicator dot (`online`, `busy`, `offline`), and `MagicAvatarGroup` stack.
-- [ ] **`ListItem` (`MagicListItem`)**: Leading avatar/icon, primary/secondary text, trailing action/badge, selectable/interactive states.
-- [ ] **`Stepper` (`MagicStepper`)**: Horizontal/vertical step indicator, completed/active/error states, linear/non-linear navigation (used for multi-step checkout and onboarding).
-- [ ] **`Pagination` & `Breadcrumbs` (`MagicPagination`, `MagicBreadcrumbs`)**: Page size selector, page range navigation, and hierarchical breadcrumb trail.
-- [ ] **`DatePicker` & `TimePicker` (`MagicDatePicker`)**: Single date, date range, min/max constraints, form-field integration (used for booking live yoga sessions and delivery estimates).
-- [ ] **`Rating` (`MagicRating`)**: Interactive and read-only star/icon rating, half-step precision, review count label (used for hand-knitted item reviews and class ratings).
+- [x] **`Dialog` / `Modal` (`MagicDialog`)**: Header, scrollable body, action footer, sizes (`sm`, `md`, `lg`, `fullscreen`), dismiss/backdrop behavior, focus trap & ARIA dialog roles.
+- [x] **`Toast` / `Snackbar` / `Alert` (`MagicAlert` & `MagicToast`)**: Severity variants (`info`, `success`, `warning`, `error`), dismissible action button, auto-hide duration, live region announcements (used for real-time PoseNet posture notifications and order alerts).
+- [x] **`Tabs` (`MagicTabs`)**: Horizontal/vertical tab bar, icon + label + badge tabs, keyboard arrow navigation, lazy/eager tab panels.
+- [x] **`Accordion` / `ExpansionPanel` (`MagicAccordion`)**: Single and multi-expand modes, header summary + icon + disabled state (used for product care details and yoga session breakdowns).
+- [x] **`Avatar` (`MagicAvatar`)**: Image, initials fallback, icon mode, status indicator dot (`online`, `busy`, `offline`), and `MagicAvatarGroup` stack.
+- [x] **`ListItem` (`MagicListItem`)**: Leading avatar/icon, primary/secondary text, trailing action/badge, selectable/interactive states.
+- [x] **`Stepper` (`MagicStepper`)**: Horizontal/vertical step indicator, completed/active/error states, linear/non-linear navigation (used for multi-step checkout and onboarding).
+- [x] **`Pagination` & `Breadcrumbs` (`MagicPagination`, `MagicBreadcrumbs`)**: Page size selector, page range navigation, and hierarchical breadcrumb trail.
+- [x] **`DatePicker` & `TimePicker` (`MagicDatePicker`)**: Single date, date range, min/max constraints, form-field integration (used for booking live yoga sessions and delivery estimates).
+- [x] **`Rating` (`MagicRating`)**: Interactive and read-only star/icon rating, half-step precision, review count label (used for hand-knitted item reviews and class ratings).
 
 #### Phase 2B — Wave 1 Core Organisms (Composing Atoms + Wave 1/2 Molecules)
 - [ ] **`Navbar` / `AppHeader` (`MagicNavbar`)**:
@@ -174,8 +174,8 @@ flowchart TD
 
 #### Phase 4B — Additional UI Frameworks & Design Systems (`libs/ui/*`)
 - [ ] **`react-shadcn` (`libs/ui/react-shadcn`)**: React 19 + Tailwind CSS + `shadcn/ui` (Radix primitives) implementing `@mono-magic/atomic-design-interfaces` + Storybook.
-- [ ] **`vue-ui` (`libs/ui/vue-vuetify` or `libs/ui/vue-shadcn`)**: Vue 3 + Vuetify 3 / `shadcn-vue` implementing `@mono-magic/atomic-design-interfaces` + Storybook.
-- [ ] **`svelte-ui` (`libs/ui/svelte-ui`)**: Svelte 5 + Tailwind / `shadcn-svelte` implementing `@mono-magic/atomic-design-interfaces` + Storybook.
+- [x] **`vue-ui` (`libs/ui/vue-vuetify`)**: Vue 3 + Vuetify 3 implementing 11 Atoms of `@mono-magic/atomic-design-interfaces` + Storybook (Molecules deferred to Wave 3).
+- [x] **`svelte-ui` (`libs/ui/svelte-tw`)**: Svelte 5 + Tailwind / Bits UI implementing 11 Atoms of `@mono-magic/atomic-design-interfaces` + Storybook (Molecules deferred to Wave 3).
 
 ---
 
@@ -184,18 +184,20 @@ flowchart TD
 > [!NOTE]
 > All libraries in `libs/utils/*` must remain **stateless, framework-agnostic, and vendor-agnostic** (`scope:utils`, `type:util`, `>=90%` unit test coverage).
 
-- [ ] **`@mono-magic/utils-ts-core` (`libs/utils/ts-core`)**:
+- [x] **`@mono-magic/utils-ts-core` (`libs/utils/ts-core`)**:
   - *Acceptance Criteria*: Functional `Result<T, E>` / `AppError` / `ErrorCode` primitives, `retryWithBackoff` (exponential backoff + jitter + `AbortSignal`), `TypedEventBus`, and `invariant` helpers with 90%+ unit test coverage.
-- [ ] **`@mono-magic/utils-ts-formatters` (`libs/utils/ts-formatters`)**:
+- [x] **`@mono-magic/utils-ts-formatters` (`libs/utils/ts-formatters`)**:
   - *Acceptance Criteria*: Locale-aware currency/price/tax formatting, physical unit & dimension converters (yarn weight/length/gauge, clothing sizes), and date/duration/countdown formatters.
-- [ ] **`@mono-magic/utils-ts-pose-math` (`libs/utils/ts-pose-math`)**:
+- [x] **`@mono-magic/utils-ts-pose-math` / `rs-utils-pose-math` (`libs/utils/rs-pose-math`)**:
   - *Acceptance Criteria*: Pure 2D/3D keypoint vector geometry (joint angle calculation between 3 landmarks, cosine similarity against reference yoga pose vectors, confidence filtering, and One-Euro / EMA temporal smoothing filters).
-- [ ] **`@mono-magic/utils-ts-design-tokens` (`libs/utils/ts-design-tokens`)**:
-  - *Acceptance Criteria*: Pure WCAG 2.1 contrast-ratio calculators, color-space conversions, and design-token transformers outputting CSS custom properties, React/RN theme objects, and Dart theme tokens.
-- [ ] **`py-utils-common` (`libs/utils/py-common`)**:
+- [x] **`@mono-magic/utils-ts-design-tokens` / `rs-utils-design-tokens` (`libs/utils/rs-design-tokens`)**:
+  - *Acceptance Criteria*: Pure WCAG 2.1 contrast-ratio calculators, color-space conversions, and multi-target design-token emitters generating CSS custom properties, React/RN theme objects, and Dart theme tokens.
+- [x] **`py-utils-common` (`libs/utils/py-common`)**:
   - *Acceptance Criteria*: `uv`-managed Python utility package providing structured JSON logging, correlation-ID middleware helpers, standardized error envelopes, and Pydantic base settings.
-- [ ] **`py-utils-nlp` (`libs/utils/py-nlp`)**:
+- [x] **`py-utils-nlp` (`libs/utils/py-nlp`)**:
   - *Acceptance Criteria*: Pure, stateless Python text/NLP helpers (`clean_text`, sentence/paragraph segmentation, plural/singular normalization, algorithmic keyword extractors `yake`/`TextRank`/`TF-IDF`, `mask_keyword_in_sentence`, and `cosine_similarity` vector math) with 90%+ unit test coverage.
+- [x] **`go-utils-core` (`libs/utils/go-core`)**:
+  - *Acceptance Criteria*: Pure Go 1.24.3 utilities (`apperror`, `retry`, `logging`, `telemetry` sliding-window aggregator) with race-detector verified tests (95%+ unit test coverage).
 
 ---
 
@@ -249,21 +251,21 @@ classDiagram
 ```
 
 #### Phase 3B — Hybrid Data-Access Contracts (`libs/data-access/{proto-contracts,ts-interfaces,py-interfaces}`)
-- [ ] **`proto-contracts` (`libs/data-access/proto-contracts`)**:
+- [x] **`proto-contracts` (`libs/data-access/proto-contracts`)**:
   - *Acceptance Criteria*: Canonical Protobuf v3 schemas under `proto/monomagic/{common,auth,storage,realtime,payments}/v1/*.proto` validated by `@bufbuild/buf` (`lint`, `breaking`, `generate` Nx targets) defining shared wire DTOs, `ErrorCode`/`DataAccessError`, `QuerySpec`/`PageInfo`, `AuthSession`, `StorageObjectMeta`, `RealtimeEnvelope`, and `PaymentIntent`.
-- [ ] **`@mono-magic/data-access-ts-interfaces` (`libs/data-access/ts-interfaces`)**:
+- [x] **`@mono-magic/data-access-ts-interfaces` (`libs/data-access/ts-interfaces`)**:
   - *Acceptance Criteria*:
     - Define vendor-agnostic TypeScript interfaces and abstract base classes (`IAuthProvider`, `BaseAuthProvider`, `IDataRepository<T, ID>`, `BaseDataRepository<T, ID>`, `IStorageProvider`, `IRealtimeProvider`, `IPaymentProvider`) plus portable query/filter/pagination DTOs (`QuerySpec`, `PaginatedResult`, `DataAccessError`) backed by `@mono-magic/utils-ts-core`.
     - Provide a reusable **Contract Compliance Test Suite** (`runDataRepositoryContractTests`, `runAuthProviderContractTests`, `runStorageProviderContractTests`) with in-memory reference adapters (`>=80%` coverage) that every concrete provider implementation must pass.
-- [ ] **`py-data-access-interfaces` (`libs/data-access/py-interfaces`)**:
+- [x] **`py-data-access-interfaces` (`libs/data-access/py-interfaces`)**:
   - *Acceptance Criteria*: Pydantic v2 DTOs, `typing.Protocol` / `abc.ABC` interfaces (`AuthProvider`, `DataRepository[TEntity, TId]`, `StorageProvider`, `RealtimeProvider`, `PaymentProvider`), and `pytest` compliance suite (`assert_repository_contract`, `assert_auth_contract`) with `>=80%` coverage.
 - [ ] **Future Language Interface Mirrors (`libs/data-access/{dart-interfaces,java-interfaces}`)**:
   - *Acceptance Criteria*: Idiomatic Dart and Java/Kotlin trait mirrors aligned with `proto-contracts`.
 
 #### Phase 3C.1 — BaaS Wrappers (Firebase & Supabase)
-- [ ] **`@mono-magic/data-access-ts-firebase` (`libs/data-access/ts-firebase`)**:
+- [x] **`@mono-magic/data-access-ts-firebase` (`libs/data-access/ts-firebase`)**:
   - *Acceptance Criteria*: Implements `IAuthProvider` (Firebase Auth), `IDataRepository` (Cloud Firestore with converter & query mapping), `IStorageProvider` (Cloud Storage), and `IRealtimeProvider` (Firestore/RTDB listeners), passing the shared contract compliance suite against Firebase Emulator / mocks.
-- [ ] **`@mono-magic/data-access-ts-supabase` (`libs/data-access/ts-supabase`)**:
+- [x] **`@mono-magic/data-access-ts-supabase` (`libs/data-access/ts-supabase`)**:
   - *Acceptance Criteria*: Implements `IAuthProvider` (Supabase Auth), `IDataRepository` (PostgREST / Postgres), `IStorageProvider` (Supabase Storage), and `IRealtimeProvider` (Supabase Realtime channels), passing the identical contract compliance suite.
 
 #### Phase 3C.2 — NestJS Backend Wrappers (`libs/data-access/ts-nestjs-*`)
@@ -286,8 +288,8 @@ classDiagram
 - [ ] **`@mono-magic/data-access-ts-aws` (`libs/data-access/ts-aws`)**: Adapters for Amazon Cognito, DynamoDB / RDS, S3, and EventBridge/IoT WebSockets.
 - [ ] **`@mono-magic/data-access-ts-gcp` (`libs/data-access/ts-gcp`)**: Adapters for Google Identity Platform, Firestore / Cloud SQL / Spanner, Cloud Storage, and Pub/Sub.
 - [ ] **`@mono-magic/data-access-ts-azure` (`libs/data-access/ts-azure`)**: Adapters for Microsoft Entra ID, Cosmos DB / Azure Postgres, Blob Storage, and Web PubSub.
-- [ ] **`py-reflective-nlp` (`libs/data-access/py-reflective-nlp`)**: Generalized `ContentSourceProvider` (`WikipediaApiSource`, Raw Text/Markdown, Books/PDF/EPUB), `FastEmbedSemanticGrader` (`BAAI/bge-small-en-v1.5`), pluggable `LLMQuestionGenerator` (`ChapterQuestionBundle`, misconception distractors, Bloom levels), and async SQLModel repositories (see [`docs/projects/reflective-learning.md`](docs/projects/reflective-learning.md)).
-- [ ] **`@mono-magic/data-access-ts-reflective-api` (`libs/data-access/ts-reflective-api`)**: Typed TypeScript REST + SSE client adapter implementing `IReflectiveLearningService` and `ts-interfaces`.
+- [x] **`py-reflective-nlp` (`libs/data-access/py-reflective-nlp`)**: Generalized `ContentSourceProvider` (`WikipediaApiSource`, Raw Text/Markdown, Books/PDF/EPUB), `FastEmbedSemanticGrader` (`BAAI/bge-small-en-v1.5`), pluggable `LLMQuestionGenerator` (`ChapterQuestionBundle`, misconception distractors, Bloom levels), and async SQLModel repositories (see [`docs/projects/reflective-learning.md`](docs/projects/reflective-learning.md)).
+- [x] **`@mono-magic/data-access-ts-reflective-api` (`libs/data-access/ts-reflective-api`)**: Typed TypeScript REST + SSE client adapter implementing `IReflectiveLearningService` and `ts-interfaces`.
 
 ---
 

@@ -14,12 +14,18 @@ import 'package:fl_mat/widgetbook/atoms/tool_tip_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/accordion_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/alert_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/avatar_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/breadcrumbs_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/card_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/date_picker_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/dialog_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/form_field_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/list_item_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/menu_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/pagination_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/rating_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/search_bar_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/select_use_cases.dart';
+import 'package:fl_mat/widgetbook/molecules/stepper_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/tabs_use_cases.dart';
 import 'package:fl_mat/widgetbook/molecules/toast_use_cases.dart';
 import 'package:fl_mat/widgetbook/widgetbook_helpers.dart';
@@ -64,7 +70,7 @@ void main() {
       expect(magicWidgetbookViewports.first, Viewports.none);
     });
 
-    test('all 11 atom and 11 molecule builders register expected use cases', () {
+    test('all 11 atom and 17 molecule builders register expected use cases', () {
       final atomComponents = <WidgetbookComponent>[
         buildBadgeComponent(),
         buildButtonComponent(),
@@ -102,12 +108,18 @@ void main() {
         buildMagicAccordionComponent(),
         buildMagicAlertComponent(),
         buildMagicAvatarComponent(),
+        buildMagicBreadcrumbsComponent(),
         buildMagicCardComponent(),
+        buildMagicDatePickerComponent(),
         buildMagicDialogComponent(),
         buildMagicFormFieldComponent(),
+        buildMagicListItemComponent(),
         buildMagicMenuComponent(),
+        buildMagicPaginationComponent(),
+        buildMagicRatingComponent(),
         buildMagicSearchBarComponent(),
         buildMagicSelectComponent(),
+        buildMagicStepperComponent(),
         buildMagicTabsComponent(),
         buildMagicToastComponent(),
       ];
@@ -117,12 +129,18 @@ void main() {
           'MagicAccordion',
           'MagicAlert',
           'MagicAvatar',
+          'MagicBreadcrumbs',
           'MagicCard',
+          'MagicDatePicker',
           'MagicDialog',
           'MagicFormField',
+          'MagicListItem',
           'MagicMenu',
+          'MagicPagination',
+          'MagicRating',
           'MagicSearchBar',
           'MagicSelect',
+          'MagicStepper',
           'MagicTabs',
           'MagicToast',
         ],
@@ -181,7 +199,7 @@ void main() {
       }
     });
 
-    testWidgets('renders all 11 molecule use cases cleanly', (tester) async {
+    testWidgets('renders all 17 molecule use cases cleanly', (tester) async {
       tester.view.physicalSize = const Size(1280, 900);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
@@ -191,12 +209,18 @@ void main() {
         buildMagicAccordionComponent(),
         buildMagicAlertComponent(),
         buildMagicAvatarComponent(),
+        buildMagicBreadcrumbsComponent(),
         buildMagicCardComponent(),
+        buildMagicDatePickerComponent(),
         buildMagicDialogComponent(),
         buildMagicFormFieldComponent(),
+        buildMagicListItemComponent(),
         buildMagicMenuComponent(),
+        buildMagicPaginationComponent(),
+        buildMagicRatingComponent(),
         buildMagicSearchBarComponent(),
         buildMagicSelectComponent(),
+        buildMagicStepperComponent(),
         buildMagicTabsComponent(),
         buildMagicToastComponent(),
       ];
@@ -332,6 +356,59 @@ void main() {
       await tester.pump();
       await tester.tap(find.text('Cross-Framework Parity'));
       await tester.pumpAndSettle();
+
+      // MagicListItem interactive playground
+      final listComp = buildMagicListItemComponent();
+      await tester.pumpWidget(_wrapUseCase(listComp.useCases[0].builder));
+      await tester.pump();
+      await tester.tap(find.text('Grace Hopper'));
+      await tester.pump();
+
+      // MagicStepper interactive workflow
+      final stepperComp = buildMagicStepperComponent();
+      await tester.pumpWidget(_wrapUseCase(stepperComp.useCases[0].builder));
+      await tester.pump();
+      await tester.tap(find.text('Next'));
+      await tester.pump();
+      await tester.tap(find.text('Simulate Error'));
+      await tester.pump();
+      await tester.tap(find.text('Back'));
+      await tester.pump();
+      await tester.tap(find.text('Reset'));
+      await tester.pump();
+
+      // MagicPagination interactive playground
+      final paginationComp = buildMagicPaginationComponent();
+      await tester.pumpWidget(_wrapUseCase(paginationComp.useCases[0].builder));
+      await tester.pump();
+      await tester.tap(find.text('2'));
+      await tester.pump();
+
+      // MagicBreadcrumbs interactive playground
+      final breadcrumbsComp = buildMagicBreadcrumbsComponent();
+      await tester.pumpWidget(_wrapUseCase(breadcrumbsComp.useCases[0].builder));
+      await tester.pump();
+      await tester.tap(find.text('Workspace'));
+      await tester.pump();
+      await tester.tap(find.text('Restore Full Path'));
+      await tester.pump();
+
+      // MagicDatePicker interactive playground
+      final dateComp = buildMagicDatePickerComponent();
+      await tester.pumpWidget(_wrapUseCase(dateComp.useCases[0].builder));
+      await tester.pump();
+      await tester.enterText(find.byType(TextField).first, '2026-11-28');
+      await tester.pump();
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+
+      // MagicRating interactive playground
+      final ratingComp = buildMagicRatingComponent();
+      await tester.pumpWidget(_wrapUseCase(ratingComp.useCases[0].builder));
+      await tester.pump();
+      await tester.tap(find.byIcon(Icons.star_border).first);
+      await tester.pump();
     });
   });
 }

@@ -39,8 +39,28 @@ export default defineConfig(() => ({
   root: import.meta.dirname,
   cacheDir: '../../../node_modules/.vite/libs/ui/ng-mat',
   test: {
+    coverage: {
+      reportsDirectory: './test-output/vitest/coverage',
+      provider: 'v8' as const,
+      reporter: ['text', 'html', 'lcov', 'json-summary'],
+      reporters: ['text', 'html', 'lcov', 'json-summary'],
+      include: ['src/lib/**/*.ts'],
+      exclude: [
+        'src/lib/**/*.stories.ts',
+        'src/lib/**/*.spec.ts',
+        'src/lib/**/*.test.ts',
+        'src/lib/**/index.ts',
+      ],
+      thresholds: {
+        lines: 80,
+        statements: 80,
+        functions: 80,
+        branches: 80,
+      },
+    },
     projects: [
       {
+        extends: true as const,
         plugins: [
           angular({
             tsconfig: join(import.meta.dirname, 'tsconfig.vitest.json'),
@@ -56,13 +76,10 @@ export default defineConfig(() => ({
           ],
           setupFiles: ['src/test-setup.ts'],
           reporters: ['default'],
-          coverage: {
-            reportsDirectory: './test-output/vitest/coverage',
-            provider: 'v8' as const,
-          },
         },
       },
       {
+        extends: true as const,
         plugins: [
           storybookAngularVitest({
             styles: [join(import.meta.dirname, 'src/theme/styles.scss')],

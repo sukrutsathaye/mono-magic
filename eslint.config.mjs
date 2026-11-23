@@ -8,7 +8,9 @@ export default [
       "ignores": [
         "**/dist",
         "**/out-tsc",
-        "**/vitest.config.*.timestamp*"
+        "**/vitest.config.*.timestamp*",
+        "**/test-output/**",
+        "**/coverage/**"
       ]
     },
     {

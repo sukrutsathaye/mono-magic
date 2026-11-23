@@ -4,3 +4,4 @@ export * from './lib/repository/repository.interface.js';
 export * from './lib/storage/storage.interface.js';
 export * from './lib/realtime/realtime.interface.js';
 export * from './lib/payments/payment.interface.js';
+export * from './lib/reflective/reflective-learning.interface.js';

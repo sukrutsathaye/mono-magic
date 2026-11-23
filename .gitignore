@@ -32,6 +32,19 @@ test-output/
 coverage/
 
 # Visual testing (storybook-addon-vis)
+# Track __vis__/**/__baselines__/ in git; ignore results and diffs
 **/__vis__/**/__diffs__
 **/__vis__/**/__results__
-**/__vis__/local
+
+# Rust
+target/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+

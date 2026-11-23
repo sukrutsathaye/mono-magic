@@ -4,6 +4,8 @@ import type { IAuthProvider } from '../auth/auth.interface.js';
 import type { DataAccessError } from '../common/query.interface.js';
 import type { IDataRepository } from '../repository/repository.interface.js';
 import type { IStorageProvider } from '../storage/storage.interface.js';
+import type { IReflectiveLearningService } from '../reflective/reflective-learning.interface.js';
+
 
 /**
  * Base entity shape required by {@link runDataRepositoryContractTests}.
@@ -144,3 +146,86 @@ export function runStorageProviderContractTests(
     });
   });
 }
+
+/**
+ * Shared Liskov Substitution compliance suite for {@link IReflectiveLearningService} adapters.
+ */
+export function runReflectiveLearningServiceContractTests(
+  createService: () => Promise<IReflectiveLearningService>,
+): void {
+  describe('IReflectiveLearningService Contract Compliance', () => {
+    it('supports topic ingestion, SSE events, chapters, MCQ & subjective quizzes, curation, and diagnostics', async () => {
+      const service = await createService();
+
+      const accepted = expectOk(
+        await service.ingestTopic({
+          title: 'Black Hole',
+          sourceKind: 'wikipedia',
+        }),
+      );
+      expect(accepted.topicId).toBeTruthy();
+
+      const events: string[] = [];
+      const unsubscribe = expectOk(
+        await service.subscribeIngestionEvents(accepted.topicId, (ev) => {
+          events.push(ev.status);
+        }),
+      );
+      unsubscribe();
+      expect(events.length).toBeGreaterThanOrEqual(1);
+
+      const topics = expectOk(await service.listTopics({ limit: 10 }));
+      expect(topics.items.length).toBeGreaterThanOrEqual(1);
+
+      const chapter = expectOk(await service.getChapters(accepted.topicId, 1, 10));
+      expect(chapter.topicId).toBe(accepted.topicId);
+      expect(chapter.paragraphs.length).toBeGreaterThanOrEqual(1);
+
+      const quiz = expectOk(await service.createMcqQuiz(accepted.topicId, 9, 2));
+      expect(quiz.questions.length).toBeGreaterThanOrEqual(1);
+
+      const firstQuestion = quiz.questions[0];
+      const submission = expectOk(
+        await service.submitMcqQuiz(quiz.sessionId, [
+          {
+            questionId: firstQuestion.id,
+            selectedAnswer: firstQuestion.options[0]?.text ?? '',
+          },
+        ]),
+      );
+      expect(submission.totalCount).toBe(1);
+
+      const subjQuestions = expectOk(await service.listSubjectiveQuestions(accepted.topicId));
+      expect(subjQuestions.length).toBeGreaterThanOrEqual(1);
+
+      const graded = expectOk(
+        await service.gradeSubjectiveAnswer(
+          subjQuestions[0].id,
+          'A black hole is a region of spacetime where gravity prevents anything from escaping.',
+        ),
+      );
+      expect(graded.questionId).toBe(subjQuestions[0].id);
+      expect(graded.similarityScore).toBeGreaterThanOrEqual(0);
+
+      const keywords = expectOk(await service.listKeywordsForCuration(accepted.topicId));
+      expect(keywords.length).toBeGreaterThanOrEqual(1);
+
+      const curatedKw = expectOk(
+        await service.curateKeyword(accepted.topicId, keywords[0].id, true),
+      );
+      expect(curatedKw.approved).toBe(true);
+
+      const curatedSq = expectOk(
+        await service.curateSubjectiveQuestion(accepted.topicId, subjQuestions[0].id, {
+          prompt: 'What is a Black Hole?',
+          approved: true,
+        }),
+      );
+      expect(curatedSq.approved).toBe(true);
+
+      const comparison = expectOk(await service.compareExtractors(accepted.topicId));
+      expect(comparison.topicId).toBe(accepted.topicId);
+    });
+  });
+}
+

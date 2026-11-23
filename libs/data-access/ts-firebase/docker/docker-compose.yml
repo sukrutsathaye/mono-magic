@@ -1,0 +1,25 @@
+name: mono-magic-firebase-emulator
+
+services:
+  firebase-emulators:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mono-magic-firebase-emulators
+    restart: unless-stopped
+    ports:
+      - '4000:4000' # Emulator Suite UI
+      - '8080:8080' # Cloud Firestore Emulator
+      - '9000:9000' # Realtime Database Emulator
+      - '9099:9099' # Authentication Emulator
+      - '9199:9199' # Cloud Storage Emulator
+    environment:
+      FIREBASE_PROJECT: demo-mono-magic
+      GCLOUD_PROJECT: demo-mono-magic
+    volumes:
+      - ./firebase.json:/srv/firebase/firebase.json:ro
+      - ./.firebaserc:/srv/firebase/.firebaserc:ro
+      - ./firestore.rules:/srv/firebase/firestore.rules:ro
+      - ./firestore.indexes.json:/srv/firebase/firestore.indexes.json:ro
+      - ./storage.rules:/srv/firebase/storage.rules:ro
+      - ./database.rules.json:/srv/firebase/database.rules.json:ro
