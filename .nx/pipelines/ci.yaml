@@ -46,6 +46,36 @@ launch-templates:
             echo "Running flutter pub get in $dir"
             (cd "$dir" && flutter pub get)
           done < <(find apps libs -maxdepth 4 -name "pubspec.yaml" -not -path "*/.*/*" -not -path "*/build/*" 2>/dev/null || true)
+      - name: Restore uv, Cargo & Go Caches
+        uses: 'nrwl/nx-cloud-workflows/v6/workflow-steps/cache/main.yaml'
+        inputs:
+          key: 'uv.lock|Cargo.lock|go.work|"uv-rust-stable-go-1.24.3"'
+          paths: |
+            ~/.cache/uv
+            ~/.cargo
+            ~/.rustup
+            ~/go-sdk
+          base-branch: 'main'
+      - name: Setup Python (uv), Rust & Go
+        script: |
+          set -euo pipefail
+          # uv (Python >=3.12 is provisioned by uv from pyproject.toml)
+          if [ ! -x "$HOME/.local/bin/uv" ]; then
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+          fi
+          # Rust stable + clippy/rustfmt
+          if [ ! -x "$HOME/.cargo/bin/cargo" ]; then
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable --component clippy,rustfmt
+          fi
+          # Go 1.24.3
+          if [ ! -x "$HOME/go-sdk/go/bin/go" ]; then
+            mkdir -p "$HOME/go-sdk"
+            curl -fSL https://go.dev/dl/go1.24.3.linux-amd64.tar.gz | tar -xzf - -C "$HOME/go-sdk"
+          fi
+          export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/go-sdk/go/bin:$HOME/flutter/bin:$PATH"
+          echo "PATH=$PATH" >> "$NX_CLOUD_ENV"
+          uv --version && cargo --version && go version
+          uv sync --all-packages
 
 worker-templates:
   default:
