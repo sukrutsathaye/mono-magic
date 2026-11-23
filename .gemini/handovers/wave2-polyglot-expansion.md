@@ -1,8 +1,8 @@
 # Handover — Wave 2 Polyglot Expansion & Phase 1 Closure
 
-- **Written**: 2026-11-23 (after the 2nd quota stop of `/teamwork`)
+- **Updated**: 2026-11-23 (after 3rd quota stop during Milestone 5 Iteration 2 / Victory Audit rework)
 - **Repo**: `sukrutsathaye/mono-magic`
-- **Integration branch**: `dev` (all track PRs target `dev`; **never push/merge to `main`** — the owner merges `dev` → `main` manually)
+- **Integration branch**: `dev` (all PRs target `dev`; **never push/merge to `main`** — the owner merges `dev` → `main` manually)
 - **Approved plan**: see "Approved Plan (Condensed)" below — every design decision is final, **do not re-interview**.
 
 ---
@@ -10,97 +10,86 @@
 ## 0. Ground Rules for the Next Agent
 
 1. Read `AGENTS.md`, `GEMINI.md`, `REPO_INDEX.md` first. Follow `.gemini/skills/{engineering-standards,token-budget-guardrails,python-uv-service}/SKILL.md`.
-2. **Quota guardrail (owner request)**: max **2 tasks/workers in parallel** globally. Prefer `flash` for mechanical verification/test/story work.
-3. Run tasks via `pnpm nx ...`. Commit with Conventional Commits; push checkpoints often. If quota gets close, update this file and push WIP.
-4. Each track: branch from `dev` → verify → PR into `dev` → merge into `dev` once green.
+2. **Quota guardrail (owner request)**: max **2 tasks/workers in parallel** globally (`--parallel=2`). Use lower-tier models (`flash` / `pro`) for simpler/mechanical tasks.
+3. Run tasks via `pnpm nx ...`. Commit with Conventional Commits; push checkpoints often.
+4. **Do NOT redo Tracks A, B, C, D, M1 CI fixes, or M5 Features #9–#10** — all of them are already implemented, verified, and merged into `dev` (`d05c4fa`). Only the 3 small closure items in §2 remain!
 
 ---
 
-## 1. Current State (all pushed to `origin`)
+## 1. Current State on `dev` (All Merged & Pushed to `origin/dev`)
 
-| Branch | Head | Status |
-| --- | --- | --- |
-| `dev` | `d598744` | Created from `main` (`5110afd`) + **Track B merged (PR #14)** |
-| `fix/ci-polyglot-workers` | PR **#15** → `dev` | **CI fix, open** — merge first (see §2) |
-| `wave2/track-b-polyglot-utils` | `917d7e8` | ✅ **DONE & merged** into `dev` |
-| `wave2/track-a-ui-molecules` | WIP checkpoint | 🟡 Implemented; verification/fixes in progress |
-| `wave2/track-d-vue-svelte` | WIP checkpoint | 🟡 Mostly implemented; finish + verify |
-| `wave2/track-c-data-access` | = `dev` (`d598744`) | ⚪ Not started (branch only) |
-| `wave2/track-e-phase1-closure` | — | ⚪ Not started (runs last) |
+All 5 Wave 2 tracks + Nx Cloud polyglot CI remediation are merged into `dev` (`d05c4fa`):
 
-Local worktrees used previously (recreate if on a new machine):
-`../mono-magic-wt/track-{a,b,c,d}` via `git worktree add ../mono-magic-wt/track-x <branch>`, then `pnpm install` and `uv sync --all-packages`.
+| Milestone / Track | Branch | PR | Status | Notes |
+| --- | --- | --- | --- | --- |
+| **Track B** — Polyglot Utils (3A) | `wave2/track-b-polyglot-utils` | **#14** | ✅ Merged | `py-common`, `py-nlp`, `ts-formatters`, `rs-pose-math`, `rs-design-tokens`, `go-core` |
+| **M1** — Nx CI Polyglot Workers (`uv`/`cargo`/`go`) | `fix/ci-polyglot-workers` & `fix/ci-polyglot-workers-v2` | **#15**, **#16** | ✅ Merged | `linux-large-polyglot` validated (`nx-cloud validate` PASS); per-target Cargo `--target-dir` & Python `COVERAGE_FILE` isolation; CI runs on `bffc2fd`, `edf307d`, `a1086d1`, `509b0ad` all **SUCCESS** |
+| **M2 / Track A** — UI Molecules Batch 2 (2A) | `wave2/track-a-ui-molecules` | **#17** | ✅ Merged | 6 molecules (`breadcrumbs`, `date-picker`, `list-item`, `pagination`, `rating`, `stepper`) across `atomic-design-interfaces`, `react-mui`, `ng-mat`, `rn-paper`, `fl-mat` (137/137 Flutter tests, 3/3 Storybook builds) |
+| **M3 / Track D** — Vue & Svelte Atoms (4B) | `wave2/track-d-vue-svelte` | **#18** | ✅ Merged | All 11 atoms in `libs/ui/vue-vuetify` and `libs/ui/svelte-tw` (`lint`, `typecheck`, `test`, `build-storybook`) |
+| **M4 / Track C** — Data-Access Providers (3C) | `wave2/track-c-data-access` | **#19** | ✅ Merged | `ts-supabase` (+ `docker/`), `ts-firebase` (+ `docker/`), `ts-reflective-api`, `py-reflective-nlp` — all passing shared contract suites |
+| **M5 / Track E** — Phase 1 Closure & Index | `wave2/track-e-phase1-closure` | **#20** | 🟡 Merged, **3 minor follow-ups** | 537 visual baseline PNGs committed; coverage thresholds (80%/90%) & `storybook-pages.mjs` portal standardized; `REPO_INDEX.md` up to date (22 projects). See §2 for the 3 remaining closure items. |
 
----
-
-## 2. CI Failure on `dev` after Track B — Root Cause & Fix (PR #15)
-
-- **Symptom**: CI run `45103716364` on `dev` failed with `uv: not found` and `cargo: not found` for `py-utils-nlp`, `py-utils-common`, `py-data-access-interfaces`, and the `rs-*` crates.
-- **Root cause**: `.github/workflows/ci.yml` calls `pnpm nx-cloud start-workers`, so `nx affected` tasks run on **Nx Cloud workers**, not on the GitHub runner. The `setup-uv` / `rust-toolchain` / `setup-go` steps in `ci.yml` only install on the runner. Workers use the `linux-large-flutter` launch template in **`.nx/pipelines/ci.yaml`**, which only installed Node + Flutter (that is why `fl-mat` passed).
-- **Fix (PR #15, `fix/ci-polyglot-workers` → `dev`)**: adds two worker `init-steps` to `.nx/pipelines/ci.yaml`:
-  1. cache restore for `~/.cache/uv`, `~/.cargo`, `~/.rustup`, `~/go-sdk`;
-  2. install uv, Rust stable (+clippy, rustfmt), Go 1.24.3, export `PATH` via `$NX_CLOUD_ENV`, then `uv sync --all-packages`.
-- **To do**: watch PR #15 CI. If green, merge into `dev`, then re-run CI on `dev`. If a worker step fails, check the Nx Cloud run logs (link printed in the CI log). Possible follow-ups: Python version (uv should provision `>=3.12` automatically; add `uv python install 3.12` if not) and renaming the template to `linux-large-polyglot` (update `worker-templates.default.workers` too).
-- The `setup-uv`/rust/go steps in `ci.yml` can stay (they're needed for anything run on the main job, e.g. `uv sync`).
+**Working tree**: Clean on `dev` (no uncommitted WIP code; all merged branches are pushed to `origin`).
 
 ---
 
-## 3. Remaining Work (Recommended Order, ≤2 in Parallel)
+## 2. Exact Remaining Work (1 Small Closure PR → `dev`)
 
-### Pair 1 — Track A + Track D
+Create a single branch from `dev` (e.g., `fix/wave2-closure-audit`), resolve these **3 concrete items**, open PR → `dev`, verify green CI, and merge into `dev`:
 
-**Track A — `wave2/track-a-ui-molecules`** (Phase 2A Batch 2)
-- Done: `atomic-design-interfaces` contracts (`f92285f`); 6 molecules (`breadcrumbs`, `date-picker`, `list-item`, `pagination`, `rating`, `stepper`) with specs and stories in `react-mui`, `ng-mat`, `rn-paper`, `fl-mat` (+ Widgetbook use-cases). `ng-mat` was last reported as passing (317 tests, 92.2% lines) before the latest fix checkpoint.
-- Last WIP commit includes in-progress fixes to `ng-mat` date-picker/pagination/stepper/list-item and `react-mui` rating/stepper. **Re-verify these first.**
-- Verify:
-  ```bash
-  pnpm nx run-many -t lint typecheck test -p atomic-design-interfaces,react-mui,ng-mat,rn-paper
-  pnpm nx run-many -t build-storybook -p react-mui,ng-mat,rn-paper
-  pnpm nx run-many -t lint test -p fl-mat
-  ```
-- Acceptance: ≥80% coverage; **extensive, stateful, interactive stories** (controls/actions, `play` tests where supported) for every molecule; 1:1 parity across the 4 libs. Then PR → `dev`.
+### Item 1 — Fix `ng-mat:lint` Coverage HTML Conflict (Caught by Victory Audit)
+- **Root cause**: Root `eslint.config.mjs` (lines 8–13) only ignores `["**/dist", "**/out-tsc", "**/vitest.config.*.timestamp*"]`. After running Vitest with `--coverage`, generated HTML reports under `libs/ui/ng-mat/test-output/vitest/coverage/**/*.ts.html` are parsed by `@angular-eslint/template-parser` (`files: ["**/*.html"]`), failing `pnpm nx lint ng-mat --skip-nx-cache` with 31 template parser errors.
+- **Fix**: Add `"**/test-output/**"` and `"**/coverage/**"` to the `ignores` array in `eslint.config.mjs`.
+- **Verify**: Run `pnpm nx test ng-mat --coverage --skip-nx-cache && pnpm nx lint ng-mat --skip-nx-cache`.
 
-**Track D — `wave2/track-d-vue-svelte`** (Phase 4B)
-- Done: scaffold (`acd114d`) for `libs/ui/vue-vuetify` (Vue 3 + Vuetify 3) and `libs/ui/svelte-tw` (Svelte 5 + Tailwind + Bits UI). Naming rule: `<framework>-<design-system>`.
-- `vue-vuetify`: 9/11 atoms with spec + stories. **Missing: `TextInput`, `ToolTip`** (component + spec + stories, and export in `src/index.ts`).
-- `svelte-tw`: all 11 `.svelte` atoms. Specs and `*.stories.ts` + `*StoryDemo.svelte` exist for most. **Check and fill gaps** (at least `slider` stories, plus `text-input` and `tool-tip` spec/stories).
-- Verify:
-  ```bash
-  pnpm nx run-many -t lint typecheck test build-storybook -p vue-vuetify,svelte-tw
-  ```
-- Acceptance: all 11 atoms implement `@mono-magic/atomic-design-interfaces`, ≥80% coverage, interactive stories, Storybook wired with `@storybook/addon-vitest` + `storybook-addon-vis`. Then PR → `dev`.
+### Item 2 — Update `ROADMAP.md` Checklists & Phase Summary (Missed in Commit `2dc060b`)
+- **Root cause**: Commit `2dc060b` (`docs(roadmap): ...`) only modified `REPO_INDEX.md` and never touched `ROADMAP.md`.
+- **Fix**: Update `ROADMAP.md` to reflect all completed Wave 1 & Wave 2 deliverables:
+  - **Phase Summary table (§2, lines 57–65)**:
+    - `Phase 1` → `Completed`
+    - `Phase 2A` → `Completed`
+    - `Phase 3A` → `Completed`
+    - `Phase 3B` → `Completed (TS/Py/Proto)`
+    - `Phase 3C` → `In Progress`
+    - `Phase 4B` → `In Progress`
+  - **Checkboxes (`[x]`)**:
+    - Phase 1.2 (visual regression baselines tracked + `update-snapshots`)
+    - Phase 1.3 (coverage standardization 80%/90%, Storybook/Flutter coverage, GitHub Pages portal)
+    - Phase 2A (all 10 Wave 2 Molecule items: Batch 1 + Batch 2 across all 4 UI libs + contracts)
+    - Phase 3A (`ts-core`, `ts-formatters`, `py-common`, `py-nlp`, `rs-pose-math`, `rs-design-tokens`, `go-core`)
+    - Phase 3B (`proto-contracts`, `ts-interfaces`, `py-interfaces` + contract compliance suites)
+    - Phase 3C.1 (`ts-firebase`, `ts-supabase` + Docker emulator suites)
+    - Phase 3C.4 (`py-reflective-nlp`, `ts-reflective-api`)
+    - Phase 4B (`vue-vuetify`, `svelte-tw` — 11 Atoms complete; Molecules deferred to Wave 3)
 
-### Pair 2 — Track C (can start now; it can pair with A or D if a slot is free)
+### Item 3 — Fix `vue-vuetify:typecheck` Failure on Nx Cloud CI (`dev` Run `45155292787`)
+- **Symptom**: On `dev` commit `d05c4fa` (GitHub Actions run `45155292787`, Nx Cloud run `https://cloud.nx.app/runs/NH0s9iZigl`), **59/60 tasks passed** (all Rust/Cargo, Python/`uv`, Go, Flutter, Proto, and TS tasks succeeded!), and only **`vue-vuetify:typecheck`** failed (`https://cloud.nx.app/logs/pOBSxxPzjv`).
+- **Context**: `pnpm nx typecheck vue-vuetify --skip-nx-cache` passes locally, which strongly suggests either:
+  1. Missing `dependsOn: ["^build"]` on `vue-vuetify:typecheck` in `libs/ui/vue-vuetify/project.json` (on a fresh Nx Cloud worker without prior `atomic-design-interfaces` build output), or
+  2. Minor config issue in `libs/ui/vue-vuetify/vite.config.mts` (note: commit `33aa6ac` added `reporter:` alongside existing `reporters:`).
+- **Fix**: Inspect `https://cloud.nx.app/logs/pOBSxxPzjv` (or check `libs/ui/vue-vuetify/project.json` + `tsconfig.lib.json` + `vite.config.mts`), fix the root cause, and confirm the PR CI run and subsequent `dev` CI run are **100% green**.
 
-**Track C — `wave2/track-c-data-access`** (Phase 3C; ≥80% coverage; depends only on `type:interfaces` + `scope:utils`)
-- `libs/data-access/ts-supabase` (`@mono-magic/data-access-ts-supabase`, tags `scope:data-access`, `type:data-access`, `lang:ts`): implements `IAuthProvider`, `IDataRepository<T, ID>`, `IStorageProvider`, `IRealtimeProvider` with `@supabase/supabase-js`, `DataAccessError` normalization, and `QuerySpec` → PostgREST mapping.
-  - Co-located **`libs/data-access/ts-supabase/docker/`**: `docker-compose.yml` (Postgres, GoTrue, PostgREST, Storage, Realtime, gateway) + `init.sql` + `README.md`, with static local keys and no cloud org.
-  - Targets: `test` (mocks + `run*ContractTests` from `data-access-ts-interfaces`), `emulator-up`, `emulator-down`, `test-integration` (the same contract suites run against Docker).
-- `libs/data-access/ts-firebase` (same tags): Firebase Auth, Firestore repo + query mapping, Cloud Storage, `onSnapshot`/RTDB realtime.
-  - Co-located **`libs/data-access/ts-firebase/docker/`**: Firebase Emulator Suite (Auth 9099, Firestore 8080, Storage 9199, RTDB 9000, UI 4000; project `demo-mono-magic`) + `firebase.json` + rules + `README.md`.
-  - Same targets: `test`, `emulator-up`, `emulator-down`, `test-integration`.
-- `libs/data-access/ts-reflective-api`: typed REST + SSE client implementing `IReflectiveLearningService`, using `utils-ts-core` `Result` + `retryWithBackoff`.
-- `libs/data-access/py-reflective-nlp` (uv; uses `py-utils-common`, `py-utils-nlp`, `py-data-access-interfaces`): `ContentSourceProvider` (Wikipedia/httpx, Raw Text/Markdown, PDF/EPUB adapter interface), `SemanticGrader` + `FastEmbedSemanticGrader` (injectable embedding backend), `LLMQuestionGenerator` Protocol, async SQLModel/SQLite repo that passes `assert_repository_contract`. See `docs/projects/reflective-learning.md`.
-- Use the `nx-generate` skill for scaffolding. Docker is available in the dev VM; integration tests are optional in CI.
+### Optional Housekeeping Before Merging `dev` → `main`
+- Check whether root `PROJECT.md` (created by `/teamwork` orchestration) should be removed or archived before the owner merges `dev` → `main`.
+- Re-run `node tools/ci/generate-repo-index.mjs --check` to ensure `REPO_INDEX.md` stays in sync.
 
-### Final (sequential) — Track E — `wave2/track-e-phase1-closure` (after A, C, D are merged into `dev`)
-- Track `__vis__/*/__baselines__/` in git (keep `__results__/` and `__diffs__/` ignored) for `react-mui`, `ng-mat`, `rn-paper`, `vue-vuetify`, `svelte-tw`. Add an `update-snapshots` target (`test-storybook -- -u`) and commit the baselines.
-- Standardize coverage: `@vitest/coverage-v8` with reporters `text, html, lcov, json-summary`; thresholds 80% (UI/data-access) and 90% (`libs/utils/*`). Add a `test-storybook-coverage` target and an `fl-mat` `test-coverage` target (`flutter test --coverage`).
-- Extend `tools/ci/storybook-pages.mjs` and `.github/workflows/storybook-gh-pages.yml` to publish unit + Storybook coverage reports and badges per project card.
-- Tick the `ROADMAP.md` boxes (Wave 1: 2A Batch 1, `utils-ts-core`, 3B; Wave 2: 1.2, 1.3, 2A Batch 2, 3A, 3C, 4B partial) and run `node tools/ci/generate-repo-index.mjs`.
-- PR → `dev`.
+---
+
+## 3. Final Verification Commands (Run with `--parallel=2`)
+
+```bash
+pnpm exec nx-cloud validate --workflow-file=.nx/pipelines/ci.yaml
+node tools/ci/generate-repo-index.mjs --check
+pnpm nx lint ng-mat --skip-nx-cache
+pnpm nx typecheck vue-vuetify --skip-nx-cache
+pnpm nx affected -t lint typecheck test build --base=origin/dev --parallel=2
+```
 
 ---
 
 ## 4. Approved Plan (Condensed Decisions)
 
-- **3A language matrix**: Python `py-common`, `py-nlp`; TS `ts-formatters`; Rust `rs-pose-math`, `rs-design-tokens` (math- and compute-heavy work goes to Rust; pure crates with FFI/WASM-ready APIs and a CLI emitter for CSS/TS/Dart; `wasm-bindgen`/PyO3 deferred to Phase 4); Go `go-core`. **All merged.**
-- Root `Cargo.toml` globs: `libs/utils/rs-*`, `libs/data-access/rs-*`, `libs/features/rs-*`, `apps/api-rs-*`. Root `go.work`.
-- **3C**: `ts-supabase` + `ts-firebase` (each with its own `docker/`), `ts-reflective-api`, `py-reflective-nlp`.
-- **4B**: `vue-vuetify` + `svelte-tw`, 11 Atoms now, Molecules in Wave 3.
-- **Stories**: extensive and interactive for every component.
+- **3A language matrix**: Python `py-common`, `py-nlp`; TS `ts-formatters`; Rust `rs-pose-math`, `rs-design-tokens`; Go `go-core`. **All merged.**
+- **3C**: `ts-supabase` + `ts-firebase` (each with its own `docker/`), `ts-reflective-api`, `py-reflective-nlp`. **All merged.**
+- **4B**: `vue-vuetify` + `svelte-tw`, 11 Atoms now, Molecules in Wave 3. **All merged.**
 - **Branching**: one PR per track → `dev`; owner merges `dev` → `main`.
-
-## 5. Track B Delivered (for reference)
-
-`py-common` (98.3% cov), `py-nlp` (98.9%), `ts-formatters` (100%), `rs-pose-math` + `rs-design-tokens` (36 tests), `go-core` (95.8–100%, `-race`). It passed review (r2 APPROVED) and the forensic audit (CLEAN), then merged as PR #14.
