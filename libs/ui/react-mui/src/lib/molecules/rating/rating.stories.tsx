@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, within } from 'storybook/test';
 import { MagicRating } from './rating';
 
 /**
@@ -124,7 +124,8 @@ export const InteractiveFullAndHalfPrecision: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const fullRoot = within(canvas.getByTestId('full-rating-control'));
-    await userEvent.click(fullRoot.getByLabelText('5 Stars'));
+    const fiveStarsRadio = fullRoot.getByRole('radio', { name: '5 Stars' });
+    fireEvent.click(fiveStarsRadio);
     await expect(canvas.getByTestId('full-rating-text')).toHaveTextContent(
       'Selected full rating: 5 / 5',
     );

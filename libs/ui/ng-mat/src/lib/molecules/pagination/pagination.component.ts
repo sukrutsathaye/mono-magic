@@ -271,6 +271,7 @@ export class MagicPaginationComponent
     if (nextSize === this.currentPageSize()) {
       return;
     }
+    const prevPage = this.currentPage();
     this.uncontrolledPageSize.set(nextSize);
     this.pageSizeChange.emit(nextSize);
 
@@ -278,8 +279,8 @@ export class MagicPaginationComponent
       1,
       Math.ceil(Math.max(0, this.totalItems()) / nextSize),
     );
-    const clampedPage = this.clampPage(this.currentPage(), newTotalPages);
-    if (clampedPage !== this.currentPage()) {
+    const clampedPage = this.clampPage(prevPage, newTotalPages);
+    if (clampedPage !== prevPage) {
       if (this.page() === undefined) {
         this.uncontrolledPage.set(clampedPage);
       }

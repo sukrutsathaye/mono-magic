@@ -178,13 +178,24 @@ export function MagicStepper({
                 {step.errorMessage}
               </Typography>
             ) : step.optional ? (
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ display: 'block', fontSize: sizeStyle.captionSize }}
-              >
-                {step.optionalLabel ?? 'Optional'}
-              </Typography>
+              <Box>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ display: 'block', fontSize: sizeStyle.captionSize }}
+                >
+                  {step.optionalLabel ?? 'Optional'}
+                </Typography>
+                {orientation === 'horizontal' && step.description ? (
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ display: 'block', fontSize: sizeStyle.captionSize }}
+                  >
+                    {step.description}
+                  </Typography>
+                ) : null}
+              </Box>
             ) : orientation === 'horizontal' && step.description ? (
               <Typography
                 variant="caption"
@@ -244,6 +255,7 @@ export function MagicStepper({
               active={isActive}
               completed={isCompleted}
               disabled={isStepDisabled}
+              expanded={orientation === 'vertical' ? isActive || isError : undefined}
               data-testid={testId ? `${testId}-step-${step.id}` : undefined}
               data-status={
                 isError
@@ -259,6 +271,7 @@ export function MagicStepper({
                 <StepButton
                   onClick={() => handleStepClick(step, index)}
                   disabled={isStepDisabled}
+                  optional={optionalNode}
                   data-testid={
                     testId ? `${testId}-button-${step.id}` : undefined
                   }
@@ -279,6 +292,7 @@ export function MagicStepper({
 
               {orientation === 'vertical' ? (
                 <StepContent
+                  transitionDuration={0}
                   data-testid={
                     testId ? `${testId}-content-${step.id}` : undefined
                   }

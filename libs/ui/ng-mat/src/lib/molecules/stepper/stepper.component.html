@@ -1,62 +1,64 @@
-<mat-stepper
-  class="magic-stepper__group"
-  [orientation]="orientation()"
-  [linear]="linear()"
-  [labelPosition]="alternativeLabel() ? 'bottom' : 'end'"
-  [selectedIndex]="currentActiveStep()"
-  animationDuration="0ms"
-  [attr.id]="id() || null"
-  [attr.data-testid]="testId() || null"
-  [attr.aria-label]="ariaLabel() || null"
-  (selectionChange)="onSelectionChange($event)"
->
-  @for (step of steps(); track step.id; let idx = $index) {
-    <mat-step
-      [completed]="isStepCompleted(step, idx)"
-      [hasError]="isStepError(step)"
-      [errorMessage]="step.errorMessage ?? ''"
-      [optional]="step.optional ?? false"
-      [editable]="isStepEditable(step)"
-      [state]="resolvedStepState(step, idx)"
-      [ariaLabel]="step.label"
-    >
-      <ng-template matStepLabel>
-        <span
-          class="magic-stepper__label-wrap"
-          [class.magic-stepper__label-wrap--disabled]="disabled() || step.disabled"
-          [attr.data-testid]="testId() ? testId() + '-step-' + step.id : null"
-        >
-          <span class="magic-stepper__label">{{ step.label }}</span>
-          @if (step.optional) {
-            <span class="magic-stepper__optional">{{
-              step.optionalLabel || 'Optional'
-            }}</span>
-          }
-        </span>
-      </ng-template>
-
-      <div
-        class="magic-stepper__body"
-        [attr.data-testid]="testId() ? testId() + '-panel-' + step.id : null"
+@if (steps().length > 0) {
+  <mat-stepper
+    class="magic-stepper__group"
+    [orientation]="orientation()"
+    [linear]="linear()"
+    [labelPosition]="alternativeLabel() ? 'bottom' : 'end'"
+    [selectedIndex]="currentActiveStep()"
+    animationDuration="0ms"
+    [attr.id]="id() || null"
+    [attr.data-testid]="testId() || null"
+    [attr.aria-label]="ariaLabel() || null"
+    (selectionChange)="onSelectionChange($event)"
+  >
+    @for (step of steps(); track step.id; let idx = $index) {
+      <mat-step
+        [completed]="isStepCompleted(step, idx)"
+        [hasError]="isStepError(step)"
+        [errorMessage]="step.errorMessage ?? ''"
+        [optional]="step.optional ?? false"
+        [editable]="isStepEditable(step)"
+        [state]="resolvedStepState(step, idx)"
+        [ariaLabel]="step.label"
       >
-        @if (isStepError(step) && step.errorMessage) {
-          <p class="magic-stepper__error" role="alert">
-            <mat-icon class="magic-stepper__error-icon" aria-hidden="true">error</mat-icon>
-            <span>{{ step.errorMessage }}</span>
-          </p>
-        }
-        @if (customContentFor(step.id); as tpl) {
-          <ng-container *ngTemplateOutlet="tpl" />
-        } @else if (step.description) {
-          <p class="magic-stepper__description">{{ step.description }}</p>
-        }
-      </div>
-    </mat-step>
+        <ng-template matStepLabel>
+          <span
+            class="magic-stepper__label-wrap"
+            [class.magic-stepper__label-wrap--disabled]="disabled() || step.disabled"
+            [attr.data-testid]="testId() ? testId() + '-step-' + step.id : null"
+          >
+            <span class="magic-stepper__label">{{ step.label }}</span>
+            @if (step.optional) {
+              <span class="magic-stepper__optional">{{
+                step.optionalLabel || 'Optional'
+              }}</span>
+            }
+          </span>
+        </ng-template>
 
-    @if (step.icon) {
-      <ng-template [matStepperIcon]="'custom-' + idx">
-        <mat-icon aria-hidden="true">{{ step.icon }}</mat-icon>
-      </ng-template>
+        <div
+          class="magic-stepper__body"
+          [attr.data-testid]="testId() ? testId() + '-panel-' + step.id : null"
+        >
+          @if (isStepError(step) && step.errorMessage) {
+            <p class="magic-stepper__error" role="alert">
+              <mat-icon class="magic-stepper__error-icon" aria-hidden="true">error</mat-icon>
+              <span>{{ step.errorMessage }}</span>
+            </p>
+          }
+          @if (customContentFor(step.id); as tpl) {
+            <ng-container *ngTemplateOutlet="tpl" />
+          } @else if (step.description) {
+            <p class="magic-stepper__description">{{ step.description }}</p>
+          }
+        </div>
+      </mat-step>
+
+      @if (step.icon) {
+        <ng-template [matStepperIcon]="'custom-' + idx">
+          <mat-icon aria-hidden="true">{{ step.icon }}</mat-icon>
+        </ng-template>
+      }
     }
-  }
-</mat-stepper>
+  </mat-stepper>
+}

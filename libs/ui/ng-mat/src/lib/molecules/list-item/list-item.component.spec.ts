@@ -73,10 +73,19 @@ describe('MagicListItemComponent', () => {
 
       setInputs({
         leadingAvatarSrc: 'https://example.com/ada.png',
+        size: 'sm',
       });
       const img = host().querySelector('magic-avatar img') as HTMLImageElement;
       expect(img).toBeTruthy();
       expect(img.src).toContain('https://example.com/ada.png');
+      expect(
+        host().querySelector('magic-avatar')?.classList.contains('magic-size-sm'),
+      ).toBe(true);
+
+      setInputs({ size: 'lg' });
+      expect(
+        host().querySelector('magic-avatar')?.classList.contains('magic-size-lg'),
+      ).toBe(true);
     });
 
     it.each(['standard', 'outlined', 'filled'] as ListItemAppearance[])(

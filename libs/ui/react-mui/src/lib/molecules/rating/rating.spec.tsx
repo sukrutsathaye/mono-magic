@@ -32,7 +32,7 @@ describe('MagicRating (React MUI)', () => {
     expect(screen.getByTestId('course-rating-value').textContent).toBe('3.5');
     expect(screen.getByTestId('course-rating-reviews').textContent).toBe('(128)');
 
-    const fourStars = screen.getByLabelText('4 Stars');
+    const fourStars = screen.getByRole('radio', { name: '4 Stars' });
     fireEvent.click(fourStars);
     expect(onChange).toHaveBeenCalledWith(4);
     expect(screen.getByTestId('course-rating-value').textContent).toBe('4.0');
@@ -73,7 +73,9 @@ describe('MagicRating (React MUI)', () => {
       </MagicMuiThemeProvider>,
     );
 
-    const threeStarsInput = screen.getByLabelText('3 Stars') as HTMLInputElement;
+    const threeStarsInput = screen.getByRole('radio', {
+      name: '3 Stars',
+    }) as HTMLInputElement;
     expect(threeStarsInput.disabled).toBe(true);
     fireEvent.click(threeStarsInput);
     expect(onChange).not.toHaveBeenCalled();

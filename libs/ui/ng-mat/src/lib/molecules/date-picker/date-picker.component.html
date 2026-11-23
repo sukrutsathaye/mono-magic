@@ -1,18 +1,18 @@
 <div class="magic-date-picker__container">
-  <mat-form-field
-    class="magic-date-picker__field"
-    [appearance]="matAppearance()"
-    [floatLabel]="floatLabel()"
-    [subscriptSizing]="subscriptSizing()"
-    [hideRequiredMarker]="hideRequiredMarker()"
-    [attr.id]="id() || null"
-    [attr.data-testid]="testId() || null"
-  >
-    @if (label()) {
-      <mat-label>{{ label() }}</mat-label>
-    }
+  @if (mode() === 'range') {
+    <mat-form-field
+      class="magic-date-picker__field"
+      [appearance]="matAppearance()"
+      [floatLabel]="floatLabel()"
+      [subscriptSizing]="subscriptSizing()"
+      [hideRequiredMarker]="hideRequiredMarker()"
+      [attr.id]="id() || null"
+      [attr.data-testid]="testId() || null"
+    >
+      @if (label()) {
+        <mat-label>{{ label() }}</mat-label>
+      }
 
-    @if (mode() === 'range') {
       <mat-date-range-input
         [rangePicker]="rangePicker"
         [min]="minDateObj()"
@@ -25,6 +25,7 @@
           [value]="rangeStartObj()"
           [placeholder]="startPlaceholder()"
           [readonly]="readOnly()"
+          [errorStateMatcher]="errorStateMatcher"
           [attr.aria-label]="ariaLabel() ? ariaLabel() + ' start' : startPlaceholder()"
           [attr.aria-invalid]="errorText() ? 'true' : null"
           [attr.data-testid]="testId() ? testId() + '-start' : null"
@@ -35,6 +36,7 @@
           [value]="rangeEndObj()"
           [placeholder]="endPlaceholder()"
           [readonly]="readOnly()"
+          [errorStateMatcher]="errorStateMatcher"
           [attr.aria-label]="ariaLabel() ? ariaLabel() + ' end' : endPlaceholder()"
           [attr.aria-invalid]="errorText() ? 'true' : null"
           [attr.data-testid]="testId() ? testId() + '-end' : null"
@@ -61,7 +63,28 @@
         />
       </div>
       <mat-date-range-picker #rangePicker [disabled]="disabled() || readOnly()" />
-    } @else {
+
+      @if (errorText()) {
+        <mat-error>{{ errorText() }}</mat-error>
+      }
+      @if (hint()) {
+        <mat-hint>{{ hint() }}</mat-hint>
+      }
+    </mat-form-field>
+  } @else {
+    <mat-form-field
+      class="magic-date-picker__field"
+      [appearance]="matAppearance()"
+      [floatLabel]="floatLabel()"
+      [subscriptSizing]="subscriptSizing()"
+      [hideRequiredMarker]="hideRequiredMarker()"
+      [attr.id]="id() || null"
+      [attr.data-testid]="testId() || null"
+    >
+      @if (label()) {
+        <mat-label>{{ label() }}</mat-label>
+      }
+
       <input
         matInput
         [matDatepicker]="singlePicker"
@@ -98,15 +121,15 @@
         />
       </div>
       <mat-datepicker #singlePicker [disabled]="disabled() || readOnly()" />
-    }
 
-    @if (errorText()) {
-      <mat-error>{{ errorText() }}</mat-error>
-    }
-    @if (hint()) {
-      <mat-hint>{{ hint() }}</mat-hint>
-    }
-  </mat-form-field>
+      @if (errorText()) {
+        <mat-error>{{ errorText() }}</mat-error>
+      }
+      @if (hint()) {
+        <mat-hint>{{ hint() }}</mat-hint>
+      }
+    </mat-form-field>
+  }
 
   @if (enableTime() && mode() === 'single') {
     <label class="magic-date-picker__time-wrap">

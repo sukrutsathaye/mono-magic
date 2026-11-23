@@ -145,10 +145,14 @@ export const InteractivePagination: Story = {
     await userEvent.click(canvas.getByTestId('interactive-pg-last'));
     await expect(args.pageChange).toHaveBeenCalledWith(12);
 
-    const selectTrigger = canvas.getByTestId('interactive-pg-page-size');
-    await userEvent.click(selectTrigger);
+    const selectTrigger =
+      canvas
+        .getByTestId('interactive-pg-page-size')
+        .querySelector('.mat-mdc-select-trigger') ??
+      canvas.getByRole('combobox', { name: 'Items per page' });
+    await userEvent.click(selectTrigger as HTMLElement);
     const doc = within(document.body);
-    await userEvent.click(doc.getByRole('option', { name: '25' }));
+    await userEvent.click(await doc.findByRole('option', { name: '25' }));
     await expect(args.pageSizeChange).toHaveBeenCalledWith(25);
   },
 };

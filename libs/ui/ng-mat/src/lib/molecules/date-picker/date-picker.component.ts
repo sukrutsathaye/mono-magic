@@ -2,9 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   input,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import {
   ErrorStateMatcher,
@@ -289,9 +291,22 @@ export class MagicDatePickerComponent
       this.hasValue(),
   );
 
+  private readonly matInput = viewChild(MatInput);
+  private readonly startInput = viewChild(MatStartDate);
+  private readonly endInput = viewChild(MatEndDate);
+
   protected readonly errorStateMatcher: ErrorStateMatcher = {
     isErrorState: () => Boolean(this.errorText()),
   };
+
+  constructor() {
+    effect(() => {
+      this.errorText();
+      this.matInput()?.updateErrorState();
+      this.startInput()?.updateErrorState();
+      this.endInput()?.updateErrorState();
+    });
+  }
 
   protected readonly hostClasses = computed(() =>
     [

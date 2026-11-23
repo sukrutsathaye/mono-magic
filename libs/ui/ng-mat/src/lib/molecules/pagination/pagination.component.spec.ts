@@ -120,7 +120,9 @@ describe('MagicPaginationComponent', () => {
       ).toBe('0 of 0');
       expect(fixture.componentInstance.totalPages()).toBe(1);
 
-      const selectTrigger = host().querySelector('mat-select') as HTMLElement;
+      const selectTrigger = host().querySelector(
+        'mat-select .mat-mdc-select-trigger',
+      ) as HTMLElement;
       selectTrigger.click();
       fixture.detectChanges();
       await fixture.whenStable();
@@ -209,7 +211,9 @@ describe('MagicPaginationComponent', () => {
         pageSizeOptions: [10, 25, 50],
       });
 
-      const selectTrigger = host().querySelector('mat-select') as HTMLElement;
+      const selectTrigger = host().querySelector(
+        'mat-select .mat-mdc-select-trigger',
+      ) as HTMLElement;
       selectTrigger.click();
       fixture.detectChanges();
       await fixture.whenStable();
