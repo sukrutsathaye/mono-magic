@@ -52,3 +52,15 @@ pnpm nx run proto-contracts:generate
 ### Enabling Language Stub Generation
 
 `buf.gen.yaml` ships with `plugins: []` so `pnpm nx run proto-contracts:generate` validates compilation deterministically offline without requiring external BSR access or local `protoc-gen-*` binaries. To emit language stubs (TypeScript, Python, Java, Dart), uncomment or add plugins under `plugins:` in `buf.gen.yaml` and output into `../../../dist/libs/data-access/proto-contracts/<lang>`.
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Schema Validation & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever schemas or tests change.
+
+| Project | Validator / Runner | Schemas | Lint Gate | Breaking-Change Gate | Status |
+| --- | --- | --- | --- | --- | --- |
+| `proto-contracts` | Buf (`buf lint` & `buf breaking`) | 6 `.proto` contracts | `buf lint` (100%) | `buf breaking` | Passing |
+<!-- COVERAGE_TABLE_END -->

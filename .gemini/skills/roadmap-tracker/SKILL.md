@@ -33,9 +33,11 @@ Use this skill whenever inspecting, planning, or updating progress in [ROADMAP.m
 Never mark a checklist item `[x]` in `ROADMAP.md` until all acceptance criteria for that item are verified:
 1. For **UI Components**:
    - Contract defined in `@mono-magic/atomic-design-interfaces`
-   - Implemented in all 4 core libraries (`react-mui`, `ng-mat`, `rn-paper`, `fl-mat`)
-   - `lint`, `typecheck`, `test` (>=80% coverage), `test-storybook`, `build-storybook`, and `build-widgetbook` all pass
+   - Implemented in all 4 core libraries (`react-mui`, `ng-mat`, `rn-paper`, `fl-mat`) plus `vue-vuetify` / `svelte-tw` where applicable
+   - Canonical 7-Category Component State Matrix stories & Widgetbook use-cases implemented per [`interactive-stories`](../interactive-stories/SKILL.md)
+   - `lint`, `typecheck`, `test` (`>=80%` coverage), `test-storybook`, `build-storybook`, and `build-widgetbook` all pass
 2. For **Utils & Data-Access Libraries**:
-   - Contract/unit tests (>=80% coverage), `lint`, and `typecheck` pass
+   - Contract/unit tests (`>=90%` for `libs/utils/*`, `>=80%` for `libs/data-access/*`), `lint`, and `typecheck` pass
    - Concrete data-access providers pass the shared contract compliance suite
 3. Update the item checkbox from `- [ ]` to `- [x]` and update the Phase status table in Section 2 if all items in a phase are complete.
+4. Execute [`repo-updater`](../repo-updater/SKILL.md) (`node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs`) so `REPO_INDEX.md`, per-library `libs/*/*/README.md` catalogs & coverage tables, and root `README.md` stay 100% synchronized.

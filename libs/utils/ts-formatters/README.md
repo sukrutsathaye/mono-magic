@@ -64,3 +64,15 @@ calculateGaugeDimensions(100, 140, 20, 28);
 // { widthCm: 50, heightCm: 50, widthInches: 19.685..., heightInches: 19.685... }
 convertClothingSize(8, 'US', 'UK', 'womens'); // "12"
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `utils-ts-formatters` | Vitest V8 (`@vitest/coverage-v8`) | **100.0%** | **100.0%** | **100.0%** | **100.0%** | `>= 90%` | Passing |
+<!-- COVERAGE_TABLE_END -->

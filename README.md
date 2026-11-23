@@ -58,8 +58,10 @@ mono-magic/
 │       ├── rs-design-tokens/         # Rust design-token utilities
 │       └── go-core/                  # Go core utility library
 ├── tools/
+│   ├── ci/coverage-metrics.json      # Tracked polyglot unit test coverage metrics manifest
 │   ├── ci/generate-repo-index.mjs    # REPO_INDEX.md generator & drift checker
-│   └── ci/storybook-pages.mjs        # Showcase discovery, build, and GitHub Pages portal assembler
+│   ├── ci/storybook-pages.mjs        # Showcase & coverage discovery, build, and GitHub Pages portal assembler
+│   └── ci/sync-readmes-and-coverage.mjs # Automated per-library & root README coverage table synchronizer
 ├── AGENTS.md                         # Nx & workspace agent rules
 ├── GEMINI.md                         # Primary Gemini / Antigravity architectural & workflow instructions
 ├── REPO_INDEX.md                     # Auto-generated workspace project & module index
@@ -76,17 +78,17 @@ mono-magic/
 
 Each UI library follows **Atomic Design** (`atoms/`, `molecules/`, `organisms/`, `templates/`) backed by framework-agnostic contracts in `@mono-magic/atomic-design-interfaces` (and mirrored in Dart models for Flutter):
 
-| Nx Project | Package / Location | Framework & Design System | Component Catalog | Live Showcase (GitHub Pages) |
-| --- | --- | --- | --- | --- |
-| `atomic-design-interfaces` | `@mono-magic/atomic-design-interfaces` (`libs/ui/atomic-design-interfaces`) | Framework-agnostic TypeScript | — | — |
-| `react-mui` | `@mono-magic/react-mui` (`libs/ui/react-mui`) | React 19 + MUI Material | Storybook (`@storybook/react-vite`) | [react-mui Storybook](https://sukrutsathaye.github.io/mono-magic/react-mui/) |
-| `ng-mat` | `@mono-magic/ng-mat` (`libs/ui/ng-mat`) | Angular 22 + Angular Material | Storybook (`@storybook/angular-vite`) | [ng-mat Storybook](https://sukrutsathaye.github.io/mono-magic/ng-mat/) |
-| `rn-paper` | `@mono-magic/rn-paper` (`libs/ui/rn-paper`) | Expo / React Native + RN Paper | Storybook (`@storybook/react-vite` + `react-native-web`) | [rn-paper Storybook](https://sukrutsathaye.github.io/mono-magic/rn-paper/) |
-| `fl-mat` | `fl_mat` (`libs/ui/fl-mat`) | Flutter Material 3 | Widgetbook (`lib/widgetbook.dart`) | [fl-mat Widgetbook](https://sukrutsathaye.github.io/mono-magic/fl-mat/) |
-| `vue-vuetify` | `@mono-magic/vue-vuetify` (`libs/ui/vue-vuetify`) | Vue 3 + Vuetify | Storybook (`@storybook/vue3-vite`) | [vue-vuetify Storybook](https://sukrutsathaye.github.io/mono-magic/vue-vuetify/) |
-| `svelte-tw` | `@mono-magic/svelte-tw` (`libs/ui/svelte-tw`) | Svelte 5 + Tailwind | Storybook (`@storybook/svelte-vite`) | [svelte-tw Storybook](https://sukrutsathaye.github.io/mono-magic/svelte-tw/) |
+| Nx Project | Package & Detailed Docs | Framework & Design System | Component Catalog | Unit Coverage | Live Showcase (GitHub Pages) |
+| --- | --- | --- | --- | --- | --- |
+| `atomic-design-interfaces` | `@mono-magic/atomic-design-interfaces` ([README.md](libs/ui/atomic-design-interfaces/README.md)) | Framework-agnostic TypeScript | 11 Atoms · 17 Molecules | <!-- COV:atomic-design-interfaces -->**100.0%** lines / **100.0%** branches<!-- /COV:atomic-design-interfaces --> | [Coverage Report](https://sukrutsathaye.github.io/mono-magic/coverage/atomic-design-interfaces/) |
+| `react-mui` | `@mono-magic/react-mui` ([README.md](libs/ui/react-mui/README.md)) | React 19 + MUI Material | Storybook (`@storybook/react-vite`) | <!-- COV:react-mui -->**80.0%** lines / **80.0%** branches<!-- /COV:react-mui --> | [react-mui Storybook](https://sukrutsathaye.github.io/mono-magic/react-mui/) |
+| `ng-mat` | `@mono-magic/ng-mat` ([README.md](libs/ui/ng-mat/README.md)) | Angular 22 + Angular Material | Storybook (`@storybook/angular-vite`) | <!-- COV:ng-mat -->**80.0%** lines / **80.0%** branches<!-- /COV:ng-mat --> | [ng-mat Storybook](https://sukrutsathaye.github.io/mono-magic/ng-mat/) |
+| `rn-paper` | `@mono-magic/rn-paper` ([README.md](libs/ui/rn-paper/README.md)) | Expo / React Native + RN Paper | Storybook (`@storybook/react-vite` + `react-native-web`) | <!-- COV:rn-paper -->**80.0%** lines / **80.0%** branches<!-- /COV:rn-paper --> | [rn-paper Storybook](https://sukrutsathaye.github.io/mono-magic/rn-paper/) |
+| `fl-mat` | `fl_mat` ([README.md](libs/ui/fl-mat/README.md)) | Flutter Material 3 | Widgetbook (`lib/widgetbook.dart`) | <!-- COV:fl-mat -->**80.0%** lines / **80.0%** branches<!-- /COV:fl-mat --> | [fl-mat Widgetbook](https://sukrutsathaye.github.io/mono-magic/fl-mat/) |
+| `vue-vuetify` | `@mono-magic/vue-vuetify` ([README.md](libs/ui/vue-vuetify/README.md)) | Vue 3 + Vuetify | Storybook (`@storybook/vue3-vite`) | <!-- COV:vue-vuetify -->**80.0%** lines / **80.0%** branches<!-- /COV:vue-vuetify --> | [vue-vuetify Storybook](https://sukrutsathaye.github.io/mono-magic/vue-vuetify/) |
+| `svelte-tw` | `@mono-magic/svelte-tw` ([README.md](libs/ui/svelte-tw/README.md)) | Svelte 5 + Tailwind | Storybook (`@storybook/svelte-vite`) | <!-- COV:svelte-tw -->**80.0%** lines / **80.0%** branches<!-- /COV:svelte-tw --> | [svelte-tw Storybook](https://sukrutsathaye.github.io/mono-magic/svelte-tw/) |
 
-> **Unified GitHub Pages Showcase Portal**: [https://sukrutsathaye.github.io/mono-magic/](https://sukrutsathaye.github.io/mono-magic/)
+> **Unified GitHub Pages Showcase & Coverage Portal**: [https://sukrutsathaye.github.io/mono-magic/](https://sukrutsathaye.github.io/mono-magic/)
 
 ### Implemented Atomic Design Components
 
@@ -102,29 +104,29 @@ Each UI library follows **Atomic Design** (`atoms/`, `molecules/`, `organisms/`,
 
 Contract-first data-access layer backed by Protobuf (`buf`) wire schemas, idiomatic TypeScript/Python interfaces with shared Contract Compliance Test Suites, and concrete provider implementations:
 
-| Nx Project | Location | Language / Stack | Role |
-| --- | --- | --- | --- |
-| `proto-contracts` | `libs/data-access/proto-contracts` | Protobuf (`buf`) | Canonical wire DTOs, errors, pagination, auth, storage, realtime, payments |
-| `data-access-ts-interfaces` | `libs/data-access/ts-interfaces` | TypeScript | Provider interfaces + shared contract compliance test suites |
-| `py-data-access-interfaces` | `libs/data-access/py-interfaces` | Python (`uv`) | Async `Protocol` interfaces + shared pytest contract suites |
-| `data-access-ts-firebase` | `libs/data-access/ts-firebase` | TypeScript | Firebase Auth, Firestore, Realtime, Storage providers + Docker emulator suite |
-| `data-access-ts-supabase` | `libs/data-access/ts-supabase` | TypeScript | Supabase Auth, Data, Realtime, Storage providers + Docker emulator suite |
-| `data-access-ts-reflective-api` | `libs/data-access/ts-reflective-api` | TypeScript | Reflective Learning API client + in-memory transport |
-| `py-reflective-nlp` | `libs/data-access/py-reflective-nlp` | Python (`uv`) | Reflective Learning NLP grading, LLM generator, and repository providers |
+| Nx Project | Location & Detailed Docs | Language / Stack | Role | Unit Coverage |
+| --- | --- | --- | --- | --- |
+| `proto-contracts` | `libs/data-access/proto-contracts` ([README.md](libs/data-access/proto-contracts/README.md)) | Protobuf (`buf`) | Canonical wire DTOs, errors, pagination, auth, storage, realtime, payments | <!-- COV:proto-contracts -->`buf lint` (100%)<!-- /COV:proto-contracts --> |
+| `data-access-ts-interfaces` | `libs/data-access/ts-interfaces` ([README.md](libs/data-access/ts-interfaces/README.md)) | TypeScript | Provider interfaces + shared contract compliance test suites | <!-- COV:data-access-ts-interfaces -->**100.0%** lines / **83.3%** branches<!-- /COV:data-access-ts-interfaces --> |
+| `py-data-access-interfaces` | `libs/data-access/py-interfaces` ([README.md](libs/data-access/py-interfaces/README.md)) | Python (`uv`) | Async `Protocol` interfaces + shared pytest contract suites | <!-- COV:py-data-access-interfaces -->**80.0%** lines / **80.0%** branches<!-- /COV:py-data-access-interfaces --> |
+| `data-access-ts-firebase` | `libs/data-access/ts-firebase` ([README.md](libs/data-access/ts-firebase/README.md)) | TypeScript | Firebase Auth, Firestore, Realtime, Storage providers + Docker emulator suite | <!-- COV:data-access-ts-firebase -->**91.8%** lines / **81.9%** branches<!-- /COV:data-access-ts-firebase --> |
+| `data-access-ts-supabase` | `libs/data-access/ts-supabase` ([README.md](libs/data-access/ts-supabase/README.md)) | TypeScript | Supabase Auth, Data, Realtime, Storage providers + Docker emulator suite | <!-- COV:data-access-ts-supabase -->**95.1%** lines / **81.5%** branches<!-- /COV:data-access-ts-supabase --> |
+| `data-access-ts-reflective-api` | `libs/data-access/ts-reflective-api` ([README.md](libs/data-access/ts-reflective-api/README.md)) | TypeScript | Reflective Learning API client + in-memory transport | <!-- COV:data-access-ts-reflective-api -->**94.8%** lines / **83.2%** branches<!-- /COV:data-access-ts-reflective-api --> |
+| `py-reflective-nlp` | `libs/data-access/py-reflective-nlp` ([README.md](libs/data-access/py-reflective-nlp/README.md)) | Python (`uv`) | Reflective Learning NLP grading, LLM generator, and repository providers | <!-- COV:py-reflective-nlp -->**80.0%** lines / **80.0%** branches<!-- /COV:py-reflective-nlp --> |
 
 ## Polyglot Utility Libraries (`libs/utils/`)
 
-Pure, stateless, framework- and vendor-agnostic utilities:
+Pure, stateless, framework- and vendor-agnostic utilities (`>= 90%` unit coverage threshold):
 
-| Nx Project | Location | Language | Capabilities |
-| --- | --- | --- | --- |
-| `utils-ts-core` | `libs/utils/ts-core` | TypeScript | `Result`, typed errors, event bus, retry helpers |
-| `utils-ts-formatters` | `libs/utils/ts-formatters` | TypeScript | Currency, datetime, and crafting formatters |
-| `py-utils-common` | `libs/utils/py-common` | Python (`uv`) | Shared settings, structured logging, typed errors |
-| `py-utils-nlp` | `libs/utils/py-nlp` | Python (`uv`) | Text cleaning, keyword extraction, masking, segmentation, similarity |
-| `rs-utils-pose-math` | `libs/utils/rs-pose-math` | Rust (`cargo`) | Pose & geometry math primitives |
-| `rs-utils-design-tokens` | `libs/utils/rs-design-tokens` | Rust (`cargo`) | Design-token helpers |
-| `go-utils-core` | `libs/utils/go-core` | Go (`go.work`) | Core Go utility helpers |
+| Nx Project | Location & Detailed Docs | Language | Capabilities | Unit Coverage |
+| --- | --- | --- | --- | --- |
+| `utils-ts-core` | `libs/utils/ts-core` ([README.md](libs/utils/ts-core/README.md)) | TypeScript | `Result`, typed errors, event bus, retry helpers | <!-- COV:utils-ts-core -->**97.3%** lines / **97.9%** branches<!-- /COV:utils-ts-core --> |
+| `utils-ts-formatters` | `libs/utils/ts-formatters` ([README.md](libs/utils/ts-formatters/README.md)) | TypeScript | Currency, datetime, and crafting formatters | <!-- COV:utils-ts-formatters -->**100.0%** lines / **100.0%** branches<!-- /COV:utils-ts-formatters --> |
+| `py-utils-common` | `libs/utils/py-common` ([README.md](libs/utils/py-common/README.md)) | Python (`uv`) | Shared settings, structured logging, typed errors | <!-- COV:py-utils-common -->**90.0%** lines / **90.0%** branches<!-- /COV:py-utils-common --> |
+| `py-utils-nlp` | `libs/utils/py-nlp` ([README.md](libs/utils/py-nlp/README.md)) | Python (`uv`) | Text cleaning, keyword extraction, masking, segmentation, similarity | <!-- COV:py-utils-nlp -->**90.0%** lines / **90.0%** branches<!-- /COV:py-utils-nlp --> |
+| `rs-utils-pose-math` | `libs/utils/rs-pose-math` ([README.md](libs/utils/rs-pose-math/README.md)) | Rust (`cargo`) | Pose & geometry math primitives | <!-- COV:rs-utils-pose-math -->**90.0%** lines / **90.0%** branches<!-- /COV:rs-utils-pose-math --> |
+| `rs-utils-design-tokens` | `libs/utils/rs-design-tokens` ([README.md](libs/utils/rs-design-tokens/README.md)) | Rust (`cargo`) | Design-token helpers | <!-- COV:rs-utils-design-tokens -->**90.0%** lines / **90.0%** branches<!-- /COV:rs-utils-design-tokens --> |
+| `go-utils-core` | `libs/utils/go-core` ([README.md](libs/utils/go-core/README.md)) | Go (`go.work`) | Core Go utility helpers | <!-- COV:go-utils-core -->**97.8%** lines / **97.8%** branches<!-- /COV:go-utils-core --> |
 
 ## Getting Started
 

@@ -18,7 +18,7 @@
     "test": {
       "cache": true,
       "outputs": ["{projectRoot}/.coverage"],
-      "command": "COVERAGE_FILE=libs/utils/py-nlp/.coverage uv run --package py-utils-nlp pytest -c libs/utils/py-nlp/pyproject.toml libs/utils/py-nlp/tests --cov=libs/utils/py-nlp/src --cov-report=term-missing --cov-fail-under=90"
+      "command": "COVERAGE_FILE=libs/utils/py-nlp/.coverage uv run --package py-utils-nlp pytest -c libs/utils/py-nlp/pyproject.toml libs/utils/py-nlp/tests --cov=libs/utils/py-nlp/src --cov-report=term-missing --cov-report=json:libs/utils/py-nlp/coverage.json --cov-fail-under=90"
     }
   }
 }

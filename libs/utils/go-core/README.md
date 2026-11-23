@@ -59,3 +59,15 @@ sw.Add(time.Now(), 42.0)
 stats := sw.Stats(time.Now())
 fmt.Printf("count=%d mean=%.2f p95=%.2f\n", stats.Count, stats.Mean, stats.P95)
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `go-utils-core` | Go Test (`go test -race -cover`) | **97.8%** | **97.8%** | **97.8%** | **97.8%** | `>= 90%` | Passing |
+<!-- COVERAGE_TABLE_END -->

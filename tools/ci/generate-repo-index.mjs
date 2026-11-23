@@ -75,7 +75,10 @@ function findEntrypoint(projectRoot) {
   const candidates = [
     'src/index.ts',
     'lib/fl_mat.dart',
+    'src/lib.rs',
     'pyproject.toml',
+    'Cargo.toml',
+    'go.mod',
     'buf.yaml',
     'package.json',
   ];
@@ -100,9 +103,12 @@ function listBasenames(dirPath) {
         !d.name.startsWith('.') &&
         d.name !== '__pycache__' &&
         !d.name.endsWith('.spec.ts') &&
-        !d.name.endsWith('.test.ts')
+        !d.name.endsWith('.test.ts') &&
+        !d.name.endsWith('_test.go')
     )
-    .map((d) => (d.isDirectory() ? d.name : d.name.replace(/\.(ts|tsx|dart|py|proto)$/, '')))
+    .map((d) =>
+      d.isDirectory() ? d.name : d.name.replace(/\.(ts|tsx|dart|py|proto|rs|go)$/, '')
+    )
     .sort();
 }
 
@@ -129,7 +135,7 @@ function summarizeUiComponents(projectRoot) {
 }
 
 /**
- * Collects proto files or src/lib modules for non-UI libraries.
+ * Collects proto files or src/lib modules for non-UI libraries (TS, Python, Rust, Go).
  * @param {string} projectRoot
  * @returns {string}
  */
@@ -151,6 +157,26 @@ function summarizeModules(projectRoot) {
   const tsLib = join(ROOT, projectRoot, 'src/lib');
   if (existsSync(tsLib)) {
     const items = listBasenames(tsLib);
+    return items.length ? `modules: ${items.join(', ')}` : '';
+  }
+
+  const rsLib = join(ROOT, projectRoot, 'src/lib.rs');
+  if (existsSync(rsLib)) {
+    const items = listBasenames(join(ROOT, projectRoot, 'src')).filter((m) => m !== 'lib');
+    return items.length ? `modules: ${items.join(', ')}` : 'modules: lib';
+  }
+
+  const goMod = join(ROOT, projectRoot, 'go.mod');
+  if (existsSync(goMod)) {
+    const items = readdirSync(join(ROOT, projectRoot), { withFileTypes: true })
+      .filter(
+        (d) =>
+          !d.name.startsWith('.') &&
+          ((d.isFile() && d.name.endsWith('.go') && !d.name.endsWith('_test.go')) ||
+            (d.isDirectory() && d.name !== 'vendor' && d.name !== 'testdata'))
+      )
+      .map((d) => (d.isDirectory() ? d.name : d.name.replace(/\.go$/, '')))
+      .sort();
     return items.length ? `modules: ${items.join(', ')}` : '';
   }
 
@@ -224,12 +250,14 @@ function buildIndex() {
   lines.push('');
   lines.push('## 1. Quick-Start & Guardrails');
   lines.push('');
-  lines.push('- **Package Manager / Task Runner**: `pnpm nx <target> <project>` (Node/TS), `uv` (Python >=3.12), `flutter` (>=3.50).');
+  lines.push('- **Package Manager / Task Runner**: `pnpm nx <target> <project>` (Node/TS), `uv` (Python >=3.12), `flutter` (>=3.50), `cargo` (Rust), `go` (Go >=1.24).');
+  lines.push('- **Git & Branching (`main -> dev`)**: Always sync `dev` with `origin/main` before starting any task, branch `<type>/<scope>-<slug>` from `dev`, open all PRs against `dev`, and merge verified PRs into `dev` (`dev -> main` is owner-only).');
   lines.push('- **Rules & Standards**: [AGENTS.md](AGENTS.md), [GEMINI.md](GEMINI.md), [.gemini/skills/engineering-standards/SKILL.md](.gemini/skills/engineering-standards/SKILL.md), [.gemini/skills/token-budget-guardrails/SKILL.md](.gemini/skills/token-budget-guardrails/SKILL.md).');
-  lines.push('- **Verification Commands**:');
+  lines.push('- **Verification & Post-Task Commands**:');
   lines.push('  - Affected only: `pnpm nx affected -t lint typecheck test`');
   lines.push('  - Single project: `pnpm nx test <project>` / `pnpm nx lint <project>` / `pnpm nx typecheck <project>`');
   lines.push('  - Refresh this index: `node tools/ci/generate-repo-index.mjs` (or `--check` in CI)');
+  lines.push('  - Sync README coverage tables: `node tools/ci/sync-readmes-and-coverage.mjs` (or `--check` in CI)');
   lines.push('');
   lines.push('## 2. Nx Projects Catalog');
   lines.push('');

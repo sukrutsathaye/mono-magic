@@ -15,7 +15,7 @@
     },
     "test": {
       "cache": true,
-      "command": "COVERAGE_FILE=libs/utils/py-common/.coverage uv run --package py-utils-common pytest -c libs/utils/py-common/pyproject.toml libs/utils/py-common/tests --cov=libs/utils/py-common/src --cov-report=term-missing --cov-fail-under=90"
+      "command": "COVERAGE_FILE=libs/utils/py-common/.coverage uv run --package py-utils-common pytest -c libs/utils/py-common/pyproject.toml libs/utils/py-common/tests --cov=libs/utils/py-common/src --cov-report=term-missing --cov-report=json:libs/utils/py-common/coverage.json --cov-fail-under=90"
     }
   }
 }
