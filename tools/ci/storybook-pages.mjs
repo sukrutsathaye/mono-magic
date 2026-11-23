@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Modular helper for discovering, building, and assembling all workspace
- * showcases (Storybooks and Flutter Widgetbooks) into a single static
+ * showcases (Storybooks and Flutter Widgetbooks) plus Unit and Storybook
+ * coverage reports and coverage percentage badges into a single static
  * GitHub Pages bundle (`dist/storybook-pages`).
  *
  * Subcommands:
@@ -173,11 +174,248 @@ function normalizeWidgetbookBaseHref(projectName) {
   return cleanPrefix ? `/${cleanPrefix}/${projectName}/` : `/${projectName}/`;
 }
 
-function buildProject(projectName, outDir) {
+/**
+ * Parse LCOV text into line/function/branch summary percentages and per-file entries.
+ */
+function parseLcovContent(lcovText) {
+  let linesFound = 0;
+  let linesHit = 0;
+  let funcsFound = 0;
+  let funcsHit = 0;
+  let branchesFound = 0;
+  let branchesHit = 0;
+  const files = [];
+  let currentFile = null;
+
+  for (const rawLine of lcovText.split('\n')) {
+    const line = rawLine.trim();
+    if (line.startsWith('SF:')) {
+      currentFile = {
+        file: line.slice(3),
+        lf: 0,
+        lh: 0,
+        fnf: 0,
+        fnh: 0,
+        brf: 0,
+        brh: 0,
+      };
+    } else if (line.startsWith('LF:')) {
+      const val = Number(line.slice(3)) || 0;
+      linesFound += val;
+      if (currentFile) currentFile.lf = val;
+    } else if (line.startsWith('LH:')) {
+      const val = Number(line.slice(3)) || 0;
+      linesHit += val;
+      if (currentFile) currentFile.lh = val;
+    } else if (line.startsWith('FNF:')) {
+      const val = Number(line.slice(4)) || 0;
+      funcsFound += val;
+      if (currentFile) currentFile.fnf = val;
+    } else if (line.startsWith('FNH:')) {
+      const val = Number(line.slice(4)) || 0;
+      funcsHit += val;
+      if (currentFile) currentFile.fnh = val;
+    } else if (line.startsWith('BRF:')) {
+      const val = Number(line.slice(4)) || 0;
+      branchesFound += val;
+      if (currentFile) currentFile.brf = val;
+    } else if (line.startsWith('BRH:')) {
+      const val = Number(line.slice(4)) || 0;
+      branchesHit += val;
+      if (currentFile) currentFile.brh = val;
+    } else if (line === 'end_of_record' && currentFile) {
+      files.push(currentFile);
+      currentFile = null;
+    }
+  }
+
+  const pct = (hit, found) =>
+    found > 0 ? Number(((hit / found) * 100).toFixed(1)) : 100;
+
+  return {
+    lines: { total: linesFound, covered: linesHit, pct: pct(linesHit, linesFound) },
+    functions: {
+      total: funcsFound,
+      covered: funcsHit,
+      pct: pct(funcsHit, funcsFound),
+    },
+    branches: {
+      total: branchesFound,
+      covered: branchesHit,
+      pct: pct(branchesHit, branchesFound),
+    },
+    statements: {
+      total: linesFound,
+      covered: linesHit,
+      pct: pct(linesHit, linesFound),
+    },
+    files,
+  };
+}
+
+/**
+ * Render a standalone HTML coverage report from parsed LCOV data (used for Flutter `lcov.info`).
+ */
+function renderLcovHtmlReport(projectName, parsedLcov) {
+  const rows = parsedLcov.files
+    .map((f) => {
+      const linePct = f.lf > 0 ? ((f.lh / f.lf) * 100).toFixed(1) : '100.0';
+      return `        <tr>
+          <td class="file">${escapeHtml(f.file)}</td>
+          <td>${linePct}%</td>
+          <td>${f.lh} / ${f.lf}</td>
+        </tr>`;
+    })
+    .join('\n');
+
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escapeHtml(projectName)} Coverage Report</title>
+    <style>
+      body { font-family: system-ui, -apple-system, sans-serif; margin: 2rem; color: #111827; background: #f9fafb; }
+      h1 { margin-bottom: 0.25rem; }
+      .summary { display: flex; gap: 1rem; margin: 1rem 0 1.5rem; flex-wrap: wrap; }
+      .stat { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.75rem 1rem; }
+      table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+      th, td { text-align: left; padding: 0.6rem 0.85rem; border-bottom: 1px solid #e5e7eb; font-size: 0.9rem; }
+      th { background: #f3f4f6; }
+      .file { font-family: ui-monospace, SFMono-Regular, monospace; }
+    </style>
+  </head>
+  <body>
+    <h1>${escapeHtml(projectName)} — Unit &amp; Widget Coverage</h1>
+    <div class="summary">
+      <div class="stat"><strong>Lines:</strong> ${parsedLcov.lines.pct}% (${parsedLcov.lines.covered}/${parsedLcov.lines.total})</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Line Coverage</th>
+          <th>Covered / Total</th>
+        </tr>
+      </thead>
+      <tbody>
+${rows}
+      </tbody>
+    </table>
+  </body>
+</html>
+`;
+}
+
+/**
+ * Read unit or storybook coverage summary for a project and stage its HTML report
+ * into `<destDir>/coverage/<kind>/` when present.
+ */
+function stageProjectCoverage(project, destDir) {
+  const projectAbsDir = resolve(WORKSPACE_ROOT, project.root);
+  const coverageMeta = {
+    unit: null,
+    storybook: null,
+  };
+
+  // 1. Vitest unit coverage (`test-output/vitest/coverage`)
+  const vitestCovDir = join(projectAbsDir, 'test-output/vitest/coverage');
+  const vitestSummary = readJsonIfExists(
+    join(vitestCovDir, 'coverage-summary.json'),
+  );
+  if (vitestSummary?.total) {
+    const unitDest = join(destDir, 'coverage/unit');
+    mkdirSync(unitDest, { recursive: true });
+    cpSync(vitestCovDir, unitDest, { recursive: true });
+    const hasHtml = existsSync(join(unitDest, 'index.html'));
+    coverageMeta.unit = {
+      linesPct: Number((vitestSummary.total.lines?.pct ?? 0).toFixed(1)),
+      statementsPct: Number(
+        (vitestSummary.total.statements?.pct ?? 0).toFixed(1),
+      ),
+      functionsPct: Number(
+        (vitestSummary.total.functions?.pct ?? 0).toFixed(1),
+      ),
+      branchesPct: Number((vitestSummary.total.branches?.pct ?? 0).toFixed(1)),
+      reportPath: hasHtml ? `./${project.name}/coverage/unit/` : null,
+    };
+  }
+
+  // 2. Flutter LCOV unit coverage (`coverage/lcov.info`)
+  const flutterLcovPath = join(projectAbsDir, 'coverage/lcov.info');
+  if (!coverageMeta.unit && existsSync(flutterLcovPath)) {
+    const parsed = parseLcovContent(readFileSync(flutterLcovPath, 'utf8'));
+    const unitDest = join(destDir, 'coverage/unit');
+    mkdirSync(unitDest, { recursive: true });
+    cpSync(flutterLcovPath, join(unitDest, 'lcov.info'));
+    const existingHtml = join(projectAbsDir, 'coverage/html/index.html');
+    if (existsSync(existingHtml)) {
+      cpSync(join(projectAbsDir, 'coverage/html'), unitDest, {
+        recursive: true,
+      });
+    } else {
+      writeFileSync(
+        join(unitDest, 'index.html'),
+        renderLcovHtmlReport(project.name, parsed),
+      );
+    }
+    coverageMeta.unit = {
+      linesPct: parsed.lines.pct,
+      statementsPct: parsed.statements.pct,
+      functionsPct: parsed.functions.pct,
+      branchesPct: parsed.branches.pct,
+      reportPath: `./${project.name}/coverage/unit/`,
+    };
+  }
+
+  // 3. Storybook browser coverage (`test-output/storybook/coverage`)
+  const sbCovDir = join(projectAbsDir, 'test-output/storybook/coverage');
+  const sbSummary = readJsonIfExists(join(sbCovDir, 'coverage-summary.json'));
+  if (sbSummary?.total) {
+    const sbDest = join(destDir, 'coverage/storybook');
+    mkdirSync(sbDest, { recursive: true });
+    cpSync(sbCovDir, sbDest, { recursive: true });
+    const hasHtml = existsSync(join(sbDest, 'index.html'));
+    coverageMeta.storybook = {
+      linesPct: Number((sbSummary.total.lines?.pct ?? 0).toFixed(1)),
+      statementsPct: Number((sbSummary.total.statements?.pct ?? 0).toFixed(1)),
+      functionsPct: Number((sbSummary.total.functions?.pct ?? 0).toFixed(1)),
+      branchesPct: Number((sbSummary.total.branches?.pct ?? 0).toFixed(1)),
+      reportPath: hasHtml ? `./${project.name}/coverage/storybook/` : null,
+    };
+  }
+
+  return coverageMeta;
+}
+
+function buildProject(projectName, outDir, options = {}) {
   const project = findShowcaseProjects().find((p) => p.name === projectName);
   if (!project) {
     console.error(`Unknown showcase project: "${projectName}"`);
     process.exit(1);
+  }
+
+  if (options.withCoverage) {
+    if (project.type === 'widgetbook') {
+      runCommand('pnpm', ['exec', 'nx', 'run', `${project.name}:test-coverage`]);
+    } else {
+      runCommand('pnpm', [
+        'exec',
+        'nx',
+        'run',
+        `${project.name}:test`,
+        '--',
+        '--coverage',
+      ]);
+      if (options.withStorybookCoverage) {
+        runCommand('pnpm', [
+          'exec',
+          'nx',
+          'run',
+          `${project.name}:test-storybook-coverage`,
+        ]);
+      }
+    }
   }
 
   if (project.type === 'widgetbook') {
@@ -225,6 +463,9 @@ function buildProject(projectName, outDir) {
   rmSync(destDir, { recursive: true, force: true });
   mkdirSync(destDir, { recursive: true });
   cpSync(builtAbsDir, destDir, { recursive: true });
+
+  const coverage = stageProjectCoverage(project, destDir);
+
   writeFileSync(
     join(destDir, '.metadata.json'),
     JSON.stringify(
@@ -234,6 +475,7 @@ function buildProject(projectName, outDir) {
         packageName: project.packageName,
         root: project.root,
         tags: project.tags,
+        coverage,
       },
       null,
       2,
@@ -265,21 +507,67 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
+function formatCoverageBadgeClass(pct) {
+  if (pct >= 90) return 'cov-badge cov-high';
+  if (pct >= 80) return 'cov-badge cov-pass';
+  return 'cov-badge cov-low';
+}
+
+function renderCoverageBadgesHtml(site) {
+  const items = [];
+  const unit = site.coverage?.unit;
+  const sb = site.coverage?.storybook;
+
+  if (unit && typeof unit.linesPct === 'number') {
+    const cls = formatCoverageBadgeClass(unit.linesPct);
+    const label = `Unit Coverage: ${unit.linesPct}%`;
+    if (unit.reportPath) {
+      items.push(
+        `<a class="${cls}" href="${escapeHtml(unit.reportPath)}" title="View Unit Test Coverage Report">${escapeHtml(label)}</a>`,
+      );
+    } else {
+      items.push(`<span class="${cls}">${escapeHtml(label)}</span>`);
+    }
+  }
+
+  if (sb && typeof sb.linesPct === 'number') {
+    const cls = formatCoverageBadgeClass(sb.linesPct);
+    const label = `Storybook Coverage: ${sb.linesPct}%`;
+    if (sb.reportPath) {
+      items.push(
+        `<a class="${cls}" href="${escapeHtml(sb.reportPath)}" title="View Storybook Browser Coverage Report">${escapeHtml(label)}</a>`,
+      );
+    } else {
+      items.push(`<span class="${cls}">${escapeHtml(label)}</span>`);
+    }
+  }
+
+  if (items.length === 0) {
+    return '';
+  }
+
+  return `<div class="coverage-badges">${items.join('')}</div>`;
+}
+
 function renderPortalHtml(sites) {
   const cards = sites
     .map((site) => {
       const badges = site.tags
         .map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`)
         .join('');
-      return `      <a class="card" href="./${encodeURIComponent(site.name)}/">
-        <div class="card-header">
-          <h2>${escapeHtml(site.name)}</h2>
-          <span class="arrow" aria-hidden="true">→</span>
-        </div>
-        <p class="pkg">${escapeHtml(site.packageName)}</p>
-        <p class="stats">${escapeHtml(site.summary)}</p>
+      const coverageHtml = renderCoverageBadgesHtml(site);
+      return `      <article class="card">
+        <a class="card-main" href="./${encodeURIComponent(site.name)}/">
+          <div class="card-header">
+            <h2>${escapeHtml(site.name)}</h2>
+            <span class="arrow" aria-hidden="true">→</span>
+          </div>
+          <p class="pkg">${escapeHtml(site.packageName)}</p>
+          <p class="stats">${escapeHtml(site.summary)}</p>
+        </a>
+        ${coverageHtml}
         ${badges ? `<div class="tags">${badges}</div>` : ''}
-      </a>`;
+      </article>`;
     })
     .join('\n');
 
@@ -288,7 +576,7 @@ function renderPortalHtml(sites) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>mono-magic Component Showcases</title>
+    <title>mono-magic Component Showcases &amp; Coverage Portal</title>
     <style>
       :root {
         color-scheme: light dark;
@@ -300,6 +588,12 @@ function renderPortalHtml(sites) {
         --accent: #2563eb;
         --tag-bg: #eef2ff;
         --tag-fg: #3730a3;
+        --cov-high-bg: #dcfce7;
+        --cov-high-fg: #166534;
+        --cov-pass-bg: #dbeafe;
+        --cov-pass-fg: #1e40af;
+        --cov-low-bg: #fee2e2;
+        --cov-low-fg: #991b1b;
       }
       @media (prefers-color-scheme: dark) {
         :root {
@@ -311,6 +605,12 @@ function renderPortalHtml(sites) {
           --accent: #60a5fa;
           --tag-bg: #1e293b;
           --tag-fg: #93c5fd;
+          --cov-high-bg: #064e3b;
+          --cov-high-fg: #6ee7b7;
+          --cov-pass-bg: #1e3a8a;
+          --cov-pass-fg: #93c5fd;
+          --cov-low-bg: #7f1d1d;
+          --cov-low-fg: #fca5a5;
         }
       }
       * { box-sizing: border-box; }
@@ -324,30 +624,36 @@ function renderPortalHtml(sites) {
         place-items: center;
         padding: 2rem 1.25rem;
       }
-      main { width: 100%; max-width: 920px; }
+      main { width: 100%; max-width: 960px; }
       header { margin-bottom: 2rem; }
       h1 { margin: 0 0 0.5rem; font-size: 2rem; letter-spacing: -0.02em; }
       header p { margin: 0; color: var(--muted); }
       .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
         gap: 1rem;
       }
       .card {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.6rem;
         padding: 1.25rem;
         border-radius: 12px;
         border: 1px solid var(--border);
         background: var(--card);
         color: inherit;
-        text-decoration: none;
         transition: border-color 150ms ease, transform 150ms ease;
       }
       .card:hover {
         border-color: var(--accent);
         transform: translateY(-2px);
+      }
+      .card-main {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        color: inherit;
+        text-decoration: none;
       }
       .card-header {
         display: flex;
@@ -358,7 +664,37 @@ function renderPortalHtml(sites) {
       .arrow { color: var(--accent); font-size: 1.1rem; }
       .pkg { margin: 0; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 0.85rem; color: var(--muted); }
       .stats { margin: 0.25rem 0 0; font-size: 0.9rem; font-weight: 500; }
-      .tags { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.5rem; }
+      .coverage-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 0.25rem;
+      }
+      .cov-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.2rem 0.55rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      a.cov-badge:hover {
+        text-decoration: underline;
+      }
+      .cov-high {
+        background: var(--cov-high-bg);
+        color: var(--cov-high-fg);
+      }
+      .cov-pass {
+        background: var(--cov-pass-bg);
+        color: var(--cov-pass-fg);
+      }
+      .cov-low {
+        background: var(--cov-low-bg);
+        color: var(--cov-low-fg);
+      }
+      .tags { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.25rem; }
       .tag {
         padding: 0.15rem 0.5rem;
         border-radius: 999px;
@@ -371,8 +707,8 @@ function renderPortalHtml(sites) {
   <body>
     <main>
       <header>
-        <h1>mono-magic Component Showcases</h1>
-        <p>Select a Storybook or Flutter Widgetbook to browse components, controls, and documentation.</p>
+        <h1>mono-magic Component Showcases &amp; Coverage Portal</h1>
+        <p>Select a Storybook or Flutter Widgetbook to browse components, controls, interactive stories, and unit/browser coverage reports.</p>
       </header>
       <section class="grid">
 ${cards}
@@ -402,13 +738,19 @@ function assemblePages(outDir) {
     .map((entry) => {
       const dir = join(outDir, entry.name);
       const metadataPath = join(dir, '.metadata.json');
-      const metadata = readJsonIfExists(metadataPath) ?? projectMap.get(entry.name);
+      const projectInfo = projectMap.get(entry.name);
+      const metadata = readJsonIfExists(metadataPath) ?? projectInfo;
+      let coverage = metadata?.coverage ?? null;
+      if ((!coverage || (!coverage.unit && !coverage.storybook)) && projectInfo) {
+        coverage = stageProjectCoverage(projectInfo, dir);
+      }
       rmSync(metadataPath, { force: true });
       return {
         name: entry.name,
         packageName: metadata?.packageName ?? entry.name,
         tags: metadata?.tags ?? [],
         summary: summarizeSite(dir, metadata?.type),
+        coverage,
       };
     })
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -452,10 +794,15 @@ switch (command) {
   case 'build': {
     const projectName = rest.find((arg) => !arg.startsWith('--'));
     if (!projectName) {
-      console.error('Usage: storybook-pages.mjs build <project> [--out <dir>]');
+      console.error(
+        'Usage: storybook-pages.mjs build <project> [--with-coverage] [--with-storybook-coverage] [--out <dir>]',
+      );
       process.exit(1);
     }
-    buildProject(projectName, parseOutDir(rest));
+    buildProject(projectName, parseOutDir(rest), {
+      withCoverage: rest.includes('--with-coverage'),
+      withStorybookCoverage: rest.includes('--with-storybook-coverage'),
+    });
     break;
   }
   case 'assemble': {
@@ -464,7 +811,7 @@ switch (command) {
   }
   default: {
     console.error(
-      'Usage: storybook-pages.mjs <discover [--names | --matrix] | build <project> | assemble> [--out <dir>]',
+      'Usage: storybook-pages.mjs <discover [--names | --matrix] | build <project> [--with-coverage] [--with-storybook-coverage] | assemble> [--out <dir>]',
     );
     process.exit(1);
   }

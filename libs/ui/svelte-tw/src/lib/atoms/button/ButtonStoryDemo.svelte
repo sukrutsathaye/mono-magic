@@ -6,10 +6,7 @@
 
   function triggerSave() {
     clicks += 1;
-    isLoading = true;
-    setTimeout(() => {
-      isLoading = false;
-    }, 450);
+    isLoading = false;
   }
 </script>
 

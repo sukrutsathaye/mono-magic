@@ -1,4 +1,4 @@
-# Discover, build, and deploy all workspace Storybooks and Flutter Widgetbooks to GitHub Pages
+# Discover, build, and deploy all workspace Storybooks, Flutter Widgetbooks, and Coverage Reports to GitHub Pages
 name: Deploy Showcases to GitHub Pages
 
 on:
@@ -44,13 +44,16 @@ jobs:
         uses: actions/checkout@v7
       - name: Setup Node and pnpm
         uses: ./.github/actions/setup-pnpm
+      - name: Install Playwright Chromium for Storybook coverage
+        if: matrix.type == 'storybook'
+        run: pnpm exec playwright install --with-deps chromium
       - name: Setup Flutter
         if: matrix.type == 'widgetbook'
         uses: ./.github/actions/setup-flutter
-      - name: Build ${{ matrix.type }} (${{ matrix.name }})
+      - name: Build ${{ matrix.type }} & coverage (${{ matrix.name }})
         env:
           PAGES_BASE_PATH: ${{ needs.discover.outputs.base_path }}
-        run: node tools/ci/storybook-pages.mjs build "${{ matrix.name }}"
+        run: node tools/ci/storybook-pages.mjs build "${{ matrix.name }}" --with-coverage --with-storybook-coverage
       - name: Upload built showcase
         uses: actions/upload-artifact@v4
         with:

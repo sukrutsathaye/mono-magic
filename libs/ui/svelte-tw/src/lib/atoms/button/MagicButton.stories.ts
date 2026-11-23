@@ -93,7 +93,7 @@ export const InteractiveMatrixAndClickCounter: Story = {
     const saveBtn = canvas.getByRole('button', { name: /Save Draft/ });
     await userEvent.click(saveBtn);
     await expect(canvas.getByTestId('button-demo-status')).toHaveTextContent(
-      'Saves: 1',
+      'Saves: 1 | Loading: false',
     );
   },
 };

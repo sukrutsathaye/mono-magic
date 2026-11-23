@@ -20,6 +20,14 @@
         "command": "flutter test"
       }
     },
+    "test-coverage": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/coverage"],
+      "options": {
+        "cwd": "libs/ui/fl-mat",
+        "command": "flutter test --coverage"
+      }
+    },
     "widgetbook": {
       "executor": "nx:run-commands",
       "options": {

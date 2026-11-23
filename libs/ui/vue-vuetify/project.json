@@ -20,6 +20,22 @@
         "command": "vitest run --project=vue-vuetify-storybook"
       }
     },
+    "update-snapshots": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "cwd": "libs/ui/vue-vuetify",
+        "command": "vitest run --project=vue-vuetify-storybook -u"
+      }
+    },
+    "test-storybook-coverage": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "cwd": "libs/ui/vue-vuetify",
+        "command": "vitest run --project=vue-vuetify-storybook --coverage.enabled=true --coverage.reportsDirectory=./test-output/storybook/coverage --coverage.thresholds.lines=0 --coverage.thresholds.statements=0 --coverage.thresholds.functions=0 --coverage.thresholds.branches=0"
+      }
+    },
     "typecheck": {
       "executor": "nx:run-commands",
       "dependsOn": ["^build"],
