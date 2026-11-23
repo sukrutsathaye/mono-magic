@@ -23,6 +23,18 @@
     },
     {
       "path": "./libs/utils/ts-formatters"
+    },
+    {
+      "path": "./libs/data-access/ts-firebase"
+    },
+    {
+      "path": "./libs/data-access/ts-supabase"
+    },
+    {
+      "path": "./libs/ui/vue-vuetify"
+    },
+    {
+      "path": "./libs/ui/svelte-tw"
     }
   ]
 }
