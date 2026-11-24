@@ -55,6 +55,7 @@ flowchart TD
 | --- | --- | --- | --- | --- |
 | **Phase 0** | Monorepo Foundation, 4 UI Libraries (11 Atoms + 5 Molecules), GH Pages Portal | `libs/ui/*`, `tools/ci/*`, `.github/workflows/*` | — | Completed |
 | **Phase 1** | Docs, `.gemini/` Orchestration, Strict Boundaries, Committed Visual Baselines & Coverage Portal | `README.md`, `ROADMAP.md`, `.gemini/*`, `eslint.config.mjs`, `libs/ui/*` | Phase 0 | Completed |
+| **Phase 1B** | Skills Compliance & Cross-Library Remediation (Waves 1–4: Tags/Hygiene, Data-Access Parity, UI Superset & 7-Category Stories, Docs/Coverage & Vue/Svelte Molecules) | `libs/ui/*`, `libs/data-access/*`, `libs/utils/*`, `tools/ci/*` | Phase 1, 2A, 3A, 3B | Planned |
 | **Phase 2A** | Atomic Design Expansion — Wave 2 Molecules (Batch 1: 5 + Batch 2: 5 × 4 UI Libs) | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 1 | Completed |
 | **Phase 2B** | Atomic Design Expansion — Wave 1 Core Organisms (5 Organisms × 4 UI Libs) | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 2A | Planned |
 | **Phase 2C** | Atomic Design Expansion — Wave 2 Domain Organisms (Commerce, Live Conferencing, Reflective Learning) & Templates | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 2B | Planned |
@@ -109,6 +110,30 @@ flowchart TD
 - [x] **Publish Coverage Reports to GitHub Pages Showcase Portal**:
   - *Acceptance Criteria*:
     - Extend `tools/ci/storybook-pages.mjs` and `.github/workflows/storybook-gh-pages.yml` to collect Unit Test and Storybook Test HTML coverage reports (plus coverage percentage badges from `coverage-summary.json` / `lcov.info`) and link them directly from each project card on the GitHub Pages portal (`https://sukrutsathaye.github.io/mono-magic/`).
+
+#### Skills Compliance & Cross-Library Remediation Plan (`Phase 1B` — Waves 1–4)
+- [ ] **Wave 1 — Governance, Canonical Nx Tags & Systems Hygiene**:
+  - *Acceptance Criteria*:
+    - Add missing canonical Nx tags across all 7 UI projects (`lang:ts` on `atomic-design-interfaces`; `type:ui` + `lang:ts` on `react-mui`, `ng-mat`, `rn-paper`; `type:ui` + `lang:dart` on `fl-mat`; `type:ui` on `vue-vuetify`, `svelte-tw`) and `provider:<name>` tags on all 4 concrete data-access providers (`ts-firebase`, `ts-supabase`, `ts-reflective-api`, `py-reflective-nlp`).
+    - Replace the 3 production `.expect("validated parameters")` calls in `libs/utils/rs-pose-math/src/filter.rs` with `?` error propagation (zero `unwrap()`/`expect()` in non-test Rust code).
+    - Add `cargo fmt -- --check` to Rust `lint` targets (`rs-pose-math`, `rs-design-tokens`) and `test -z "$(gofmt -l .)"` to Go `lint` (`go-core`).
+    - Add `from __future__ import annotations` to `libs/data-access/py-interfaces/src/py_data_access_interfaces/__init__.py`.
+    - Enable `coverage.enabled: true` in `libs/data-access/ts-interfaces/vitest.config.mts` and remove redundant `reporters` keys alongside `reporter` in TypeScript Vitest configs.
+- [ ] **Wave 2 — Data-Access Wire Contract Parity & LSP Completeness**:
+  - *Acceptance Criteria*:
+    - Add `proto/monomagic/reflective/v1/reflective.proto` to `libs/data-access/proto-contracts` (`buf lint` clean) and mirror reflective DTOs & protocols into `libs/data-access/py-interfaces` so `py-reflective-nlp` implements shared `py-interfaces` contracts rather than owning standalone `schemas.py`/`protocols.py`.
+    - Add `runRealtimeProviderContractTests` and `runPaymentProviderContractTests` to `libs/data-access/ts-interfaces/src/lib/testing/contract-suites.ts` and wire `runRealtimeProviderContractTests` into `ts-firebase` and `ts-supabase`.
+- [ ] **Wave 3 — UI Root Framework Superset & 7-Category Story Matrix**:
+  - *Acceptance Criteria*:
+    - Enforce Root Framework Superset attribute forwarding in `vue-vuetify` (`v-bind="$attrs"` / `inheritAttrs: false` across all 11 atoms) and `svelte-tw` (`HTML*Attributes` + `...restProps` across all 11 atoms, plus `$bindable()` in `MagicButtonToggle.svelte`).
+    - Close framework-specific contract gaps: add `slotProps` to the 15 remaining `react-mui` components, add `MagicValueAccessor` / CVA to `date-picker`, `rating`, and `search-bar` in `ng-mat`, and add `onClick` parity (`chip`, `card`) plus explicit `inline`/`disablePortal` props (`menu`, `select`, `date-picker`) in `rn-paper`.
+    - Upgrade all UI library stories and Widgetbook use-cases to the Canonical 7-Category State Matrix (`Default`/`InteractivePlayground`, `Variants`, `SizesAndColors`, `DisabledAndLoading`, `ErrorAndEdgeCases`, `CustomSlotsAndComposition`, `DarkTheme`) with categorized `argTypes` (`vue-vuetify`, `svelte-tw`), a `play:` test on `ng-mat` `Avatar`, and regenerated `__vis__/` visual baselines passing `test-storybook`.
+- [ ] **Wave 4 — Documentation, Measured Coverage Gates & Vue/Svelte Molecule Parity**:
+  - *Acceptance Criteria*:
+    - Complete inline docs: add missing TSDoc on top-level exports (`atomic-design-interfaces`, `rn-paper`, `ng-mat`, `react-mui`), add `# Examples` doc-tests (`cargo test --doc`) to `rs-pose-math` and `rs-design-tokens`, add `//!` to `rs-design-tokens/src/main.rs` and `#[repr(C)]` to `ContrastReport`/`WcagLevel`, and add `%w` wrapping (`retry.Do`) + table-driven `t.Run` tests in `go-core`.
+    - Complete per-package `README.md` standards: add Public API Tables (`libs/utils/*` [7/7], `libs/data-access/*` [4/7]), Usage Examples (all missing libs), Architecture sections (`vue-vuetify`, `svelte-tw`), update `ts-interfaces/README.md` with `reflective` exports, and fix stale `"all 5 molecules"` in `libs/ui/fl-mat/README.md`.
+    - Replace flat placeholder `80`/`90` entries in `tools/ci/coverage-metrics.json` with measured coverage across all 21 libraries, enforce automated `>=80%`/`>=90%` coverage gates for `fl-mat`, `rs-*`, and `go-core`, and re-sync via `node tools/ci/sync-readmes-and-coverage.mjs`.
+    - Implement all **17 Molecules** in `libs/ui/vue-vuetify` and `libs/ui/svelte-tw` (with unit tests `>=80%`, 7-Category stories, and `__vis__/` baselines) to achieve 1:1 parity across all 6 UI frameworks.
 
 ---
 
