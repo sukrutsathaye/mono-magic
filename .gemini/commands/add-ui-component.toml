@@ -1,18 +1,19 @@
-description = "Design and implement an Atomic Design component (Atom, Molecule, Organism, or Template) across atomic-design-interfaces, react-mui, ng-mat, rn-paper, and fl-mat."
+description = "Design and implement an Atomic Design component (Atom, Molecule, Organism, or Template) across atomic-design-interfaces, react-mui, ng-mat, rn-paper, fl-mat, vue-vuetify, and svelte-tw with 100% root framework prop coverage and smart polymorphic props."
 prompt = """
-# Add Polyglot UI Component
+# Add Polyglot UI Component (All UI Libraries)
 
-Follow the `polyglot-ui-component` skill (`.gemini/skills/polyglot-ui-component/SKILL.md`) to design, implement, test, and baseline the requested UI component across all 4 core UI libraries.
+Follow the `polyglot-ui-component` skill (`.gemini/skills/polyglot-ui-component/SKILL.md`) and the per-library skills (`ui-react-mui`, `ui-ng-mat`, `ui-rn-paper`, `ui-fl-mat`, `ui-vue-vuetify`, `ui-svelte-tw`) to design, implement, test, document, and baseline the requested UI component.
 
 ## User Request
 {{args}}
 
 ## Execution Checklist
 1. Verify bottom-up tier dependencies (`Atoms -> Molecules -> Core Organisms -> Domain Organisms -> Templates`).
-2. Define TypeScript contract in `libs/ui/atomic-design-interfaces/src/lib/<tier>/<component>.interface.ts` + contract tests.
-3. Implement in `libs/ui/react-mui` (Component + Vitest unit tests + CSF3 Storybook stories).
-4. Implement in `libs/ui/ng-mat` (Standalone Angular component + Vitest/Analog unit tests + Storybook stories).
-5. Implement in `libs/ui/rn-paper` (React Native Paper component + Vitest unit tests + Storybook stories).
-6. Implement in `libs/ui/fl-mat` (Dart model + Material 3 widget + Widgetbook use-cases + `flutter test` widget tests).
-7. Generate visual baselines (`pnpm nx test-storybook <project> -- -u`) and run `lint`, `typecheck`, `test`, and `test-storybook`.
+2. Define the TypeScript contract in `libs/ui/atomic-design-interfaces/src/lib/<tier>/<component>.interface.ts` following the **Root Framework Superset + Smart Polymorphic Props** rule (include all native root design-system props plus smart composite props like `kind`, `variant`, `mode`, `range`, `loading`, `disabledInteractive`).
+3. Implement in `libs/ui/react-mui` (`ui-react-mui` skill).
+4. Implement in `libs/ui/ng-mat` (`ui-ng-mat` skill).
+5. Implement in `libs/ui/rn-paper` (`ui-rn-paper` skill).
+6. Implement in `libs/ui/fl-mat` (`ui-fl-mat` skill).
+7. Implement in `libs/ui/vue-vuetify` (`ui-vue-vuetify` skill) and `libs/ui/svelte-tw` (`ui-svelte-tw` skill) where applicable.
+8. Ensure every component implements the Canonical 7-Category Story State Matrix (`interactive-stories` skill), `>=80%` unit test coverage (`polyglot-unit-testing` skill), inline docs + library `README.md` catalog updates (`code-doc-generator` skill), visual baselines (`-- -u`), and post-task repo sync (`repo-updater` skill).
 """

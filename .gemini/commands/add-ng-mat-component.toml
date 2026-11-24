@@ -1,0 +1,17 @@
+description = "Create or extend an Angular 22 + Angular Material v22 component in libs/ui/ng-mat with full Material input/output coverage, smart polymorphic inputs, Signal Forms + CVA, unit tests (>=80%), 7-state Storybook stories, and visual baselines."
+prompt = """
+# Add Angular Material (`ng-mat`) Component
+
+Follow the `ui-ng-mat` skill (`.gemini/skills/ui-ng-mat/SKILL.md`), `interactive-stories` (`.gemini/skills/interactive-stories/SKILL.md`), `polyglot-unit-testing` (`.gemini/skills/polyglot-unit-testing/SKILL.md`), `code-doc-generator` (`.gemini/skills/code-doc-generator/SKILL.md`), and `repo-updater` (`.gemini/skills/repo-updater/SKILL.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Ensure the shared contract in `libs/ui/atomic-design-interfaces` includes all root `@angular/material` capabilities plus smart polymorphic inputs (`kind`, `variant`, `mode`, `range`, `loading`, `disabledInteractive`, slots).
+2. Implement standalone `Magic<Component>Component` (`selector: 'magic-<kebab>'`, `ChangeDetectionStrategy.OnPush`) in `libs/ui/ng-mat/src/lib/<tier>/<kebab-name>/` with `SignalProps<...>`, shared host binding directive where switching Material directives, content projection + input fallbacks, and dual Signal Forms + `MagicValueAccessor` CVA integration.
+3. Add AnalogJS/Vitest unit tests in `<kebab-name>.component.spec.ts` (`>= 80%` coverage).
+4. Add CSF3 stories in `<kebab-name>.component.stories.ts` covering the Canonical 7-Category State Matrix with `play` tests and TSDoc comments for Compodoc.
+5. Generate visual baselines (`pnpm nx test-storybook ng-mat -- -u`) and verify `pnpm nx run-many -t lint typecheck test test-storybook -p ng-mat`.
+6. Update `libs/ui/ng-mat/README.md` and run `node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs`.
+"""

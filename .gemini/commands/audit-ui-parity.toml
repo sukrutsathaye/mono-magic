@@ -1,0 +1,15 @@
+description = "Audit an Atomic Design UI component across atomic-design-interfaces and all 6 UI libraries for 100% root framework prop coverage, smart polymorphic props, unit test coverage (>=80%), and 7-Category Story State Matrix parity."
+prompt = """
+# Audit Polyglot UI Component Parity & Smart Props
+
+Follow `polyglot-ui-component` (`.gemini/skills/polyglot-ui-component/SKILL.md`), `interactive-stories` (`.gemini/skills/interactive-stories/SKILL.md`), and the per-library skills (`ui-react-mui`, `ui-ng-mat`, `ui-rn-paper`, `ui-fl-mat`, `ui-vue-vuetify`, `ui-svelte-tw`).
+
+## User Request
+{{args}}
+
+## Audit Checklist
+1. **Root Framework Prop Superset**: Compare the contract in `libs/ui/atomic-design-interfaces` and each framework implementation (`react-mui`, `ng-mat`, `rn-paper`, `fl-mat`, `vue-vuetify`, `svelte-tw`) against the underlying root design-system component to identify any missing native props, slots, styling hooks, or form bindings.
+2. **Smart Polymorphic & Composite Props**: Check that related primitives/modes are unified via smart props (`kind`, `variant`, `mode`, `range`, `loading` + `loadingLabel`, `disabledInteractive`, `MagicFormFieldContext`).
+3. **Unit Test Coverage (`>= 80%`)**: Verify unit tests cover every smart prop branch, accessibility attribute, and edge case.
+4. **Canonical 7-Category Story State Matrix**: Verify stories and Flutter Widgetbook use-cases cover all 7 state categories with stateful wrappers, `play` tests, and committed `__baselines__/`.
+"""

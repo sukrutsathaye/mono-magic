@@ -67,7 +67,13 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 - **`repo-updater`** *(Mandatory Post-Task)* ([.gemini/skills/repo-updater/SKILL.md](.gemini/skills/repo-updater/SKILL.md)): End-of-task synchronization across `REPO_INDEX.md`, per-library and root `README.md` (with clickable links to individual library READMEs and live test/coverage tables), `ROADMAP.md`, and `GEMINI.md`/`AGENTS.md`.
 - **`python-uv-service`** *(Mandatory for Python)* ([.gemini/skills/python-uv-service/SKILL.md](.gemini/skills/python-uv-service/SKILL.md)): `uv` workspace standards for `libs/*/py-*` & `apps/api-*`, Nx `ruff`/`pyright`/`pytest --cov` targets, FastAPI `lifespan` singletons, Pydantic v2, and SOLID `Protocol`s.
 - **`rust-go-systems`** *(Mandatory for Rust & Go)* ([.gemini/skills/rust-go-systems/SKILL.md](.gemini/skills/rust-go-systems/SKILL.md)): Cargo (`clippy -D warnings`, `rustfmt`, `#[repr(C)]` FFI/WASM, `cargo test`) and Go (`go.work`, `go vet`, table-driven `go test -race -cover`) workspace standards.
-- **`polyglot-ui-component`** ([.gemini/skills/polyglot-ui-component/SKILL.md](.gemini/skills/polyglot-ui-component/SKILL.md)): End-to-end workflow for adding or updating an Atomic Design component across `atomic-design-interfaces`, `react-mui`, `ng-mat`, `rn-paper`, `fl-mat`, `vue-vuetify`, and `svelte-tw`.
+- **`polyglot-ui-component`** ([.gemini/skills/polyglot-ui-component/SKILL.md](.gemini/skills/polyglot-ui-component/SKILL.md)): End-to-end workflow for adding or updating an Atomic Design component across `atomic-design-interfaces`, `react-mui`, `ng-mat`, `rn-paper`, `fl-mat`, `vue-vuetify`, and `svelte-tw` following the **Root Framework Superset + Smart Polymorphic Props** rule.
+- **`ui-react-mui`** ([.gemini/skills/ui-react-mui/SKILL.md](.gemini/skills/ui-react-mui/SKILL.md)): React 19 + MUI v9 component playbook (`sx`, `slotProps`, direct `ref`, `useControllableState`, smart internal MUI primitive switching).
+- **`ui-ng-mat`** ([.gemini/skills/ui-ng-mat/SKILL.md](.gemini/skills/ui-ng-mat/SKILL.md)): Angular 22 + Angular Material v22 component playbook (`SignalProps`, shared host binding directives, dual Signal Forms + `MagicValueAccessor` CVA).
+- **`ui-rn-paper`** ([.gemini/skills/ui-rn-paper/SKILL.md](.gemini/skills/ui-rn-paper/SKILL.md)): Expo 56 / React Native 0.85 + React Native Paper v5 component playbook (`useMagicPaperColors`, React Native Web parity, smart Paper primitive switching).
+- **`ui-fl-mat`** ([.gemini/skills/ui-fl-mat/SKILL.md](.gemini/skills/ui-fl-mat/SKILL.md)): Flutter `>=3.50` Material 3 widget playbook (Dart contracts, `MagicTheme`, tree-shake-safe icons, `Semantics`, Widgetbook use-cases).
+- **`ui-vue-vuetify`** ([.gemini/skills/ui-vue-vuetify/SKILL.md](.gemini/skills/ui-vue-vuetify/SKILL.md)): Vue 3.5 + Vuetify 3.12 SFC playbook (`v-model`, named `<slot>`s, Vite `optimizeDeps.include` pre-bundling, smart Vuetify primitive switching).
+- **`ui-svelte-tw`** ([.gemini/skills/ui-svelte-tw/SKILL.md](.gemini/skills/ui-svelte-tw/SKILL.md)): Svelte 5 runes + Tailwind CSS v4 + Bits UI component playbook (`$props()`, `$bindable()`, `Snippet` slots, smart primitive switching).
 - **`storybook-visual-testing`** ([.gemini/skills/storybook-visual-testing/SKILL.md](.gemini/skills/storybook-visual-testing/SKILL.md)): Runbook for `storybook-addon-vis` baselines (`-- -u`), diff triage, and assembling the GitHub Pages showcase & coverage portal (`tools/ci/storybook-pages.mjs`).
 - **`coverage-and-quality`** ([.gemini/skills/coverage-and-quality/SKILL.md](.gemini/skills/coverage-and-quality/SKILL.md)): Runbook for polyglot unit test coverage, Storybook browser coverage, `>=80%`/`>=90%` threshold enforcement, and static coverage portal generation.
 - **`data-access-provider`** ([.gemini/skills/data-access-provider/SKILL.md](.gemini/skills/data-access-provider/SKILL.md)): Blueprint for designing hybrid `proto-contracts` + `ts-interfaces`/`py-interfaces` contracts and provider implementations (`ts-firebase`, `ts-supabase`, `ts-nestjs-*`, `java-spring-boot-*`, Cloud SDKs).
@@ -75,6 +81,15 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 
 ### Custom Gemini CLI Slash Commands (`.gemini/commands/`)
 - `/add-ui-component` ([.gemini/commands/add-ui-component.toml](.gemini/commands/add-ui-component.toml))
+- `/add-react-mui-component` ([.gemini/commands/add-react-mui-component.toml](.gemini/commands/add-react-mui-component.toml))
+- `/add-ng-mat-component` ([.gemini/commands/add-ng-mat-component.toml](.gemini/commands/add-ng-mat-component.toml))
+- `/add-rn-paper-component` ([.gemini/commands/add-rn-paper-component.toml](.gemini/commands/add-rn-paper-component.toml))
+- `/add-fl-mat-component` ([.gemini/commands/add-fl-mat-component.toml](.gemini/commands/add-fl-mat-component.toml))
+- `/add-vue-vuetify-component` ([.gemini/commands/add-vue-vuetify-component.toml](.gemini/commands/add-vue-vuetify-component.toml))
+- `/add-svelte-tw-component` ([.gemini/commands/add-svelte-tw-component.toml](.gemini/commands/add-svelte-tw-component.toml))
+- `/audit-ui-parity` ([.gemini/commands/audit-ui-parity.toml](.gemini/commands/audit-ui-parity.toml))
+- `/add-polyglot-util` ([.gemini/commands/add-polyglot-util.toml](.gemini/commands/add-polyglot-util.toml))
+- `/pre-pr-check` ([.gemini/commands/pre-pr-check.toml](.gemini/commands/pre-pr-check.toml))
 - `/write-stories` ([.gemini/commands/write-stories.toml](.gemini/commands/write-stories.toml))
 - `/unit-test` ([.gemini/commands/unit-test.toml](.gemini/commands/unit-test.toml))
 - `/doc-gen` ([.gemini/commands/doc-gen.toml](.gemini/commands/doc-gen.toml))
