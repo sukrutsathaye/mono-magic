@@ -38,17 +38,28 @@ Use this skill as a **mandatory operating framework** for `/teamwork` coordinato
   3. **Exact verification command(s)** for its owned project.
   4. **Explicit "do not scan" rule**: tell workers to read only their assigned files + `REPO_INDEX.md` if needed.
 
-### B. Bounded Fan-Out, Zero Explorer Swarms & Single-Reviewer Gate
+### B. Bounded Fan-Out (Max 6 Concurrent Agents), Zero Explorer Swarms & Single-Reviewer Gate
+- **Maximum Concurrent Agents**: **Up to 6 agents at the same time** across `/teamwork` waves.
+  - This enables 1:1 parallel sharding across all 6 UI libraries (`react-mui`, `ng-mat`, `rn-paper`, `fl-mat`, `vue-vuetify`, `svelte-tw`) once shared contracts in `atomic-design-interfaces` are landed, or up to 6 disjoint domain workers across `utils`, `data-access`, and `ui`.
 - **Zero Survey Explorers**: Because `REPO_INDEX.md` already catalogs every project, entrypoint, component, module, proto, skill, and command, orchestrators MUST NOT spawn "survey explorer" subagents (Wave 1 burned 7 explorer agents and ~1,500 lines of redundant survey handoffs before `REPO_INDEX.md` existed). The coordinator reads `REPO_INDEX.md` + 1–2 contract files directly.
-- **Default Worker Cap**: **Max 3–4 parallel workers** per wave.
-  - *Allowed exception*: 1:1 sharding across the independent UI libraries (`react-mui`, `ng-mat`, `rn-paper`, `fl-mat`, `vue-vuetify`, `svelte-tw`) when implementing an already-specified contract, using each library's dedicated skill (`ui-react-mui`, `ui-ng-mat`, `ui-rn-paper`, `ui-fl-mat`, `ui-vue-vuetify`, `ui-svelte-tw`).
 - **Single-Pass Verification (No 5-Agent Verification Swarms)**: Never spawn 5-agent verification waves (1 auditor + 2 reviewers + 2 challengers) per sub-milestone. Rely on deterministic Nx checks (`pnpm nx affected -t lint typecheck test`, `generate-repo-index.mjs --check`, `sync-readmes-and-coverage.mjs --check`) plus **at most 1 combined reviewer pass** per track.
 - **No overlapping edits**: Two concurrent workers MUST NEVER edit the same project, barrel file, or `REPO_INDEX.md`.
 - **Sequentialize shared contracts**: Always land shared interfaces (`atomic-design-interfaces`, `proto-contracts`, `ts-interfaces`, `py-interfaces`) **before** fanning out concrete provider/UI workers.
 
-### C. Model Tiering
-- **`flash` / `flash_lite`**: Use for read-only audits, mechanical refactors, test/Storybook boilerplate, and single-project verification.
-- **`inherit` / `pro`**: Reserve for coordinator planning, cross-cutting architecture, complex business logic, and final integration review.
+### C. Multi-Provider Model Capability & Task Complexity Matrix
+
+`/teamwork` orchestrators and subagents may select from the **7 models available in the workspace subscription** across Google Gemini, Anthropic Claude, and OpenAI (`GPT-OSS`), mapped to 4 task complexity tiers (and to `pro` / `flash` / `flash_lite` / `inherit` when calling `invoke_subagent`):
+
+| Tier | Task Complexity & Specialist Roles | Available Subscription Models | `invoke_subagent` Alias | Ideal Workloads in `mono-magic` |
+| --- | --- | --- | --- | --- |
+| **Tier 1: Frontier Architecture & Orchestration** | High reasoning, cross-domain architecture, root `/teamwork` orchestration, final track verification | **`Gemini 4 Argon (High)`**<br/>**`Claude Opus 5.5 (Medium)`** | `pro` / `inherit` | Designing contract-first schemas (`atomic-design-interfaces`, `proto-contracts`, `ts-interfaces`, `py-interfaces`), Root Framework Superset + Smart Polymorphic Prop contracts, complex polyglot architecture (Rust FFI/WASM, Go concurrency, FastAPI `lifespan`), and final track Victory Audits. |
+| **Tier 2: Complex Feature, UI & Data-Access Implementation** | Multi-file component & adapter engineering, intricate state/form integration, interactive stories | **`Claude Sonnet 5.5 (Medium)`**<br/>**`Gemini 4 Neon (Medium)`** | `pro` / `inherit` | Implementing Core/Domain Organisms & Molecules (`ui-react-mui`, `ui-ng-mat`, `ui-rn-paper`, `ui-fl-mat`, `ui-vue-vuetify`, `ui-svelte-tw`), concrete data-access providers (`ts-firebase`, `ts-supabase`, `py-reflective-nlp`), and 7-Category State Matrix stories with `play` tests (`interactive-stories`). |
+| **Tier 3: High-Throughput Parallel Implementation & Unit Testing** | Pattern-guided parallel execution, algorithmic utils, exhaustive unit & compliance test suites | **`Gemini 4 Hydrogen (Medium)`**<br/>**`GPT-OSS 120B (Medium)`** | `flash` | Parallel 6-way UI component sharding once a contract & reference component exist, pure stateless utilities (`libs/utils/{ts-*,py-*,rs-*,go-*}`), comprehensive unit/contract compliance test suites (`polyglot-unit-testing`), and cross-provider load balancing. |
+| **Tier 4: Fast Mechanical Tasks, Docs & Repo Sync** | Low-latency, deterministic edits, inline documentation, index/coverage sync, targeted verification | **`Gemini 3.8 Flash (Medium)`** | `flash` / `flash_lite` | Generating inline docstrings & package `README.md` catalogs (`code-doc-generator`), running `generate-repo-index.mjs` & `sync-readmes-and-coverage.mjs` (`repo-updater`), mechanical lint/typecheck fixes, and single-project verification runs. |
+
+#### Multi-Provider Quota Balancing Rule
+- Never funnel all 6 concurrent workers through a single Tier 1 frontier model.
+- Mix providers and tiers across parallel workers (e.g., `Gemini 4 Argon` or `Claude Opus 5.5` for the orchestrator, `Claude Sonnet 5.5` + `Gemini 4 Neon` for complex tracks, `Gemini 4 Hydrogen` + `GPT-OSS 120B` for parallel UI/utils/testing shards, and `Gemini 3.8 Flash` for docs and repo sync) so no single model family's token bucket is exhausted prematurely.
 
 ### D. Reactive Waiting & Compact Handoffs
 - **Zero polling**: After launching subagents or background commands, **stop calling tools** and wait for the system wakeup. Never poll status in a loop.
@@ -74,7 +85,7 @@ Use this skill as a **mandatory operating framework** for `/teamwork` coordinato
 
 ---
 
-## 4. Git Branching (`main -> dev`), Specialist Phases, Continuous Commit/Push & Handover Protocol
+## 4. Git Branching (`main -> dev`), Token-Consumption Monitoring, Track Prioritization & Handover Protocol
 
 1. **Always Sync `dev` with Current `main` Before Starting Any Task**:
    - `dev` is the AI integration branch. **Before starting any task**, configure the full remote fetch refspec (in case the VM was cloned with `--single-branch`), fetch, merge `origin/main` into `dev`, and push `origin/dev`:
@@ -104,13 +115,21 @@ Use this skill as a **mandatory operating framework** for `/teamwork` coordinato
      ```
    - **AI agents may freely merge their verified, passing PRs into `dev`** (`gh pr merge --squash --delete-branch`).
    - **Final `dev -> main` Merge**: Reserved **strictly for the human repository owner** after review. Agents must never merge into `main`.
-4. **Periodic Rate-Limit Checks & Sequential Fallback**:
-   - The `/teamwork` orchestrator MUST periodically check rate-limit / quota headroom between waves and immediately upon any `429`, quota warning, or latency spike.
-   - When limits tighten: **pause or stop** excess parallel child agents, halt new parallel fan-outs, and **continue remaining tasks one by one** (sequentially) to preserve quota.
+4. **Periodic Token-Consumption Checks & Priority-Ordered Track Gating (1–2 Tracks When Tight)**:
+   - **Pre-Wave & Inter-Wave Token Audit**: Before launching any wave—and at the end of every sub-wave or track—the `/teamwork` orchestrator MUST check token consumption, cumulative tool-call volume, and quota headroom across active providers.
+   - **Prioritize 1–2 Tracks When Full Wave Would Exceed Token Limits**:
+     - If executing all tracks in the current wave would risk exceeding token or quota limits, the orchestrator MUST **not** launch all tracks at once. Instead, select and execute **only the top 1–2 tracks** according to this strict priority order:
+       1. **`Priority 1 (Foundational Contracts)`**: Shared interfaces & wire schemas (`atomic-design-interfaces`, `proto-contracts`, `ts-interfaces`, `py-interfaces`).
+       2. **`Priority 2 (Core Logic & Data-Access)`**: Pure shared utilities (`libs/utils/*`) and concrete data-access providers (`libs/data-access/*`).
+       3. **`Priority 3 (UI Component Implementations)`**: Concrete Atomic Design UI libraries (`react-mui`, `ng-mat`, `rn-paper`, `fl-mat`, `vue-vuetify`, `svelte-tw`).
+       4. **`Priority 4 (Applications, Showcases & Closure)`**: Feature/app composition (`libs/features/*`, `apps/*`), visual baselines, and portal assembly.
+     - Bring the prioritized 1–2 tracks to 100% completion (tests, stories, docs, `repo-updater`), open their PR(s) against `dev`, and **merge them into `dev`** before launching the next track slice.
+   - **Dynamic Down-Tiering & Sequential Fallback**:
+     - When token consumption crosses ~60% of session budget or upon any `429` / quota warning / latency spike: shift remaining workers to Tier 3 / Tier 4 models (`Gemini 4 Hydrogen`, `GPT-OSS 120B (Medium)`, `Gemini 3.8 Flash`), reduce active concurrency from 6 down to 1–2 sequential workers, and complete the active track cleanly.
 5. **Near-Limit Handover & WIP Push**:
-   - If usage or rate limits are almost reached before completion:
-     1. Stop launching new tasks and stabilize the current in-flight edit.
-     2. Write a concise handover doc at `.gemini/handovers/<branch-slug>.md` covering: active branch, completed vs. remaining tasks, exact modified files, last verification command + outcome, and the exact next step to resume.
+   - If usage or token limits are almost reached before all wave tracks finish:
+     1. Ensure any finished track is merged into `dev` and stabilize any in-flight branch.
+     2. Write a concise handover doc at `.gemini/handovers/<branch-slug>.md` covering: completed tracks (already merged to `dev`), deferred/remaining tracks in priority order, exact modified files, last verification command + outcome, and the exact next command to resume.
      3. Commit remaining WIP + the handover doc (`wip(<scope>): checkpoint <short-desc> and add handover`) and `git push -u origin <branch>` before stopping.
 
 ---
@@ -121,8 +140,9 @@ Use this skill as a **mandatory operating framework** for `/teamwork` coordinato
 - [ ] Opening a PR against `main` instead of `dev`, or merging `dev` into `main` without the repository owner
 - [ ] Running `find .`, `ls -R`, or `rg` at repo root when `REPO_INDEX.md` answers the question
 - [ ] Reading full files >200 lines when only one function/class is needed
-- [ ] Spawning >4 parallel workers without disjoint per-project sharding
-- [ ] Sending vague worker briefs that force each worker to re-explore the codebase
+- [ ] Spawning >6 concurrent agents, or spawning survey explorer / 5-agent verification swarms
+- [ ] Launching all tracks in a wave concurrently when token budget only safely fits 1–2 prioritized tracks
+- [ ] Funneling all parallel workers through a single Tier 1 frontier model instead of balancing across the 4-Tier Capability Matrix (`Gemini 4 Argon/Neon/Hydrogen`, `Gemini 3.8 Flash`, `Claude Opus/Sonnet 5.5`, `GPT-OSS 120B`)
 - [ ] Running `pnpm nx run-many` across unaffected projects during feature iteration
 - [ ] Skipping `polyglot-unit-testing`, `interactive-stories`, `code-doc-generator`, or `repo-updater` before finishing a task
-- [ ] Continuing parallel fan-out during rate-limit pressure instead of falling back to 1-by-1 execution or writing a handover + WIP push
+- [ ] Continuing wide parallel fan-out during token/rate-limit pressure instead of prioritizing 1–2 tracks, down-tiering models, or writing a handover + WIP push
