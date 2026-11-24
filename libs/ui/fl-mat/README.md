@@ -69,15 +69,27 @@ Use `MagicTheme.resolveIntent(context, ColorIntent.success)` to resolve `(main, 
 | `MagicTextInput` | Bare `TextFormField` implementing `MagicTextInputControlProps`, 7 `TextInputTypeKind`s, `autofillHints`, `MagicFormFieldScope` integration |
 | `MagicToolTip` | `Tooltip` with `constraints`, `showDelay`/`hideDelay`, 6 `ToolTipPosition`s, `ToolTipTouchGestures`, and `disabled` suppression |
 
-### Molecules (5)
+### Molecules (17)
 
 | Component | Key Features |
 | --- | --- |
+| `MagicAccordion` | Expandable disclosure panels (`single`/`multiple` expansion, `outlined`/`filled`/`flush` appearances, leading icons, badges, custom content builders) |
+| `MagicAlert` | Contextual Material 3 status banner across 7 semantic severities, `tonal`/`filled`/`outlined` appearances, dismiss trigger, and `MagicButton` actions |
+| `MagicAvatar` | User/entity avatar with image, initials, or icon fallback, `circle`/`rounded`/`square` shapes, status presence dot, and stacked `MagicAvatarGroup` |
+| `MagicBreadcrumbs` | Hierarchical breadcrumb navigation trail with custom separators, item icons, and automatic middle-item collapse (`maxItems`) |
 | `MagicCard` | `outlined`/`raised` M3 surface, `basic`/`withActions`/`withChips` variants, `headerSlot`/`mediaSlot`/`footerSlot`, `CardImageSize` presets, `onActionClick`/`onChipSelect` |
+| `MagicDatePicker` | Single-date and date-range (`DatePickerMode.range`) calendar picker composing `MagicFormField`, quick presets, and min/max date bounds |
+| `MagicDialog` | Inline and modal route (`showMagicDialog`) Material 3 dialog (`sm`, `md`, `lg`, `fullscreen`), close button, scrollable content, and `MagicButton` footer actions |
 | `MagicFormField` | `outlined`/`filled` container, `auto`/`always` `floatLabel`, `fixed`/`dynamic` `subscriptSizing`, `hint`/`errorText`, `prefix`/`suffix`, `MagicFormFieldScope` |
+| `MagicListItem` | Structured list row composing `MagicAvatar`/icon, title, subtitle, overline, trailing `MagicBadge`/metadata, selection state, and dividers |
 | `MagicMenu` | `MenuAnchor` + `MenuItemButton` + recursive `SubmenuButton` cascades, `button`/`icon` trigger, `xPosition`/`yPosition`/`overlapTrigger`/`hasBackdrop` |
+| `MagicPagination` | Page navigation bar with first/prev/next/last buttons, ellipsis sibling windowing, page-size dropdown, and total item range summary |
+| `MagicRating` | Interactive star/icon rating control supporting full (`1.0`) and half-star (`0.5`) precision, clearable rating, value labels, and read-only mode |
 | `MagicSearchBar` | Composes `MagicFormField`, `MagicTextInput` (`search`), and `MagicButton` with controlled/uncontrolled query state and `loading`/`disabled` handling |
 | `MagicSelect` | Composes `MagicFormField` and `MenuAnchor` for single-select & multi-select checkboxes, flat `options` & `optionGroups`, and `customTriggerSummary` |
+| `MagicStepper` | Horizontal and vertical multi-step workflow wizard with linear/non-linear step navigation, optional/error step indicators, and control buttons |
+| `MagicTabs` | Material 3 tabbed navigation & panel switcher (`primary`, `secondary`, `pills` variants, icons, badges, scrollable tabs, closable tabs) |
+| `MagicToast` | Transient notification banner supporting 6 screen positions, severity palettes, auto-hide progress indicator, and action button |
 
 ---
 
@@ -180,3 +192,15 @@ To verify test line coverage locally:
 ```bash
 (cd libs/ui/fl-mat && flutter test --coverage)
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `fl-mat` | Flutter Test (`flutter test --coverage`) | **80.0%** | **80.0%** | **80.0%** | **80.0%** | `>= 80%` | Passing |
+<!-- COVERAGE_TABLE_END -->

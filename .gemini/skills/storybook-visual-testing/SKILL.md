@@ -35,13 +35,15 @@ Snapshots live under `libs/ui/<project>/__vis__/<local|platform>/`:
 
 ## 2. Creating & Updating Baselines
 
-To generate initial baselines or accept intentional visual changes:
+To generate initial baselines or accept intentional visual changes (after authoring stories per [`interactive-stories`](../interactive-stories/SKILL.md)):
 
 ```bash
 # Update baselines for a single UI library
 pnpm nx test-storybook react-mui -- -u
 pnpm nx test-storybook ng-mat -- -u
 pnpm nx test-storybook rn-paper -- -u
+pnpm nx test-storybook vue-vuetify -- -u
+pnpm nx test-storybook svelte-tw -- -u
 
 # Filter to a specific component story when updating baselines
 pnpm nx test-storybook react-mui -- -u src/lib/atoms/button/button.stories.tsx
@@ -50,28 +52,34 @@ pnpm nx test-storybook react-mui -- -u src/lib/atoms/button/button.stories.tsx
 Then verify all visual tests pass without `-u`:
 
 ```bash
-pnpm nx run-many -t test-storybook -p react-mui,ng-mat,rn-paper
+pnpm nx run-many -t test-storybook -p react-mui,ng-mat,rn-paper,vue-vuetify,svelte-tw
 ```
 
 If a visual comparison fails, use the `review-image-snapshot-failures` skill (registered from `node_modules/storybook-addon-vis/skills`) to inspect `*.regions.json` and `*.review.png` before opening full PNGs.
 
 ---
 
-## 3. Building & Assembling the GitHub Pages Showcase Portal
+## 3. Building & Assembling the GitHub Pages Showcase & Coverage Portal
 
-`tools/ci/storybook-pages.mjs` discovers all Storybooks (`react-mui`, `ng-mat`, `rn-paper`) and Flutter Widgetbooks (`fl-mat`) and assembles them into `dist/storybook-pages`:
+`tools/ci/storybook-pages.mjs` discovers all Storybooks (`react-mui`, `ng-mat`, `rn-paper`, `vue-vuetify`, `svelte-tw`), Flutter Widgetbooks (`fl-mat`), and non-UI library coverage suites (`utils/*`, `data-access/*`, `atomic-design-interfaces`) and assembles them into `dist/storybook-pages`:
 
 ```bash
-# 1. Discover showcase projects
+# 1. Discover showcase & coverage projects
 node tools/ci/storybook-pages.mjs discover
+node tools/ci/storybook-pages.mjs discover-coverage
 
 # 2. Build individual showcases into dist/storybook-pages/<project>
-node tools/ci/storybook-pages.mjs build react-mui
-node tools/ci/storybook-pages.mjs build ng-mat
-node tools/ci/storybook-pages.mjs build rn-paper
-node tools/ci/storybook-pages.mjs build fl-mat
+node tools/ci/storybook-pages.mjs build react-mui --with-coverage --with-storybook-coverage
+node tools/ci/storybook-pages.mjs build ng-mat --with-coverage --with-storybook-coverage
+node tools/ci/storybook-pages.mjs build rn-paper --with-coverage --with-storybook-coverage
+node tools/ci/storybook-pages.mjs build vue-vuetify --with-coverage --with-storybook-coverage
+node tools/ci/storybook-pages.mjs build svelte-tw --with-coverage --with-storybook-coverage
+node tools/ci/storybook-pages.mjs build fl-mat --with-coverage
 
-# 3. Assemble the landing portal (dist/storybook-pages/index.html & .nojekyll)
+# 3. Build non-UI library coverage reports into dist/storybook-pages/coverage/<project>
+node tools/ci/storybook-pages.mjs build-coverage
+
+# 4. Assemble the landing portal (dist/storybook-pages/index.html & .nojekyll)
 node tools/ci/storybook-pages.mjs assemble
 ```
 
@@ -81,3 +89,6 @@ Deployed GitHub Pages URLs:
 - Angular Material Storybook: `https://sukrutsathaye.github.io/mono-magic/ng-mat/`
 - React Native Paper Storybook: `https://sukrutsathaye.github.io/mono-magic/rn-paper/`
 - Flutter Material 3 Widgetbook: `https://sukrutsathaye.github.io/mono-magic/fl-mat/`
+- Vue Vuetify Storybook: `https://sukrutsathaye.github.io/mono-magic/vue-vuetify/`
+- Svelte Tailwind Storybook: `https://sukrutsathaye.github.io/mono-magic/svelte-tw/`
+- Non-UI Library Coverage Reports: `https://sukrutsathaye.github.io/mono-magic/coverage/<project>/`

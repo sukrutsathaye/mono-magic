@@ -29,3 +29,15 @@ unsubscribe();
 
 const value = await retryWithBackoff(async () => 'done', { maxAttempts: 3, baseDelayMs: 10 });
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `utils-ts-core` | Vitest V8 (`@vitest/coverage-v8`) | **97.3%** | **97.3%** | **100.0%** | **97.9%** | `>= 90%` | Passing |
+<!-- COVERAGE_TABLE_END -->

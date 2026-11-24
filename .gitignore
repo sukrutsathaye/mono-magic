@@ -47,4 +47,6 @@ __pycache__/
 .ruff_cache/
 .coverage
 .coverage.*
+coverage.json
+coverage.out
 

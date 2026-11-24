@@ -91,13 +91,18 @@ Before starting a Molecule, Organism, or Template, verify that every lower-tier 
 
 ### Step 5b — Implement in `vue-vuetify` (`libs/ui/vue-vuetify`) & `svelte-tw` (`libs/ui/svelte-tw`)
 1. Mirror the contract in `libs/ui/vue-vuetify/src/lib/<tier>/<kebab-name>/Magic<Component>.vue` and `libs/ui/svelte-tw/src/lib/<tier>/<kebab-name>/Magic<Component>.svelte` (with unit tests `*.spec.ts` `>=80%` coverage and CSF3 stories `Magic<Component>.stories.ts`).
-2. **Mandatory Interactive Story & `play` Function Rule (All Storybook Libraries)**:
-   - Every component's `*.stories.ts(x)` across `react-mui`, `ng-mat`, `rn-paper`, `vue-vuetify`, and `svelte-tw` **MUST** include:
-     1. Full `argTypes` + `args` so Storybook **Controls** interactively update the component.
-     2. At least one **stateful interactive story** (using `useState`, Angular `signal`, Vue `ref`, or a Svelte `$state` demo wrapper) so users can click, type, toggle, or drag in the live preview.
-     3. At least one Storybook `play` function (using `expect`, `userEvent`, `within` from `storybook/test`) that exercises real user interaction and asserts DOM/state changes in the Storybook **Interactions** panel and `test-storybook`.
+2. **Mandatory Canonical 7-Category State Matrix & `play` Functions ([`interactive-stories`](../interactive-stories/SKILL.md))**:
+   - Every component's `*.stories.ts(x)` across `react-mui`, `ng-mat`, `rn-paper`, `vue-vuetify`, and `svelte-tw` (and Widgetbook use-cases in `fl-mat`) **MUST** follow [`interactive-stories`](../interactive-stories/SKILL.md):
+     1. `Default` / `InteractivePlayground` with categorized `argTypes` / Widgetbook `context.knobs` and a stateful wrapper (`useState`, Angular `signal`, Vue `ref`, Svelte `$state`, Flutter `StatefulWidget`).
+     2. `Variants` / `Appearances`
+     3. `SizesAndColors` (`xs`..`xl` + all 7 `MagicColor` intents)
+     4. `DisabledAndLoading` (`disabled`, `disabledInteractive`, `readOnly`, `loading`)
+     5. `ErrorAndEdgeCases` (validation errors, empty states, overflow)
+     6. `CustomSlotsAndComposition` (icons, slots, nested items)
+     7. `DarkTheme` preview
+     8. Automated `storybook/test` `play` functions on every interactive state.
 
-### Step 6 — Generate Visual Baselines & Verify Showcases
+### Step 6 — Generate Visual Baselines, Document & Sync Repository
 1. Generate/update Storybook visual baselines (`storybook-addon-vis`):
    ```bash
    pnpm nx test-storybook react-mui -- -u
@@ -112,6 +117,9 @@ Before starting a Molecule, Organism, or Template, verify that every lower-tier 
    ```
 3. Build static Storybooks and Widgetbook:
    ```bash
-   pnpm nx run-many -t build-storybook -p react-mui,ng-mat,rn-paper
+   pnpm nx run-many -t build-storybook -p react-mui,ng-mat,rn-paper,vue-vuetify,svelte-tw
    pnpm nx build-widgetbook fl-mat
    ```
+4. Execute [`code-doc-generator`](../code-doc-generator/SKILL.md) and [`repo-updater`](../repo-updater/SKILL.md):
+   - Verify all TSDoc/Dartdoc comments and add the new component to each UI library's `libs/ui/*/README.md` catalog table.
+   - Run `node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs` to update `REPO_INDEX.md`, per-library `README.md` coverage tables, root `README.md`, and `ROADMAP.md`.

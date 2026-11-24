@@ -20,3 +20,15 @@ pnpm nx emulator-up data-access-ts-supabase
 pnpm nx test-integration data-access-ts-supabase
 pnpm nx emulator-down data-access-ts-supabase
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `data-access-ts-supabase` | Vitest V8 + Contract Compliance Suite | **95.1%** | **95.0%** | **99.0%** | **81.5%** | `>= 80%` | Passing |
+<!-- COVERAGE_TABLE_END -->

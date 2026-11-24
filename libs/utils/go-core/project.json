@@ -17,7 +17,7 @@
       "executor": "nx:run-commands",
       "cache": true,
       "options": {
-        "command": "go test -race -cover ./...",
+        "command": "go test -race -cover -coverprofile=coverage.out ./...",
         "cwd": "libs/utils/go-core"
       }
     },

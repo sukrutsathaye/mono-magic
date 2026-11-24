@@ -1,0 +1,22 @@
+description = "Write or audit state-complete interactive Storybook stories and Flutter Widgetbook use-cases following the Canonical 7-Category Component State Matrix."
+prompt = """
+# Interactive Story & Widgetbook Specialist Workflow
+
+Follow the `interactive-stories` skill (`.gemini/skills/interactive-stories/SKILL.md`) and adopt the `interactive-story-specialist` profile (`.gemini/agents/interactive-story-specialist.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Audit or author stories (`*.stories.tsx` / `*.stories.ts`) across `react-mui`, `ng-mat`, `rn-paper`, `vue-vuetify`, and `svelte-tw`, plus Widgetbook use-cases (`*_use_cases.dart`) in `fl-mat`.
+2. Ensure every component covers the Canonical 7-Category State Matrix:
+   - Default / Interactive Playground (categorized `argTypes` / `context.knobs` + reactive state wrapper)
+   - Variants & Appearances
+   - Sizes & Color Intents
+   - Disabled, ReadOnly & Loading states
+   - Error, Validation, Empty & Overflow edge cases
+   - Custom Slots, Icons & Composition
+   - Dark Theme preview
+3. Include `storybook/test` `play` functions verifying user interaction, callback spies, keyboard navigation, and DOM/ARIA state changes.
+4. Update and verify visual regression baselines (`pnpm nx test-storybook <project> -- -u` followed by `pnpm nx test-storybook <project>`).
+"""

@@ -1,0 +1,15 @@
+description = "Run post-task repository synchronization across REPO_INDEX.md, per-library and root README.md (links + coverage tables), ROADMAP.md, and GEMINI.md/AGENTS.md."
+prompt = """
+# Repository Updater Post-Task Workflow
+
+Follow the `repo-updater` skill (`.gemini/skills/repo-updater/SKILL.md`) and adopt the `repo-updater` specialist profile (`.gemini/agents/repo-updater.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Regenerate and verify `REPO_INDEX.md` via `node tools/ci/generate-repo-index.mjs` and `node tools/ci/generate-repo-index.mjs --check`.
+2. Sync per-library `libs/*/*/README.md` coverage tables and root `README.md` (directory tree, links to individual library READMEs, component counts, and live coverage percentages) via `node tools/ci/sync-readmes-and-coverage.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs --check`.
+3. Update `ROADMAP.md` milestone checkboxes (`- [x]`) and Section 2 Phase Status table for verified deliverables.
+4. Ensure `AGENTS.md` and `GEMINI.md` reflect any new libraries, skills, specialist agents, or slash commands.
+"""

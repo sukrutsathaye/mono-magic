@@ -18,7 +18,7 @@
     "test": {
       "cache": true,
       "outputs": ["{projectRoot}/.coverage"],
-      "command": "COVERAGE_FILE=libs/data-access/py-interfaces/.coverage uv run --package py-data-access-interfaces pytest -c libs/data-access/py-interfaces/pyproject.toml libs/data-access/py-interfaces/tests --cov=libs/data-access/py-interfaces/src --cov-report=term-missing --cov-fail-under=80"
+      "command": "COVERAGE_FILE=libs/data-access/py-interfaces/.coverage uv run --package py-data-access-interfaces pytest -c libs/data-access/py-interfaces/pyproject.toml libs/data-access/py-interfaces/tests --cov=libs/data-access/py-interfaces/src --cov-report=term-missing --cov-report=json:libs/data-access/py-interfaces/coverage.json --cov-fail-under=80"
     }
   }
 }

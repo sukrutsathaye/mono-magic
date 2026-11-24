@@ -28,20 +28,31 @@ Angular Material (`22.2.x`) design-system component library adhering to **Atomic
 | `magic-text-input` | `MagicTextInputComponent` | `FormValueControl` + CVA + `MatFormFieldControl` |
 | `magic-tool-tip` | `MagicToolTipComponent` | — |
 
-### Implemented Molecules (5)
+### Implemented Molecules (17)
 
 | Selector | Class | Composes |
 | --- | --- | --- |
+| `magic-accordion` | `MagicAccordionComponent` | Expandable disclosure panels (`single`/`multiple`, `outlined`/`filled`/`flush`, icons, badges) |
+| `magic-alert` | `MagicAlertComponent` | Contextual status banner (`tonal`/`filled`/`outlined`, 7 severities, dismiss & `magic-button` actions) |
+| `magic-avatar` | `MagicAvatarComponent` | Image / initials / icon avatar (`circle`/`rounded`/`square`, status badge, avatar group) |
+| `magic-breadcrumbs` | `MagicBreadcrumbsComponent` | Accessible breadcrumb trail with custom separators and overflow collapse (`maxItems`) |
 | `magic-card` | `MagicCardComponent` | `mat-card`, `magic-button`, `magic-chip` |
+| `magic-date-picker` | `MagicDatePickerComponent` | Single-date & date-range calendar popover (`magic-form-field`, presets, CVA + Signal Forms) |
+| `magic-dialog` | `MagicDialogComponent` | Accessible Material 3 modal dialog (`sm`/`md`/`lg`/`fullscreen`, scrollable body, `magic-button` actions) |
 | `magic-form-field` | `MagicFormFieldComponent` | `mat-form-field`, projected `[magicPrefix]` / `[magicSuffix]` |
+| `magic-list-item` | `MagicListItemComponent` | Structured list row (`magic-avatar`, icon, title/subtitle/overline, `magic-badge`, selection) |
 | `magic-menu` | `MagicMenuComponent` | `mat-menu`, `magic-button`, recursive `magic-menu-submenu` |
+| `magic-pagination` | `MagicPaginationComponent` | Page navigation bar with sibling windowing, page-size selector, and range summary |
+| `magic-rating` | `MagicRatingComponent` | Interactive full/half-star rating control (`FormValueControl` + CVA, keyboard navigation) |
 | `magic-search-bar` | `MagicSearchBarComponent` | `magic-form-field`, `magic-text-input`, `magic-button` |
 | `magic-select` | `MagicSelectComponent` | `magic-form-field`, `mat-select` (`FormValueControl` + CVA) |
+| `magic-stepper` | `MagicStepperComponent` | Horizontal & vertical multi-step workflow wizard with linear/non-linear progression |
+| `magic-tabs` | `MagicTabsComponent` | Accessible tablist & tabpanel switcher (`primary`/`secondary`/`pills`, badges, closable tabs) |
+| `magic-toast` | `MagicToastComponent` | Transient notification banner with 6 anchor positions, auto-hide progress, and action button |
 
 ### Roadmap (Future Batches)
 
-- **Molecules**: `magic-date-picker`, `magic-time-picker`, `magic-list`, `magic-snack-bar`
-- **Organisms**: `magic-table`, `magic-tabs`, `magic-stepper`, `magic-tree`, `magic-tool-bar`, `magic-dialog`, `magic-bottom-sheet`
+- **Organisms & Templates**: Core Organisms (`Navbar`, `Sidebar`, `AuthForm`, `DataTable`, `NotificationFeed`), Domain Organisms, and Page Templates (see root `ROADMAP.md`).
 
 ## Material 3 Theming
 
@@ -74,3 +85,15 @@ pnpm nx build-storybook ng-mat --configuration=ci
 3. Use `input()`, `model()`, `output()`, `computed()` (`SignalProps<...>`), removing duplicate `id` from `:host` (`'[attr.id]': 'null'`).
 4. Add unit tests covering every variant, size, state, form binding, and projection slot, plus Storybook stories with `play` tests and TSDoc comments for Compodoc Autodocs.
 5. Re-export from the tier barrel (`atoms/index.ts`, `molecules/index.ts`, etc.).
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `ng-mat` | Vitest V8 (AnalogJS) + Storybook Vitest | **80.0%** | **80.0%** | **80.0%** | **80.0%** | `>= 80%` | Passing |
+<!-- COVERAGE_TABLE_END -->

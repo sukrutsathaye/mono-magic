@@ -1,0 +1,15 @@
+description = "Write or audit comprehensive polyglot unit and contract compliance tests (>=80% / >=90% utils coverage) and sync README coverage tables."
+prompt = """
+# Polyglot Unit Test Specialist Workflow
+
+Follow the `polyglot-unit-testing` skill (`.gemini/skills/polyglot-unit-testing/SKILL.md`) and adopt the `polyglot-unit-test-specialist` profile (`.gemini/agents/polyglot-unit-test-specialist.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Identify the target project(s) and language stack from `REPO_INDEX.md`.
+2. Write comprehensive unit tests covering happy paths, variants/state transitions, edge/boundary cases, typed `Result<T, E>` error paths, accessibility semantics (for UI), and shared Contract Compliance Test Suites (for `libs/data-access/*`).
+3. Run the project's Nx test & coverage target (`>=90%` for `libs/utils/*`, `>=80%` for all other domains).
+4. Run `node tools/ci/sync-readmes-and-coverage.mjs` to update the `## Test & Coverage Summary` table in `libs/<domain>/<project>/README.md` and the coverage column in root `README.md`.
+"""

@@ -1,0 +1,16 @@
+description = "Document all newly written or modified code (TSDoc, Google Python docstrings, Dartdoc, Rustdoc, Godoc, Proto) and update the owning package's README.md."
+prompt = """
+# Code Documentation Generator Workflow
+
+Follow the `code-doc-generator` skill (`.gemini/skills/code-doc-generator/SKILL.md`) and adopt the `code-doc-generator` specialist profile (`.gemini/agents/code-doc-generator.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Inspect modified or newly written files in the target package(s).
+2. Add or refine idiomatic inline documentation for every public symbol (TSDoc/JSDoc, Google-style Python docstrings, Dartdoc `///`, Rustdoc `//!`/`///` with `# Examples`, Godoc `// <SymbolName>`, Protobuf comments).
+3. Update `libs/<domain>/<project>/README.md` with accurate component/API catalog tables, Nx targets, and usage examples.
+4. Run `node tools/ci/sync-readmes-and-coverage.mjs` to update the package's `## Test & Coverage Summary` table.
+5. Run `pnpm nx lint <project>` to confirm zero lint or doc formatting issues.
+"""

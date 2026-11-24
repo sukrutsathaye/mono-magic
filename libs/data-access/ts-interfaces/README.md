@@ -23,3 +23,15 @@ pnpm nx lint data-access-ts-interfaces
 pnpm nx typecheck data-access-ts-interfaces
 pnpm nx test data-access-ts-interfaces -- --coverage
 ```
+
+---
+
+<!-- COVERAGE_TABLE_START -->
+## Test & Coverage Summary
+
+> Auto-synced by `node tools/ci/sync-readmes-and-coverage.mjs`. Updated whenever new functions or unit tests are written.
+
+| Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `data-access-ts-interfaces` | Vitest V8 (`@vitest/coverage-v8`) | **100.0%** | **100.0%** | **100.0%** | **83.3%** | `>= 80%` | Passing |
+<!-- COVERAGE_TABLE_END -->
