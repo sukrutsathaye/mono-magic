@@ -1,0 +1,16 @@
+description = "Design and implement a pure, stateless polyglot utility module under libs/utils/{ts-*,py-*,rs-*,go-*} with >=90% unit test coverage, inline docs, and synced README coverage tables."
+prompt = """
+# Add Polyglot Utility Module (`libs/utils/*`)
+
+Follow `engineering-standards` (`.gemini/skills/engineering-standards/SKILL.md`), `python-uv-service` (`.gemini/skills/python-uv-service/SKILL.md`), `rust-go-systems` (`.gemini/skills/rust-go-systems/SKILL.md`), `polyglot-unit-testing` (`.gemini/skills/polyglot-unit-testing/SKILL.md`), `code-doc-generator` (`.gemini/skills/code-doc-generator/SKILL.md`), and `repo-updater` (`.gemini/skills/repo-updater/SKILL.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Ensure the utility belongs in `libs/utils/<lang>-<name>` (`scope:utils`, `type:util`, `lang:<ts|py|rust|go>`) and is pure, stateless, and framework/vendor-agnostic.
+2. Implement with strict immutability, explicit `Result<T, E>` / typed errors, and FFI/WASM-ready `#[repr(C)]` structs (for Rust) or `context.Context` support (for Go).
+3. Author unit tests (and Rust doc-tests / Go table-driven `-race -cover` tests) achieving **`>= 90%` coverage** across lines, statements, functions, and branches.
+4. Document every exported symbol and update `libs/utils/<project>/README.md`.
+5. Run `node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs`.
+"""

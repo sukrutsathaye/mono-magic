@@ -1,0 +1,22 @@
+description = "Run the complete pre-PR verification gate (affected lint/typecheck/test, REPO_INDEX drift check, and README coverage table sync check) before opening or merging a PR into dev."
+prompt = """
+# Pre-PR Verification & Drift Gate (Target: `dev`)
+
+Follow `token-budget-guardrails` (`.gemini/skills/token-budget-guardrails/SKILL.md`), `coverage-and-quality` (`.gemini/skills/coverage-and-quality/SKILL.md`), and `repo-updater` (`.gemini/skills/repo-updater/SKILL.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Confirm the active branch was branched from `dev` (after merging `origin/main` into `dev`).
+2. Run affected quality gates:
+   ```bash
+   pnpm nx affected -t lint typecheck test
+   ```
+3. Refresh and verify repository index and README coverage tables:
+   ```bash
+   node tools/ci/generate-repo-index.mjs --check
+   node tools/ci/sync-readmes-and-coverage.mjs --check
+   ```
+4. Open the Pull Request against `--base dev` (`gh pr create --base dev ...`).
+"""

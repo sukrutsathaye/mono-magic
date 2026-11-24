@@ -1,0 +1,17 @@
+description = "Create or extend an Expo / React Native 0.85 + React Native Paper v5 component in libs/ui/rn-paper with full RN/Paper prop coverage, smart polymorphic props, unit tests (>=80%), 7-state Storybook stories, and visual baselines."
+prompt = """
+# Add React Native Paper (`rn-paper`) Component
+
+Follow the `ui-rn-paper` skill (`.gemini/skills/ui-rn-paper/SKILL.md`), `interactive-stories` (`.gemini/skills/interactive-stories/SKILL.md`), `polyglot-unit-testing` (`.gemini/skills/polyglot-unit-testing/SKILL.md`), `code-doc-generator` (`.gemini/skills/code-doc-generator/SKILL.md`), and `repo-updater` (`.gemini/skills/repo-updater/SKILL.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Ensure the shared contract in `libs/ui/atomic-design-interfaces` includes all root design-system props plus smart polymorphic props (`kind`, `variant`, `mode`, `range`, `loading`, `disabledInteractive`, slots).
+2. Implement `libs/ui/rn-paper/src/lib/<tier>/<kebab-name>/<kebab-name>.tsx` exposing 100% of native React Native / RN Paper v5 props (`style`, `contentStyle`, `labelStyle`, `onPress` + `onClick`, `testID` + `testId`, `accessibilityLabel` + `ariaLabel`, direct React 19 `ref`, `useControllableState`) and smart internal primitive switching compatible with `react-native-web`.
+3. Add Vitest unit tests in `<kebab-name>.spec.tsx` (`>= 80%` coverage).
+4. Add CSF3 stories in `<kebab-name>.stories.tsx` covering the Canonical 7-Category State Matrix with stateful wrappers and `storybook/test` `play` functions.
+5. Generate visual baselines (`pnpm nx test-storybook rn-paper -- -u`) and verify `pnpm nx run-many -t lint typecheck test test-storybook -p rn-paper`.
+6. Update `libs/ui/rn-paper/README.md` and run `node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs`.
+"""

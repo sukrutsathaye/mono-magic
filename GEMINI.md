@@ -28,13 +28,15 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
    - Local zero-secret stdio MCPs (`nx-mcp`, `playwright`, `context7`) are enabled in `.gemini/settings.json`. See [.gemini/MCP.md](.gemini/MCP.md) for usage and opt-in credentialed MCPs (`supabase`, `firebase`, `storybook`, `github`)—never commit tokens or secrets.
 5. **Token-Budget & `/teamwork` Guardrails (Mandatory)**:
    - **Index-First**: Always read [REPO_INDEX.md](REPO_INDEX.md) first; never run full-repo `find`/`ls -R`/root `grep`. Scope `rg -n` to a single project and read `<=150`-line slices.
-   - **Parallel `/teamwork` Discipline**: Follow [.gemini/skills/token-budget-guardrails/SKILL.md](.gemini/skills/token-budget-guardrails/SKILL.md) — coordinator pre-reads shared contracts once and embeds exact paths/symbols in briefs; cap parallel waves to `3–4` workers (or 1:1 UI library sharding) with disjoint file ownership; tier models (`flash` for mechanical/verification, `inherit`/`pro` for architecture); never poll; run `pnpm nx affected` or targeted `pnpm nx test <project>` instead of repo-wide `run-many`.
+   - **Parallel `/teamwork` Discipline & 4-Tier Model Matrix (Max 6 Concurrent Agents)**: Follow [.gemini/skills/token-budget-guardrails/SKILL.md](.gemini/skills/token-budget-guardrails/SKILL.md):
+     - Cap concurrent agents at **max 6** with strictly disjoint file/project ownership and zero survey-explorer swarms.
+     - Select models from the 4-Tier Subscription Capability Matrix across Google, Anthropic, and OpenAI (`Tier 1 Frontier`: `Gemini 4 Argon (High)`, `Claude Opus 5.5`; `Tier 2 Complex Implementation`: `Claude Sonnet 5.5`, `Gemini 4 Neon`; `Tier 3 High-Throughput / Utils / Testing`: `Gemini 4 Hydrogen`, `GPT-OSS 120B (Medium)`; `Tier 4 Fast Docs / Sync / Verification`: `Gemini 3.8 Flash`) while balancing load across providers.
+     - **Periodic Token Checks & Track Prioritization**: Periodically check token consumption before and between waves. If running all tracks in a wave would risk exceeding token limits, **prioritize and execute only 1–2 tracks** (`P1: Contracts -> P2: Utils/Data-Access -> P3: UI Libs -> P4: Apps/Showcases`), merge completed tracks into `dev`, and checkpoint deferred tracks in `.gemini/handovers/<branch-slug>.md`.
    - **Git (`main -> dev` Sync) & Adaptive Rate-Limit Protocol**:
-     1. **Before starting any task**, always update `dev` with current `main` (`git fetch origin && git checkout -B dev origin/dev && git merge --no-edit origin/main && git push -u origin dev`).
+     1. **Before starting any task**, always update `dev` with current `main` (`git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" && git fetch origin && git checkout -B dev origin/dev && git merge --no-edit origin/main && git push -u origin dev`).
      2. Branch feature branches off `dev` (`git checkout -b <type>/<scope>-<slug> dev`, never work directly on `main` or `dev`).
      3. Continuously commit using Conventional Commits (`<type>(<scope>): <summary>`) and push verified slices.
      4. **All PRs MUST be opened against `dev`** (`gh pr create --base dev ...`). AI agents may freely merge passing PRs into `dev`, while the final `dev -> main` merge is strictly reserved for the human repository owner after review.
-     5. Orchestrators must periodically check rate limits, pause/stop child agents on pressure and continue sequentially 1-by-1, and if limits are nearly exhausted, write `.gemini/handovers/<branch-slug>.md` and push remaining WIP before stopping.
    - **Mandatory Post-Task Sync ([`repo-updater`](.gemini/skills/repo-updater/SKILL.md))**: After adding/modifying code, tests, components, protos, or skills, run `node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs` once at the end.
 
 ---
@@ -67,7 +69,13 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 - **`repo-updater`** *(Mandatory Post-Task)* ([.gemini/skills/repo-updater/SKILL.md](.gemini/skills/repo-updater/SKILL.md)): End-of-task synchronization across `REPO_INDEX.md`, per-library and root `README.md` (with clickable links to individual library READMEs and live test/coverage tables), `ROADMAP.md`, and `GEMINI.md`/`AGENTS.md`.
 - **`python-uv-service`** *(Mandatory for Python)* ([.gemini/skills/python-uv-service/SKILL.md](.gemini/skills/python-uv-service/SKILL.md)): `uv` workspace standards for `libs/*/py-*` & `apps/api-*`, Nx `ruff`/`pyright`/`pytest --cov` targets, FastAPI `lifespan` singletons, Pydantic v2, and SOLID `Protocol`s.
 - **`rust-go-systems`** *(Mandatory for Rust & Go)* ([.gemini/skills/rust-go-systems/SKILL.md](.gemini/skills/rust-go-systems/SKILL.md)): Cargo (`clippy -D warnings`, `rustfmt`, `#[repr(C)]` FFI/WASM, `cargo test`) and Go (`go.work`, `go vet`, table-driven `go test -race -cover`) workspace standards.
-- **`polyglot-ui-component`** ([.gemini/skills/polyglot-ui-component/SKILL.md](.gemini/skills/polyglot-ui-component/SKILL.md)): End-to-end workflow for adding or updating an Atomic Design component across `atomic-design-interfaces`, `react-mui`, `ng-mat`, `rn-paper`, `fl-mat`, `vue-vuetify`, and `svelte-tw`.
+- **`polyglot-ui-component`** ([.gemini/skills/polyglot-ui-component/SKILL.md](.gemini/skills/polyglot-ui-component/SKILL.md)): End-to-end workflow for adding or updating an Atomic Design component across `atomic-design-interfaces`, `react-mui`, `ng-mat`, `rn-paper`, `fl-mat`, `vue-vuetify`, and `svelte-tw` following the **Root Framework Superset + Smart Polymorphic Props** rule.
+- **`ui-react-mui`** ([.gemini/skills/ui-react-mui/SKILL.md](.gemini/skills/ui-react-mui/SKILL.md)): React 19 + MUI v9 component playbook (`sx`, `slotProps`, direct `ref`, `useControllableState`, smart internal MUI primitive switching).
+- **`ui-ng-mat`** ([.gemini/skills/ui-ng-mat/SKILL.md](.gemini/skills/ui-ng-mat/SKILL.md)): Angular 22 + Angular Material v22 component playbook (`SignalProps`, shared host binding directives, dual Signal Forms + `MagicValueAccessor` CVA).
+- **`ui-rn-paper`** ([.gemini/skills/ui-rn-paper/SKILL.md](.gemini/skills/ui-rn-paper/SKILL.md)): Expo 56 / React Native 0.85 + React Native Paper v5 component playbook (`useMagicPaperColors`, React Native Web parity, smart Paper primitive switching).
+- **`ui-fl-mat`** ([.gemini/skills/ui-fl-mat/SKILL.md](.gemini/skills/ui-fl-mat/SKILL.md)): Flutter `>=3.50` Material 3 widget playbook (Dart contracts, `MagicTheme`, tree-shake-safe icons, `Semantics`, Widgetbook use-cases).
+- **`ui-vue-vuetify`** ([.gemini/skills/ui-vue-vuetify/SKILL.md](.gemini/skills/ui-vue-vuetify/SKILL.md)): Vue 3.5 + Vuetify 3.12 SFC playbook (`v-model`, named `<slot>`s, Vite `optimizeDeps.include` pre-bundling, smart Vuetify primitive switching).
+- **`ui-svelte-tw`** ([.gemini/skills/ui-svelte-tw/SKILL.md](.gemini/skills/ui-svelte-tw/SKILL.md)): Svelte 5 runes + Tailwind CSS v4 + Bits UI component playbook (`$props()`, `$bindable()`, `Snippet` slots, smart primitive switching).
 - **`storybook-visual-testing`** ([.gemini/skills/storybook-visual-testing/SKILL.md](.gemini/skills/storybook-visual-testing/SKILL.md)): Runbook for `storybook-addon-vis` baselines (`-- -u`), diff triage, and assembling the GitHub Pages showcase & coverage portal (`tools/ci/storybook-pages.mjs`).
 - **`coverage-and-quality`** ([.gemini/skills/coverage-and-quality/SKILL.md](.gemini/skills/coverage-and-quality/SKILL.md)): Runbook for polyglot unit test coverage, Storybook browser coverage, `>=80%`/`>=90%` threshold enforcement, and static coverage portal generation.
 - **`data-access-provider`** ([.gemini/skills/data-access-provider/SKILL.md](.gemini/skills/data-access-provider/SKILL.md)): Blueprint for designing hybrid `proto-contracts` + `ts-interfaces`/`py-interfaces` contracts and provider implementations (`ts-firebase`, `ts-supabase`, `ts-nestjs-*`, `java-spring-boot-*`, Cloud SDKs).
@@ -75,6 +83,15 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 
 ### Custom Gemini CLI Slash Commands (`.gemini/commands/`)
 - `/add-ui-component` ([.gemini/commands/add-ui-component.toml](.gemini/commands/add-ui-component.toml))
+- `/add-react-mui-component` ([.gemini/commands/add-react-mui-component.toml](.gemini/commands/add-react-mui-component.toml))
+- `/add-ng-mat-component` ([.gemini/commands/add-ng-mat-component.toml](.gemini/commands/add-ng-mat-component.toml))
+- `/add-rn-paper-component` ([.gemini/commands/add-rn-paper-component.toml](.gemini/commands/add-rn-paper-component.toml))
+- `/add-fl-mat-component` ([.gemini/commands/add-fl-mat-component.toml](.gemini/commands/add-fl-mat-component.toml))
+- `/add-vue-vuetify-component` ([.gemini/commands/add-vue-vuetify-component.toml](.gemini/commands/add-vue-vuetify-component.toml))
+- `/add-svelte-tw-component` ([.gemini/commands/add-svelte-tw-component.toml](.gemini/commands/add-svelte-tw-component.toml))
+- `/audit-ui-parity` ([.gemini/commands/audit-ui-parity.toml](.gemini/commands/audit-ui-parity.toml))
+- `/add-polyglot-util` ([.gemini/commands/add-polyglot-util.toml](.gemini/commands/add-polyglot-util.toml))
+- `/pre-pr-check` ([.gemini/commands/pre-pr-check.toml](.gemini/commands/pre-pr-check.toml))
 - `/write-stories` ([.gemini/commands/write-stories.toml](.gemini/commands/write-stories.toml))
 - `/unit-test` ([.gemini/commands/unit-test.toml](.gemini/commands/unit-test.toml))
 - `/doc-gen` ([.gemini/commands/doc-gen.toml](.gemini/commands/doc-gen.toml))

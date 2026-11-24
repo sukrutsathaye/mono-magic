@@ -1,0 +1,17 @@
+description = "Create or extend a React 19 + MUI v9 component in libs/ui/react-mui with full MUI prop coverage, smart polymorphic props, unit tests (>=80%), 7-state Storybook stories, and visual baselines."
+prompt = """
+# Add React MUI (`react-mui`) Component
+
+Follow the `ui-react-mui` skill (`.gemini/skills/ui-react-mui/SKILL.md`), `interactive-stories` (`.gemini/skills/interactive-stories/SKILL.md`), `polyglot-unit-testing` (`.gemini/skills/polyglot-unit-testing/SKILL.md`), `code-doc-generator` (`.gemini/skills/code-doc-generator/SKILL.md`), and `repo-updater` (`.gemini/skills/repo-updater/SKILL.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Ensure the shared contract in `libs/ui/atomic-design-interfaces` includes all root design-system props plus smart polymorphic props (`kind`, `variant`, `mode`, `range`, `loading`, `disabledInteractive`, slots).
+2. Implement `libs/ui/react-mui/src/lib/<tier>/<kebab-name>/<kebab-name>.tsx` exposing 100% of native MUI v9 props (`sx`, `slotProps`, `className`, direct React 19 `ref`, `useControllableState`) and smart internal primitive switching.
+3. Add Vitest + `@testing-library/react` unit tests in `<kebab-name>.spec.tsx` (`>= 80%` coverage).
+4. Add CSF3 stories in `<kebab-name>.stories.tsx` covering the Canonical 7-Category State Matrix with stateful wrappers and `storybook/test` `play` functions.
+5. Generate visual baselines (`pnpm nx test-storybook react-mui -- -u`) and verify `pnpm nx run-many -t lint typecheck test test-storybook -p react-mui`.
+6. Update `libs/ui/react-mui/README.md` and run `node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs`.
+"""

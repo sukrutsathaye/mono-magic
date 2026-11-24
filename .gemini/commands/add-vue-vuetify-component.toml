@@ -1,0 +1,18 @@
+description = "Create or extend a Vue 3.5 + Vuetify 3.12 SFC component in libs/ui/vue-vuetify with full Vuetify prop/slot coverage, smart polymorphic props, Vite optimizeDeps registration, unit tests (>=80%), 7-state Storybook stories, and visual baselines."
+prompt = """
+# Add Vue Vuetify (`vue-vuetify`) Component
+
+Follow the `ui-vue-vuetify` skill (`.gemini/skills/ui-vue-vuetify/SKILL.md`), `interactive-stories` (`.gemini/skills/interactive-stories/SKILL.md`), `polyglot-unit-testing` (`.gemini/skills/polyglot-unit-testing/SKILL.md`), `code-doc-generator` (`.gemini/skills/code-doc-generator/SKILL.md`), and `repo-updater` (`.gemini/skills/repo-updater/SKILL.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Ensure the shared contract in `libs/ui/atomic-design-interfaces` includes all root design-system props plus smart polymorphic props (`kind`, `variant`, `mode`, `range`, `loading`, `disabledInteractive`, slots).
+2. Implement `libs/ui/vue-vuetify/src/lib/<tier>/<kebab-name>/Magic<Component>.vue` exposing full Vuetify `v-*` props, `v-model` bindings, named `<slot>`s, `$attrs` pass-through, and smart internal Vuetify primitive switching.
+3. Ensure any newly imported `vuetify/components/*` modules are pre-bundled in `optimizeDeps.include` inside `libs/ui/vue-vuetify/vite.config.mts`.
+4. Add `@vue/test-utils` Vitest unit tests in `Magic<Component>.spec.ts` (`>= 80%` coverage).
+5. Add CSF3 stories in `Magic<Component>.stories.ts` covering the Canonical 7-Category State Matrix with `play` functions.
+6. Generate visual baselines (`pnpm nx test-storybook vue-vuetify -- -u`) and verify `pnpm nx run-many -t lint typecheck test test-storybook -p vue-vuetify`.
+7. Update `libs/ui/vue-vuetify/README.md` and run `node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs`.
+"""
