@@ -1,0 +1,17 @@
+description = "Create or extend a Svelte 5 (runes) + Tailwind CSS v4 + Bits UI component in libs/ui/svelte-tw with full prop/Snippet coverage, smart polymorphic props, unit tests (>=80%), 7-state Storybook stories, and visual baselines."
+prompt = """
+# Add Svelte Tailwind (`svelte-tw`) Component
+
+Follow the `ui-svelte-tw` skill (`.gemini/skills/ui-svelte-tw/SKILL.md`), `interactive-stories` (`.gemini/skills/interactive-stories/SKILL.md`), `polyglot-unit-testing` (`.gemini/skills/polyglot-unit-testing/SKILL.md`), `code-doc-generator` (`.gemini/skills/code-doc-generator/SKILL.md`), and `repo-updater` (`.gemini/skills/repo-updater/SKILL.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Ensure the shared contract in `libs/ui/atomic-design-interfaces` includes all root design-system props plus smart polymorphic props (`kind`, `variant`, `mode`, `range`, `loading`, `disabledInteractive`, slots).
+2. Implement `libs/ui/svelte-tw/src/lib/<tier>/<kebab-name>/Magic<Component>.svelte` using Svelte 5 runes (`$props()`, `$bindable()`), `Snippet` slots, native HTML rest-props (`...restProps`), and smart polymorphic switching.
+3. Add `@testing-library/svelte` Vitest unit tests in `Magic<Component>.spec.ts` (`>= 80%` coverage).
+4. Add CSF3 stories in `Magic<Component>.stories.ts` covering the Canonical 7-Category State Matrix with `play` functions.
+5. Generate visual baselines (`pnpm nx test-storybook svelte-tw -- -u`) and verify `pnpm nx run-many -t lint typecheck test test-storybook -p svelte-tw`.
+6. Update `libs/ui/svelte-tw/README.md` and run `node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs`.
+"""

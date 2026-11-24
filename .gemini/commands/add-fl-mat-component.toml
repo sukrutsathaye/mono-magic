@@ -1,0 +1,17 @@
+description = "Create or extend a Flutter >=3.50 Material 3 widget in libs/ui/fl-mat with full Material 3 parameter coverage, smart polymorphic parameters, flutter_test widget tests (>=80%), and 7-state Widgetbook use-cases."
+prompt = """
+# Add Flutter Material 3 (`fl-mat`) Widget
+
+Follow the `ui-fl-mat` skill (`.gemini/skills/ui-fl-mat/SKILL.md`), `interactive-stories` (`.gemini/skills/interactive-stories/SKILL.md`), `polyglot-unit-testing` (`.gemini/skills/polyglot-unit-testing/SKILL.md`), `code-doc-generator` (`.gemini/skills/code-doc-generator/SKILL.md`), and `repo-updater` (`.gemini/skills/repo-updater/SKILL.md`).
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Mirror the superset + smart-prop contract in `libs/ui/fl-mat/lib/src/interfaces/atomic_interfaces.dart`.
+2. Implement `Magic<Component>` in `libs/ui/fl-mat/lib/src/<tier>/<snake_name>/magic_<snake_name>.dart` exposing all native Flutter Material 3 parameters (`focusNode`, `autofocus`, `mouseCursor`, `style`, `padding`, `constraints`, `semanticsLabel`, widget slots) and smart polymorphic widget switching (`kind`, `variant`, `mode`, `range`, `loading`, `disabledInteractive`).
+3. Add `flutter_test` widget tests in `libs/ui/fl-mat/test/<tier>/<snake_name>_test.dart` (`>= 80%` coverage).
+4. Add Widgetbook use-cases in `libs/ui/fl-mat/lib/widgetbook/<tier>/<snake_name>_use_cases.dart` covering the Canonical 7-Category State Matrix and register in `lib/widgetbook.dart`.
+5. Verify `pnpm nx run-many -t lint test-coverage build-widgetbook -p fl-mat`.
+6. Update `libs/ui/fl-mat/README.md` and run `node tools/ci/generate-repo-index.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs`.
+"""

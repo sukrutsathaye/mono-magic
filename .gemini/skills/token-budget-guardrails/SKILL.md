@@ -38,11 +38,13 @@ Use this skill as a **mandatory operating framework** for `/teamwork` coordinato
   3. **Exact verification command(s)** for its owned project.
   4. **Explicit "do not scan" rule**: tell workers to read only their assigned files + `REPO_INDEX.md` if needed.
 
-### B. Bounded Fan-Out & Disjoint Ownership
-- **Default cap**: **Max 3–4 parallel workers** per wave.
-  - *Allowed exception*: 1:1 sharding across the 4 independent UI libraries (`react-mui`, `ng-mat`, `rn-paper`, `fl-mat`) when implementing an already-specified contract.
+### B. Bounded Fan-Out, Zero Explorer Swarms & Single-Reviewer Gate
+- **Zero Survey Explorers**: Because `REPO_INDEX.md` already catalogs every project, entrypoint, component, module, proto, skill, and command, orchestrators MUST NOT spawn "survey explorer" subagents (Wave 1 burned 7 explorer agents and ~1,500 lines of redundant survey handoffs before `REPO_INDEX.md` existed). The coordinator reads `REPO_INDEX.md` + 1–2 contract files directly.
+- **Default Worker Cap**: **Max 3–4 parallel workers** per wave.
+  - *Allowed exception*: 1:1 sharding across the independent UI libraries (`react-mui`, `ng-mat`, `rn-paper`, `fl-mat`, `vue-vuetify`, `svelte-tw`) when implementing an already-specified contract, using each library's dedicated skill (`ui-react-mui`, `ui-ng-mat`, `ui-rn-paper`, `ui-fl-mat`, `ui-vue-vuetify`, `ui-svelte-tw`).
+- **Single-Pass Verification (No 5-Agent Verification Swarms)**: Never spawn 5-agent verification waves (1 auditor + 2 reviewers + 2 challengers) per sub-milestone. Rely on deterministic Nx checks (`pnpm nx affected -t lint typecheck test`, `generate-repo-index.mjs --check`, `sync-readmes-and-coverage.mjs --check`) plus **at most 1 combined reviewer pass** per track.
 - **No overlapping edits**: Two concurrent workers MUST NEVER edit the same project, barrel file, or `REPO_INDEX.md`.
-- **Sequentialize shared contracts**: Always land shared interfaces (`atomic-design-interfaces`, `proto-contracts`, `ts-interfaces`) **before** fanning out concrete provider/UI workers.
+- **Sequentialize shared contracts**: Always land shared interfaces (`atomic-design-interfaces`, `proto-contracts`, `ts-interfaces`, `py-interfaces`) **before** fanning out concrete provider/UI workers.
 
 ### C. Model Tiering
 - **`flash` / `flash_lite`**: Use for read-only audits, mechanical refactors, test/Storybook boilerplate, and single-project verification.
@@ -75,8 +77,9 @@ Use this skill as a **mandatory operating framework** for `/teamwork` coordinato
 ## 4. Git Branching (`main -> dev`), Specialist Phases, Continuous Commit/Push & Handover Protocol
 
 1. **Always Sync `dev` with Current `main` Before Starting Any Task**:
-   - `dev` is the AI integration branch. **Before starting any task**, always fetch and merge `origin/main` into `dev` and push `origin/dev`:
+   - `dev` is the AI integration branch. **Before starting any task**, configure the full remote fetch refspec (in case the VM was cloned with `--single-branch`), fetch, merge `origin/main` into `dev`, and push `origin/dev`:
      ```bash
+     git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
      git fetch origin
      git checkout -B dev origin/dev || git checkout -B dev origin/main
      git merge --no-edit origin/main
