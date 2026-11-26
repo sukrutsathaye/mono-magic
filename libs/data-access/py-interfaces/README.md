@@ -71,5 +71,5 @@ from py_data_access_interfaces.testing import (
 
 | Project | Runner | Lines | Statements | Functions | Branches | Threshold | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `py-data-access-interfaces` | Pytest (`pytest --cov`) | **80.0%** | **80.0%** | **80.0%** | **80.0%** | `>= 80%` | Passing |
+| `py-data-access-interfaces` | Pytest (`pytest --cov`) | **99.6%** | **99.6%** | **99.6%** | **99.6%** | `>= 80%` | Passing |
 <!-- COVERAGE_TABLE_END -->

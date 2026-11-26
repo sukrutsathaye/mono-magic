@@ -5,11 +5,16 @@ description = "Framework- and vendor-agnostic Python data-access DTOs, Protocols
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "py-proto-contracts",
     "pydantic>=2.10.0",
 ]
 
+[tool.uv.sources]
+py-proto-contracts = { workspace = true }
+
 [dependency-groups]
 dev = [
+    "grpcio-tools>=1.68.0",
     "pyright>=1.1.380",
     "pytest>=8.0.0",
     "pytest-asyncio>=0.24.0",

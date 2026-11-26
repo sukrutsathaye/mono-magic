@@ -25,7 +25,7 @@ node tools/ci/generate-repo-index.mjs --check
 ```
 
 ### Step 2 — Sync Per-Library `README.md` Coverage Tables & Root `README.md`
-Run the automated README & coverage synchronizer:
+Follow [`project-readme-standard`](../project-readme-standard/SKILL.md) to ensure touched packages include applicable official docs/algorithm/design-system links, local Docker/emulator setup runbooks, and Protobuf codegen commands, then run the automated README & coverage synchronizer:
 ```bash
 node tools/ci/sync-readmes-and-coverage.mjs
 node tools/ci/sync-readmes-and-coverage.mjs --check

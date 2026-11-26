@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package monomagic.ai.v1;
+
+// Conversational participant role in an LLM prompt or agent transcript.
+enum ChatRole {
+  // Unspecified role.
+  CHAT_ROLE_UNSPECIFIED = 0;
+  // System instruction message.
+  CHAT_ROLE_SYSTEM = 1;
+  // End-user prompt message.
+  CHAT_ROLE_USER = 2;
+  // Assistant model response message.
+  CHAT_ROLE_ASSISTANT = 3;
+  // Tool execution result message.
+  CHAT_ROLE_TOOL = 4;
+}
+
+// Single structured message in an LLM conversation.
+message ChatMessage {
+  // Participant role.
+  ChatRole role = 1;
+  // Text content of the message.
+  string content = 2;
+  // Optional tool call identifier for CHAT_ROLE_TOOL messages.
+  string tool_call_id = 3;
+}
+
+// Request envelope for ILLMProvider / LLMService completion.
+message LLMCompletionRequest {
+  // Logical model identifier (e.g. "gpt-4o-mini", "gemini-2.5-flash", "llama3").
+  string model = 1;
+  // Ordered message history.
+  repeated ChatMessage messages = 2;
+  // Sampling temperature in [0.0, 2.0].
+  double temperature = 3;
+  // Optional maximum output tokens.
+  int32 max_tokens = 4;
+  // Optional JSON schema name for structured outputs.
+  string response_schema_name = 5;
+}
+
+// Response envelope for LLM completion.
+message LLMCompletionResponse {
+  // Generated assistant text or JSON string.
+  string content = 1;
+  // Provider model identifier actually executed.
+  string model = 2;
+  // Prompt token count.
+  int32 prompt_tokens = 3;
+  // Completion token count.
+  int32 completion_tokens = 4;
+  // End-to-end latency in milliseconds.
+  int64 latency_ms = 5;
+}
+
+// Dense embedding vector with optional metadata for vector-store indexing.
+message EmbeddingVector {
+  // Unique document or chunk identifier.
+  string id = 1;
+  // Dense floating-point vector coordinates.
+  repeated float values = 2;
+  // Key-value metadata filters associated with the chunk.
+  map<string, string> metadata = 3;
+}
+
+// Single nearest-neighbor match returned by IVectorStore.
+message VectorSearchResult {
+  // Matched document or chunk identifier.
+  string id = 1;
+  // Similarity score (higher is closer, typically cosine in [-1, 1]).
+  double score = 2;
+  // Stored metadata attached to the matched chunk.
+  map<string, string> metadata = 3;
+}
+
+// Execution summary for a stateful LangGraph / agent workflow run.
+message AgentGraphRun {
+  // Unique run identifier.
+  string run_id = 1;
+  // Registered graph name.
+  string graph_name = 2;
+  // Terminal or current status (e.g. "running", "completed", "failed").
+  string status = 3;
+  // Number of graph node steps executed.
+  int32 steps_executed = 4;
+  // JSON-encoded final state payload.
+  string output_json = 5;
+}

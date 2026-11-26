@@ -66,6 +66,8 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 - **`polyglot-unit-testing`** *(Mandatory)* ([.gemini/skills/polyglot-unit-testing/SKILL.md](.gemini/skills/polyglot-unit-testing/SKILL.md)): Per-language unit and contract compliance testing playbooks across TS/Vitest (Node, React 19, Angular 22, RN Paper, Vue 3, Svelte 5), Python (`pytest`), Flutter (`flutter_test`), Rust (`cargo test`), and Go (`go test -race -cover`), plus automated `README.md` coverage table syncing.
 - **`interactive-stories`** *(Mandatory for UI)* ([.gemini/skills/interactive-stories/SKILL.md](.gemini/skills/interactive-stories/SKILL.md)): Canonical 7-Category Component State Matrix across Storybook (`react-mui`, `ng-mat`, `rn-paper`, `vue-vuetify`, `svelte-tw`) and Flutter Widgetbook (`fl-mat`) with categorized Controls/knobs, stateful wrappers, `play` tests, and visual baselines.
 - **`code-doc-generator`** *(Mandatory)* ([.gemini/skills/code-doc-generator/SKILL.md](.gemini/skills/code-doc-generator/SKILL.md)): Inline code documentation standards (TSDoc/JSDoc, Google Python docstrings, Dartdoc `///`, Rustdoc `//!`/`///`, Godoc, Protobuf) and per-package `libs/<domain>/<project>/README.md` maintenance.
+- **`project-readme-standard`** *(Mandatory)* ([.gemini/skills/project-readme-standard/SKILL.md](.gemini/skills/project-readme-standard/SKILL.md)): Applicability-scoped project README playbook enforcing official framework/language/design-system/algorithm links, Docker/emulator local setup runbooks, and Protobuf language codegen commands.
+- **`grill-me`** ([.gemini/skills/grill-me/SKILL.md](.gemini/skills/grill-me/SKILL.md)): Deep multi-branch architectural interview playbook that explains all options (pros/cons) before every question.
 - **`repo-updater`** *(Mandatory Post-Task)* ([.gemini/skills/repo-updater/SKILL.md](.gemini/skills/repo-updater/SKILL.md)): End-of-task synchronization across `REPO_INDEX.md`, per-library and root `README.md` (with clickable links to individual library READMEs and live test/coverage tables), `ROADMAP.md`, and `GEMINI.md`/`AGENTS.md`.
 - **`python-uv-service`** *(Mandatory for Python)* ([.gemini/skills/python-uv-service/SKILL.md](.gemini/skills/python-uv-service/SKILL.md)): `uv` workspace standards for `libs/*/py-*` & `apps/api-*`, Nx `ruff`/`pyright`/`pytest --cov` targets, FastAPI `lifespan` singletons, Pydantic v2, and SOLID `Protocol`s.
 - **`rust-go-systems`** *(Mandatory for Rust & Go)* ([.gemini/skills/rust-go-systems/SKILL.md](.gemini/skills/rust-go-systems/SKILL.md)): Cargo (`clippy -D warnings`, `rustfmt`, `#[repr(C)]` FFI/WASM, `cargo test`) and Go (`go.work`, `go vet`, table-driven `go test -race -cover`) workspace standards.
@@ -95,6 +97,8 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 - `/write-stories` ([.gemini/commands/write-stories.toml](.gemini/commands/write-stories.toml))
 - `/unit-test` ([.gemini/commands/unit-test.toml](.gemini/commands/unit-test.toml))
 - `/doc-gen` ([.gemini/commands/doc-gen.toml](.gemini/commands/doc-gen.toml))
+- `/update-project-readmes` ([.gemini/commands/update-project-readmes.toml](.gemini/commands/update-project-readmes.toml))
+- `/grill-me` ([.gemini/commands/grill-me.toml](.gemini/commands/grill-me.toml))
 - `/update-repo` ([.gemini/commands/update-repo.toml](.gemini/commands/update-repo.toml))
 - `/visual-test` ([.gemini/commands/visual-test.toml](.gemini/commands/visual-test.toml))
 - `/coverage-report` ([.gemini/commands/coverage-report.toml](.gemini/commands/coverage-report.toml))

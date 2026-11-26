@@ -1,57 +1,62 @@
 # `proto-contracts` (`libs/data-access/proto-contracts`)
 
-Canonical **Protocol Buffers v3** wire contracts for `mono-magic`'s polyglot data-access layer, validated with [`@bufbuild/buf`](https://buf.build/) (`v2` configuration).
+> Canonical **Protocol Buffers v3** wire contracts for `mono-magic`'s polyglot data-access layer, validated with [`@bufbuild/buf`](https://buf.build/) (`v2`) and compiled **offline-safe** directly into language interface libraries.
 
-## Purpose & Architecture
+- **Nx Project**: `proto-contracts`
+- **Tags**: `scope:data-access`, `type:interfaces`, `lang:proto`
 
-`proto-contracts` is the wire-level source of truth in `mono-magic`'s **Hybrid `buf` + Idiomatic Language Traits** architecture:
+---
 
-- Defines vendor-agnostic wire DTOs, error envelopes, query/pagination specs, authentication claims/sessions, storage metadata, realtime pub/sub envelopes, and payment intents.
-- Mirrored by idiomatic language trait libraries:
-  - TypeScript: [`@mono-magic/data-access-ts-interfaces`](../ts-interfaces) (`libs/data-access/ts-interfaces`)
-  - Python: [`py-data-access-interfaces`](../py-interfaces) (`libs/data-access/py-interfaces`)
-- Nx tags: `scope:data-access`, `type:interfaces`, `lang:proto`.
+## Official Documentation & References
 
-## Directory Layout
+| Topic / Technology | Reference | Why It Is Used Here |
+| :--- | :--- | :--- |
+| **Protocol Buffers v3** | [Protobuf v3 Language Guide](https://protobuf.dev/programming-guides/proto3/) | Canonical schema definition language for vendor-agnostic wire DTOs, enums, and RPC envelopes. |
+| **Buf v2 CLI** | [Buf Documentation](https://buf.build/docs/) | Enforces `STANDARD` lint rules (including `v1` major-version package suffixes via `PACKAGE_VERSION_SUFFIX`) and `FILE` backward-compatibility checks. |
+| **Protobuf-ES** | [`@bufbuild/protobuf` & `protoc-gen-es`](https://github.com/bufbuild/protobuf-es) | Local, offline-safe TypeScript ES + `.d.ts` generator wired directly into `libs/data-access/ts-interfaces/src/gen`. |
+| **Python Protobuf (`grpcio-tools`)** | [Protocol Buffers Python Reference](https://protobuf.dev/reference/python/) | Local, offline-safe Python `*_pb2.py` + `*_pb2.pyi` stub generator wired directly into `libs/data-access/py-interfaces/src/py_data_access_interfaces/gen`. |
 
-```text
-libs/data-access/proto-contracts/
-├── buf.yaml                                  # Buf v2 module, STANDARD lint, FILE breaking rules
-├── buf.gen.yaml                              # Buf v2 managed code-generation template
-├── project.json                              # Nx targets: lint, breaking, generate
-├── README.md
-└── proto/
-    └── monomagic/
-        ├── common/v1/
-        │   ├── errors.proto                  # ErrorCode, DataAccessError
-        │   └── pagination.proto              # SortDirection, SortSpec, FilterOperator, FilterSpec, QuerySpec, PageInfo
-        ├── auth/v1/
-        │   └── auth.proto                    # OAuthProvider, UserClaims, AuthSession, SignInRequest
-        ├── storage/v1/
-        │   └── storage.proto                 # StorageObjectMeta, SignedUrlResponse
-        ├── realtime/v1/
-        │   └── realtime.proto                # RealtimeEnvelope, PresenceState
-        └── payments/v1/
-            └── payments.proto                # Money, PaymentStatus, PaymentIntent
-```
+---
 
-## Nx Targets & Usage
+## Language Codegen Commands & Output Map
+
+All codegen runs **100% locally and offline-safe** (zero external Buf Schema Registry network dependency required in CI):
 
 ```bash
-# Lint all Protobuf schemas against Buf STANDARD rules
+# 1. Lint all Protobuf schemas against Buf STANDARD rules
 pnpm nx lint proto-contracts
 
-# Check backward compatibility against main (skips cleanly until main contains baseline .proto schemas)
+# 2. Check backward compatibility against main
 pnpm nx breaking proto-contracts
 
-# Validate compilation & run Buf codegen template (buf.gen.yaml)
+# 3. Generate real TypeScript & Python wire types directly into ts-interfaces and py-interfaces
 # Note: use `nx run proto-contracts:generate` (not `nx generate`, which invokes Nx schematic generators)
 pnpm nx run proto-contracts:generate
 ```
 
-### Enabling Language Stub Generation
+| Target Language | Generator Plugin / Tool | Output Directory | Workspace Package & Consumers |
+| :--- | :--- | :--- | :--- |
+| **TypeScript** | `protoc-gen-es` (`@bufbuild/protoc-gen-es`) | `libs/data-access/proto-contracts/generated/ts/` | `@mono-magic/proto-contracts` (consumed by `@mono-magic/data-access-ts-interfaces/proto`) |
+| **Python** | `uv run --package py-data-access-interfaces python -m grpc_tools.protoc` (`--python_out` + `--pyi_out`) | `libs/data-access/proto-contracts/generated/py/` | `py-proto-contracts` (consumed by `py-data-access-interfaces.proto`) |
+| **Kotlin / Java / Go / Rust / Dart** *(Extensible)* | `protoc-gen-kotlin` / `protoc-gen-go` / `prost` / `protoc-gen-dart` | `libs/data-access/proto-contracts/generated/<lang>/` | Added as each language interface library is scaffolded |
 
-`buf.gen.yaml` ships with `plugins: []` so `pnpm nx run proto-contracts:generate` validates compilation deterministically offline without requiring external BSR access or local `protoc-gen-*` binaries. To emit language stubs (TypeScript, Python, Java, Dart), uncomment or add plugins under `plugins:` in `buf.gen.yaml` and output into `../../../dist/libs/data-access/proto-contracts/<lang>`.
+> **Why `v1` in package names?** Buf's `STANDARD` lint rule (`PACKAGE_VERSION_SUFFIX`) requires major-version suffixes (`monomagic.common.v1`, `monomagic.ai.v1`) so future breaking schema evolutions can ship cleanly under `v2` without breaking existing `v1` consumers.
+
+---
+
+## Schema Catalog
+
+| Proto File | Package | Key Symbols |
+| :--- | :--- | :--- |
+| `proto/monomagic/common/v1/errors.proto` | `monomagic.common.v1` | `ErrorCode`, `DataAccessError` |
+| `proto/monomagic/common/v1/pagination.proto` | `monomagic.common.v1` | `SortDirection`, `SortSpec`, `FilterOperator`, `FilterSpec`, `QuerySpec`, `PageInfo` |
+| `proto/monomagic/auth/v1/auth.proto` | `monomagic.auth.v1` | `OAuthProvider`, `UserClaims`, `AuthSession`, `SignInRequest` |
+| `proto/monomagic/storage/v1/storage.proto` | `monomagic.storage.v1` | `StorageObjectMeta`, `SignedUrlResponse` |
+| `proto/monomagic/realtime/v1/realtime.proto` | `monomagic.realtime.v1` | `RealtimeEnvelope`, `PresenceState` |
+| `proto/monomagic/payments/v1/payments.proto` | `monomagic.payments.v1` | `Money`, `PaymentStatus`, `PaymentIntent` |
+| `proto/monomagic/cache/v1/cache.proto` | `monomagic.cache.v1` | `CacheEntry`, `LockLease`, `CacheStats` |
+| `proto/monomagic/ai/v1/ai.proto` | `monomagic.ai.v1` | `ChatRole`, `ChatMessage`, `LLMCompletionRequest`, `LLMCompletionResponse`, `EmbeddingVector`, `VectorSearchResult`, `AgentGraphRun` |
+| `proto/monomagic/reflective/v1/reflective.proto` | `monomagic.reflective.v1` | `ContentSourceType`, `BloomLevel`, `TopicRecord`, `McqQuestion`, `SubjectiveGradeResult` |
 
 ---
 

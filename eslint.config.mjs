@@ -10,7 +10,8 @@ export default [
         "**/out-tsc",
         "**/vitest.config.*.timestamp*",
         "**/test-output/**",
-        "**/coverage/**"
+        "**/coverage/**",
+        "**/generated/**"
       ]
     },
     {

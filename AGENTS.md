@@ -34,8 +34,9 @@
   - Specialist Quality Phases (Required on Every Task):
     1. **Unit Testing**: [`polyglot-unit-testing`](.gemini/skills/polyglot-unit-testing/SKILL.md) (`.gemini/agents/polyglot-unit-test-specialist.md`)
     2. **Interactive State-Complete Stories**: [`interactive-stories`](.gemini/skills/interactive-stories/SKILL.md) (`.gemini/agents/interactive-story-specialist.md`)
-    3. **Code & Package README Documentation**: [`code-doc-generator`](.gemini/skills/code-doc-generator/SKILL.md) (`.gemini/agents/code-doc-generator.md`)
+    3. **Code & Package README Documentation**: [`code-doc-generator`](.gemini/skills/code-doc-generator/SKILL.md) (`.gemini/agents/code-doc-generator.md`) & [`project-readme-standard`](.gemini/skills/project-readme-standard/SKILL.md) (`/update-project-readmes`)
     4. **Post-Task Repo, README, Coverage & Roadmap Sync**: [`repo-updater`](.gemini/skills/repo-updater/SKILL.md) (`.gemini/agents/repo-updater.md`)
+    5. **Deep Architectural Interviews**: [`grill-me`](.gemini/skills/grill-me/SKILL.md) (`/grill-me`) & [`docs/ARCHITECTURE_DECISION_MATRIX.md`](docs/ARCHITECTURE_DECISION_MATRIX.md)
 - **Git, Branching (`main -> dev` Pre-Task Sync & `dev` as AI Integration Branch) & `/teamwork` Token-Budget Discipline (All Agents)**:
   - **Before starting ANY task**, always sync `dev` with the latest `main` (`git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*" && git fetch origin && git checkout -B dev origin/dev && git merge --no-edit origin/main && git push -u origin dev`) and branch off `dev` (`git checkout -b <type>/<scope>-<slug> dev`, never work directly on `main` or `dev`).
   - **All PRs MUST be opened against `dev`** (`gh pr create --base dev ...`). AI agents may freely merge green, verified PRs into `dev`.

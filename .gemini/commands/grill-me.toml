@@ -1,0 +1,15 @@
+description = "Run a deep, multi-branch /grill-me architectural interview that thoroughly covers all design dimensions and explains every option's pros and cons before asking each question."
+prompt = """
+# Deep Architectural `/grill-me` Session
+
+Follow the workspace `grill-me` skill (`.gemini/skills/grill-me/SKILL.md`).
+
+## Topic / Project to Grill
+{{args}}
+
+## Rules
+1. Read `REPO_INDEX.md` and relevant project docs (`ROADMAP.md`, `docs/ARCHITECTURE_DECISION_MATRIX.md`, `docs/projects/_TEMPLATE.md`) first — never ask what the codebase already answers.
+2. Walk systematically through all relevant branches: Problem/Scope, Stack Fit, Domain Boundaries, Contracts/Protobuf, Data/Concurrency, Failure Modes/Security, UX/DX, and Testing/Phasing.
+3. Ask **one question at a time** via `ask_question`.
+4. **Always briefly explain all options (what each does + pros/cons) in your text right before calling `ask_question`** so the user can decide with full context.
+"""

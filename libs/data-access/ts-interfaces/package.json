@@ -16,6 +16,11 @@
       "import": "./src/testing.ts",
       "default": "./src/testing.ts"
     },
+    "./proto": {
+      "types": "./src/proto.ts",
+      "import": "./src/proto.ts",
+      "default": "./src/proto.ts"
+    },
     "./package.json": "./package.json"
   },
   "nx": {
@@ -27,6 +32,7 @@
     ]
   },
   "dependencies": {
+    "@mono-magic/proto-contracts": "workspace:*",
     "@mono-magic/utils-ts-core": "workspace:*"
   }
 }

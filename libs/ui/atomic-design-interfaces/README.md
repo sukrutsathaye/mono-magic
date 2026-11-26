@@ -11,6 +11,19 @@ Framework-agnostic TypeScript Atomic Design component contracts (`Atoms`, `Molec
   - `src/lib/atoms/` — 11 foundational Atom contracts (`*AtomProps`).
   - `src/lib/molecules/` — 17 composite Molecule contracts (`*MoleculeProps`).
   - `src/lib/organisms/` & `src/lib/templates/` — Higher-order Organism and Page Template contracts.
+  - `src/proto.ts` (`./proto`) — Re-exports generated TypeScript enums, tokens, and `PageGraphDocument` AST from workspace package `@mono-magic/proto-ui-contracts` ([`libs/ui/proto-ui-contracts`](../proto-ui-contracts/README.md)).
+
+---
+
+## Official Documentation & References
+
+| Topic / Standard | Reference | Why It Is Used Here |
+| :--- | :--- | :--- |
+| **Atomic Design** | [Atomic Design by Brad Frost](https://atomicdesign.bradfrost.com/) | Defines the strict bottom-up `Atoms → Molecules → Organisms → Templates` contract hierarchy. |
+| **WCAG 2.1 AA** | [W3C WCAG 2.1 Guidelines](https://www.w3.org/TR/WCAG21/) | Mandates contrast, keyboard navigation, and accessible naming semantics across all component contracts. |
+| **WAI-ARIA APG** | [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/) | Reference keyboard & role patterns for Dialog, Tabs, Accordion, Menu, Select, Slider, and Breadcrumbs. |
+| **Material Design 3** | [Material Design 3 Spec](https://m3.material.io/) | Shared visual intent & surface hierarchy (`filled`, `tonal`, `outlined`, `elevated`, `text`). |
+| **UI Proto Contracts** | [`proto-ui-contracts`](../proto-ui-contracts/README.md) | Language-agnostic `.proto` source for shared UI enums, design tokens, and XYFlow `PageGraph` AST. |
 
 ---
 

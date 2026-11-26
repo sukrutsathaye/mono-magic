@@ -61,14 +61,14 @@ flowchart TD
 | **Phase 2C** | Atomic Design Expansion — Wave 2 Domain Organisms (Commerce, Live Conferencing, Reflective Learning) & Templates | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 2B | Planned |
 | **Phase 3A** | Pure Shared Utilities (`ts-core`, `ts-formatters`, `ts-pose-math`, `ts-design-tokens`, `py-common`, `py-nlp`, `go-core`) | `libs/utils/{ts-*,py-*,rs-*,go-*}` | Phase 1 | Completed |
 | **Phase 3B** | Hybrid Data-Access Contracts (`proto-contracts`, `ts-interfaces`, `py-interfaces`) & Compliance Harness | `libs/data-access/{proto-contracts,ts-interfaces,py-interfaces}` | Phase 3A | Completed (TS/Py/Proto) |
-| **Phase 3C** | Data-Access Implementations (`ts-firebase`, `ts-supabase`, `ts-nestjs-*`, `java-spring-boot-*`, Cloud SDKs, Domain Wrappers) | `libs/data-access/*` | Phase 3B | In Progress |
-| **Phase 4A** | Open-Source Realtime & ML Integrations (LiveKit, PoseNet / MediaPipe, Smart Whiteboard / Transcripts, Payments) | `libs/features/ts-*`, `libs/data-access/*` | Phase 2C, 3C | Planned |
-| **Phase 4B** | Additional UI Frameworks & Design Systems (Vue, Svelte, Tailwind + `shadcn/ui`) | `libs/ui/{vue-*,svelte-*,react-shadcn}` | Phase 2C | In Progress |
-| **Phase 4C** | Polyglot Microservices (`api-pose-coach`, `api-reflective-learning`, Go/Rust Realtime Workers, Spring Boot, NestJS) | `apps/api-*`, `libs/data-access/*` | Phase 3C | Planned |
-| **Phase 5A** | Flagship App 1: Interactive Live Coaching & Learning Platform (Yoga + PoseNet + Multi-Subject + Whiteboard) | `apps/yoga-live*` (or `apps/live-coaching*`) | Phase 2C, 4A, 4C | Planned |
-| **Phase 5B** | Flagship App 2: Hand-Knitted Articles Showcase & Ordering Platform | `apps/knitted-showcase*` | Phase 2C, 3C | Planned |
-| **Phase 5C** | Flagship App 3: Reflective Learning App (Wikipedia + Text/Markdown + Books/PDF/EPUB; [Blueprint](docs/projects/reflective-learning.md)) | `apps/reflective-learning*`, `apps/api-reflective-learning` | Phase 2C, 3C, 4C | Planned |
-| **Phase 5D** | Flagship App 4: Couples Relationship Journal App | `apps/couples-journal*` | Phase 2C, 3C | Planned |
+| **Phase 3C** | Data-Access Implementations (`ts-firebase`, `ts-supabase`, `ts-redis`/`py-redis`, full `ts-nestjs`, NestJS-inspired `py-nest`, `kt-spring-boot`, `py-agent-graph`/`py-ml-core`/`py-rl-core`, Cloud SDKs) | `libs/data-access/*` | Phase 3B | In Progress |
+| **Phase 4A** | Open-Source Realtime, Visual Flow & QA Integrations (LiveKit, PoseNet/MediaPipe, `ts-flow-studio` XYFlow UI Builder & BPMN Studio, `ts-playwright-crawler` QA Explorer, Payments) | `libs/features/ts-*`, `libs/data-access/*` | Phase 2C, 3C | Planned |
+| **Phase 4B** | Additional UI Frameworks & Design Systems (`vue-vuetify`, `svelte-tw`, `react-shadcn`, `kt-compose` Kotlin Jetpack Compose, `proto-ui-contracts`) | `libs/ui/{vue-*,svelte-*,react-shadcn,kt-compose,proto-ui-contracts}` | Phase 2C | In Progress |
+| **Phase 4C** | Polyglot Microservices (`api-pose-coach`, `api-reflective-learning`, `api-ml-pipeline`, `api-claims-engine`, Go/Rust Realtime & Sensor Workers, Kotlin Spring Boot, NestJS Gateway) | `apps/api-*`, `libs/data-access/*` | Phase 3C | Planned |
+| **Phase 5A** | Flagship App 1: Quanti-Fit Interactive Live Coaching & Learning Platform ([Blueprint](docs/projects/quanti-fit.md)) | `apps/quanti-fit-*` | Phase 2C, 4A, 4C | Planned |
+| **Phase 5B** | Flagship App 2: Hand-Knitted Articles Showcase & Ordering Platform ([Blueprint](docs/projects/knitted-showcase.md)) | `apps/knitted-showcase*` | Phase 2C, 3C | Planned |
+| **Phase 5C** | Flagship App 3: Reflective Learning App ([Blueprint](docs/projects/reflective-learning.md)) | `apps/reflective-learning*`, `apps/api-reflective-learning` | Phase 2C, 3C, 4C | Planned |
+| **Phase 5D** | Flagship App 4: Couples Relationship Journal App ([Blueprint](docs/projects/couples-journal.md)) | `apps/couples-journal*` | Phase 2C, 3C | Planned |
 
 ---
 
@@ -293,12 +293,20 @@ classDiagram
 - [x] **`@mono-magic/data-access-ts-supabase` (`libs/data-access/ts-supabase`)**:
   - *Acceptance Criteria*: Implements `IAuthProvider` (Supabase Auth), `IDataRepository` (PostgREST / Postgres), `IStorageProvider` (Supabase Storage), and `IRealtimeProvider` (Supabase Realtime channels), passing the identical contract compliance suite.
 
-#### Phase 3C.2 — NestJS Backend Wrappers (`libs/data-access/ts-nestjs-*`)
-- [ ] **`@mono-magic/data-access-ts-nestjs` (`libs/data-access/ts-nestjs-core` & wrappers)**:
-  - *Acceptance Criteria*: Reusable NestJS dynamic modules and decorators following official NestJS idioms:
+#### Phase 3C.2 — Full NestJS & NestJS-Inspired Python (`py-nest`) + Redis Silos
+- [ ] **`@mono-magic/data-access-ts-nestjs` (`libs/data-access/ts-nestjs`)**:
+  - *Acceptance Criteria*: Complete modular NestJS wrapper silo (subpath exports `{core,graphql,swagger,redis,auth,prisma,queues,ws,microservices}`) following official NestJS DI idioms:
     - Auth/OIDC/JWT Guards & Passport strategies implementing `IAuthProvider`
     - Prisma / TypeORM PostgreSQL repository adapters implementing `IDataRepository`
-    - Caching (Redis), Configuration (`@nestjs/config`), OpenAPI/Swagger, Queues (`BullMQ`), and WebSockets/Microservice transport wrappers.
+    - GraphQL (`@nestjs/graphql`), OpenAPI/Swagger + Scalar (`@nestjs/swagger`), Caching/Locks (`ts-redis`), Configuration (`@nestjs/config`), Queues (`BullMQ`), Health/OpenTelemetry, and WebSockets/gRPC/Kafka Microservice transports.
+- [ ] **`py-nest` (`libs/data-access/py-nest`)**:
+  - *Acceptance Criteria*: NestJS-inspired modular Python framework silo over FastAPI + `lifespan` DI singletons with clean internal submodules & `uv` optional extras (`py-nest[fastapi,swagger,graphql,redis,auth,db,otel]`): automatic OpenAPI/Swagger + Scalar docs, Strawberry GraphQL, async Redis (`py-redis`), SQLModel repositories, and structured OTel telemetry.
+- [ ] **Caching & Distributed Locks (`libs/data-access/ts-redis` & `libs/data-access/py-redis`)**:
+  - *Acceptance Criteria*: Implements `ICacheProvider` & `IDistributedLock` (`cache/v1/cache.proto`) backed by Redis/Valkey with local Docker Compose setup and Contract Compliance tests.
+- [ ] **AI, ML, RL & Agentic Silos (`libs/data-access/{py-agent-graph,py-ml-core,py-rl-core,ts-ai-sdk}`)**:
+  - *Acceptance Criteria*: Isolated `uv` workspace packages wired to `ai/v1/ai.proto`: `py-agent-graph` (LangChain/LangGraph DI wrapper), `py-ml-core` (PyTorch/ONNX/MLflow), `py-rl-core` (Gymnasium + Stable-Baselines3), and `ts-ai-sdk`.
+- [ ] **Kotlin Native / KMP Track (`libs/utils/kt-core`, `libs/data-access/kt-interfaces`)**:
+  - *Acceptance Criteria*: Gradle-in-Nx Kotlin core utilities (`Result`, retry, logging) and `kt-interfaces` wired to `proto-contracts` Kotlin codegen + Ktor/Koin DI.
 
 #### Phase 3C.3 — Enterprise Java/Kotlin Spring Boot Data-Access (`libs/data-access/java-spring-boot-*`)
 - [ ] **`java-spring-boot-data-access` (`libs/data-access/java-spring-boot-starter`)**:
