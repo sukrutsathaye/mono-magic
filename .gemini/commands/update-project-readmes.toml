@@ -1,0 +1,18 @@
+description = "Audit and update one or more project-level README.md files with official framework/language/algorithm/design-system links, local Docker/emulator setup runbooks, and codegen commands where applicable."
+prompt = """
+# Project-Level README Author & Audit Workflow
+
+Follow the `project-readme-standard` skill (`.gemini/skills/project-readme-standard/SKILL.md`).
+
+## Target Project(s) / Scope
+{{args}}
+
+## Execution Checklist
+1. Read `REPO_INDEX.md` to locate the target project(s), their domain tags, entrypoints, and Nx targets.
+2. Audit each target `README.md` against `project-readme-standard`:
+   - Include **Official Documentation, Design Systems & Algorithms** links tailored to the exact frameworks, languages, SDKs, design systems, and algorithms used.
+   - Include **Local Setup & Docker / Emulator Runbooks** where applicable (e.g., Supabase Docker CLI, Firebase Emulator, Redis/Kafka/Temporal).
+   - Include **Per-Language Codegen Commands & Output Map** for Protobuf/schema libraries.
+   - Keep **Public API / Component Catalogs**, **Usage Examples**, and **Nx Targets** accurate.
+3. Run `node tools/ci/sync-readmes-and-coverage.mjs` and `node tools/ci/sync-readmes-and-coverage.mjs --check` to refresh coverage summary tables.
+"""
