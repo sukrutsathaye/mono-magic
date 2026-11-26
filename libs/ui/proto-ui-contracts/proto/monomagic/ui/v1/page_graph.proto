@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package monomagic.ui.v1;
+
+import "monomagic/ui/v1/tokens.proto";
+
+// Atomic Design tier classification for visual builder nodes.
+enum AtomicTier {
+  // Unspecified tier.
+  ATOMIC_TIER_UNSPECIFIED = 0;
+  // Indivisible primitive component (Button, TextInput, Badge).
+  ATOMIC_TIER_ATOM = 1;
+  // Composed group of atoms (Card, Dialog, SearchBar).
+  ATOMIC_TIER_MOLECULE = 2;
+  // Complex domain or navigation section (Navbar, DataTable).
+  ATOMIC_TIER_ORGANISM = 3;
+  // Full page layout shell (AppShellTemplate, StorefrontTemplate).
+  ATOMIC_TIER_TEMPLATE = 4;
+}
+
+// 2D canvas coordinates for XYFlow visual editor nodes.
+message CanvasPosition {
+  // Horizontal position in canvas pixels.
+  double x = 1;
+  // Vertical position in canvas pixels.
+  double y = 2;
+}
+
+// Named slot binding connecting a parent component slot to child component IDs.
+message SlotBinding {
+  // Slot identifier (e.g. "header", "actions", "default").
+  string slot_name = 1;
+  // Ordered child ComponentNode IDs rendered inside this slot.
+  repeated string child_node_ids = 2;
+}
+
+// Serializable component instance placed inside a PageNode.
+message ComponentNode {
+  // Unique node identifier within the document.
+  string id = 1;
+  // Canonical Atomic Design component symbol (e.g. "MagicButton", "MagicCard").
+  string component_name = 2;
+  // Atomic Design tier of the component.
+  AtomicTier tier = 3;
+  // JSON-encoded serializable prop values (non-callback data props).
+  map<string, string> props_json = 4;
+  // Named slot bindings for nested children.
+  repeated SlotBinding slots = 5;
+  // Optional visual canvas position when editing an organism/template graph.
+  CanvasPosition position = 6;
+}
+
+// Top-level screen or route node in the XYFlow Page & Navigation Builder.
+message PageNode {
+  // Unique page node identifier.
+  string id = 1;
+  // Human-readable page title.
+  string title = 2;
+  // Canonical URL or mobile route path (e.g. "/checkout", "/sessions/:id").
+  string route_path = 3;
+  // Optional template component wrapping this page (e.g. "MagicAppShellTemplate").
+  string template_name = 4;
+  // Visual position on the XYFlow navigation canvas.
+  CanvasPosition position = 5;
+  // Component tree rendered on this page.
+  repeated ComponentNode components = 6;
+}
+
+// Directed navigation edge connecting two PageNodes on the XYFlow canvas.
+message NavigationEdge {
+  // Unique edge identifier.
+  string id = 1;
+  // Source PageNode ID.
+  string source_page_id = 2;
+  // Target PageNode ID.
+  string target_page_id = 3;
+  // Optional triggering component ID and event (e.g. "btn_checkout:onClick").
+  string trigger_ref = 4;
+  // Optional declarative route guard expression (e.g. "auth.isAuthenticated").
+  string guard_expression = 5;
+}
+
+// Complete language-agnostic UI application graph exported by the XYFlow Visual Builder.
+message PageGraphDocument {
+  // Unique document identifier.
+  string id = 1;
+  // Application display name.
+  string app_name = 2;
+  // Schema revision string (e.g. "1.0.0").
+  string schema_version = 3;
+  // Selected target UI framework for code generation.
+  UiFramework target_framework = 4;
+  // Selected design system for code generation.
+  DesignSystem design_system = 5;
+  // Optional design token bundle applied to the generated app.
+  DesignTokenSet tokens = 6;
+  // Entrypoint PageNode ID.
+  string entry_page_id = 7;
+  // All pages in the application graph.
+  repeated PageNode pages = 8;
+  // Directed navigation edges between pages.
+  repeated NavigationEdge navigation_edges = 9;
+}

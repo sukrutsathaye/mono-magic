@@ -5,11 +5,13 @@ description = "Framework- and vendor-agnostic Python data-access DTOs, Protocols
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "protobuf>=5.29.0",
     "pydantic>=2.10.0",
 ]
 
 [dependency-groups]
 dev = [
+    "grpcio-tools>=1.68.0",
     "pyright>=1.1.380",
     "pytest>=8.0.0",
     "pytest-asyncio>=0.24.0",
@@ -27,6 +29,7 @@ packages = ["src/py_data_access_interfaces"]
 [tool.ruff]
 target-version = "py312"
 line-length = 100
+extend-exclude = ["**/gen/**"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "RUF"]
@@ -40,3 +43,5 @@ testpaths = ["tests"]
 pythonVersion = "3.12"
 typeCheckingMode = "strict"
 include = ["src", "tests"]
+exclude = ["src/py_data_access_interfaces/gen"]
+extraPaths = ["src", "src/py_data_access_interfaces/gen"]

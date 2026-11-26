@@ -34,7 +34,7 @@
       ],
       "options": {
         "cwd": "libs/data-access/proto-contracts",
-        "command": "pnpm exec buf generate"
+        "command": "pnpm exec buf generate && mkdir -p ../py-interfaces/src/py_data_access_interfaces/gen && uv run --package py-data-access-interfaces python -m grpc_tools.protoc -I proto --python_out=../py-interfaces/src/py_data_access_interfaces/gen --pyi_out=../py-interfaces/src/py_data_access_interfaces/gen $(find proto -name '*.proto' | sort) && find ../py-interfaces/src/py_data_access_interfaces/gen -type d -exec touch {}/__init__.py \\;"
       }
     }
   }

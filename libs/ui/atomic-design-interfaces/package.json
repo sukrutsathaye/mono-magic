@@ -11,6 +11,11 @@
       "import": "./src/index.ts",
       "default": "./src/index.ts"
     },
+    "./proto": {
+      "types": "./src/proto.ts",
+      "import": "./src/proto.ts",
+      "default": "./src/proto.ts"
+    },
     "./package.json": "./package.json"
   },
   "nx": {

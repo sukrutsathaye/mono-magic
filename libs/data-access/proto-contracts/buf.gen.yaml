@@ -1,17 +1,15 @@
-# Buf v2 code generation template for mono-magic wire contracts.
-# Keep `plugins: []` until target consumers enable language-specific codegen plugins
-# (e.g., remote BSR plugins or local protoc-gen-* binaries) so `buf generate` remains
-# offline-safe and deterministic across CI environments.
+# Buf v2 offline-safe code generation template for mono-magic data-access wire contracts.
+# Generates TypeScript ES + .d.ts directly into libs/data-access/ts-interfaces/src/gen.
+# Python (*_pb2.py + *_pb2.pyi) is generated offline via grpc_tools.protoc in project.json:generate.
 version: v2
 clean: true
 managed:
   enabled: true
 inputs:
   - directory: proto
-plugins: []
-# Example plugin configuration when enabling codegen:
-#   - remote: buf.build/bufbuild/es:v2.2.3
-#     out: ../../../dist/libs/data-access/proto-contracts/ts
-#     opt: target=ts
-#   - remote: buf.build/protocolbuffers/python:v29.3
-#     out: ../../../dist/libs/data-access/proto-contracts/python
+plugins:
+  - local: protoc-gen-es
+    out: ../ts-interfaces/src/gen
+    opt:
+      - target=ts
+      - import_extension=.js

@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package monomagic.reflective.v1;
+
+// Supported ingestion source types for Reflective Learning topics.
+enum ContentSourceType {
+  // Unspecified content source.
+  CONTENT_SOURCE_TYPE_UNSPECIFIED = 0;
+  // Wikipedia MediaWiki Action API article.
+  CONTENT_SOURCE_TYPE_WIKIPEDIA = 1;
+  // Raw plain text or Markdown passage.
+  CONTENT_SOURCE_TYPE_MARKDOWN = 2;
+  // Uploaded PDF or EPUB book document.
+  CONTENT_SOURCE_TYPE_BOOK = 3;
+}
+
+// Bloom's taxonomy cognitive tier for generated assessment questions.
+enum BloomLevel {
+  // Unspecified Bloom level.
+  BLOOM_LEVEL_UNSPECIFIED = 0;
+  // Recall of facts and basic definitions.
+  BLOOM_LEVEL_REMEMBER = 1;
+  // Conceptual explanation and comparison.
+  BLOOM_LEVEL_UNDERSTAND = 2;
+  // Applying concepts to novel scenarios.
+  BLOOM_LEVEL_APPLY = 3;
+  // Breaking down and evaluating relationships.
+  BLOOM_LEVEL_ANALYZE = 4;
+}
+
+// Canonical reflective learning topic metadata.
+message TopicRecord {
+  // Unique topic identifier.
+  string id = 1;
+  // Display title of the topic.
+  string title = 2;
+  // Origin source type.
+  ContentSourceType source_type = 3;
+  // Total number of paginated chapters.
+  int32 chapter_count = 4;
+  // Approved domain keywords extracted for this topic.
+  repeated string keywords = 5;
+}
+
+// Chapter-scoped multiple-choice question with misconception feedback.
+message McqQuestion {
+  // Unique question identifier.
+  string id = 1;
+  // Owning chapter index (1-based).
+  int32 chapter_index = 2;
+  // Question prompt text.
+  string prompt = 3;
+  // Ordered choice options.
+  repeated string options = 4;
+  // Zero-based index of the correct option.
+  int32 correct_index = 5;
+  // Bloom taxonomy level.
+  BloomLevel bloom_level = 6;
+  // Optional explanation shown after answering.
+  string explanation = 7;
+}
+
+// Two-tier hybrid grading result for subjective open-ended answers.
+message SubjectiveGradeResult {
+  // Local ONNX fastembed cosine similarity score in [0.0, 1.0].
+  double semantic_similarity = 1;
+  // Final normalized grade in [0.0, 1.0].
+  double final_score = 2;
+  // Whether Tier 2 LLM rubric grading was invoked.
+  bool used_llm_rubric = 3;
+  // Constructive feedback returned to the learner.
+  string feedback = 4;
+}
