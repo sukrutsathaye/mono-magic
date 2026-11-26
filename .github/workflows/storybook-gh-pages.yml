@@ -53,6 +53,7 @@ jobs:
       - name: Build ${{ matrix.type }} & coverage (${{ matrix.name }})
         env:
           PAGES_BASE_PATH: ${{ needs.discover.outputs.base_path }}
+          NX_NO_CLOUD: 'true'
         run: node tools/ci/storybook-pages.mjs build "${{ matrix.name }}" --with-coverage --with-storybook-coverage
       - name: Upload built showcase
         uses: actions/upload-artifact@v4
