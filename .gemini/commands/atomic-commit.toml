@@ -1,0 +1,17 @@
+description = "Stage and commit current changes as micro-atomic Conventional Commits (function/story/test-level) per the git-workflow skill."
+prompt = """
+# Micro-Atomic Commit Assistant
+
+Follow `git-workflow` (`.gemini/skills/git-workflow/SKILL.md`) strictly.
+
+## User Request
+{{args}}
+
+## Execution Checklist
+1. Inspect `git status` and `git diff` to identify all distinct logical units of change.
+2. Verify whether any files are pure generator/codegen outputs (Nx generator, `buf generate`, visual baselines, `REPO_INDEX.md` sync). If so, isolate them in their own dedicated `chore(<scope>): ...` commit first.
+3. For all hand-authored changes, split staging down to **one function, one story, one test case/block, or one small cohesive group of lines** per commit (never dump whole hand-authored files or mixed concerns into one commit).
+4. Use hunk-level staging (`git add -p` interactively or targeted patch staging via `git apply --cached` non-interactively) and inspect `git diff --cached` before each commit.
+5. Write a concise Conventional Commit message (`<type>(<scope>): <imperative summary>`) for each atomic unit.
+6. Run `git log --oneline --stat origin/dev..HEAD` at the end to verify the resulting commit history is clean and micro-atomic.
+"""
