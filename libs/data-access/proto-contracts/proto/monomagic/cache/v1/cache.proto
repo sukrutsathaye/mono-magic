@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package monomagic.cache.v1;
+
+// Serialized cache entry stored in Redis/Valkey or an in-memory ICacheProvider.
+message CacheEntry {
+  // Namespaced cache key.
+  string key = 1;
+  // UTF-8 JSON or opaque string payload.
+  string value = 2;
+  // Time-to-live in seconds (0 indicates no expiration).
+  int64 ttl_seconds = 3;
+  // RFC 3339 creation timestamp.
+  string created_at = 4;
+}
+
+// Distributed lock lease returned by IDistributedLock.acquire().
+message LockLease {
+  // Resource lock key.
+  string resource_key = 1;
+  // Unique fencing token identifying the lock holder.
+  string token = 2;
+  // Lease expiration duration in milliseconds.
+  int64 ttl_ms = 3;
+  // RFC 3339 acquisition timestamp.
+  string acquired_at = 4;
+}
+
+// Point-in-time cache telemetry snapshot for observability & health checks.
+message CacheStats {
+  // Total cache hit count.
+  int64 hits = 1;
+  // Total cache miss count.
+  int64 misses = 2;
+  // Current approximate key count.
+  int64 key_count = 3;
+}
