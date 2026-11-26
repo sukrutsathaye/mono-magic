@@ -9,7 +9,7 @@ from typing import Any, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .common import DataAccessError, Result
+from ..common import DataAccessError, Result
 
 
 class RealtimeEnvelope(BaseModel):

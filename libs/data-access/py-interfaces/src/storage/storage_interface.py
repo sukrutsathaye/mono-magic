@@ -9,7 +9,7 @@ from typing import Literal, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .common import DataAccessError, PaginatedResult, Result
+from ..common import DataAccessError, PaginatedResult, Result
 
 
 class StorageObjectMeta(BaseModel):
