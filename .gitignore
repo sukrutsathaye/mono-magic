@@ -50,3 +50,7 @@ __pycache__/
 coverage.json
 coverage.out
 
+
+# Allow canonical monomagic.cache.v1 protobuf contracts and generated code
+!libs/**/monomagic/cache/
+!libs/**/monomagic/cache/**

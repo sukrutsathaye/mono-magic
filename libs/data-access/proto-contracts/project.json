@@ -32,9 +32,12 @@
         "{projectRoot}/buf.gen.yaml",
         "{projectRoot}/proto/**/*.proto"
       ],
+      "outputs": [
+        "{projectRoot}/generated"
+      ],
       "options": {
         "cwd": "libs/data-access/proto-contracts",
-        "command": "pnpm exec buf generate"
+        "command": "pnpm exec buf generate && rm -rf generated/py && mkdir -p generated/py && uv run --package py-data-access-interfaces python -m grpc_tools.protoc -I proto --python_out=generated/py --pyi_out=generated/py $(find proto -name '*.proto' | sort) && find generated/py -type d -exec touch {}/__init__.py \\; && touch generated/py/monomagic/py.typed"
       }
     }
   }

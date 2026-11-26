@@ -1,0 +1,14 @@
+# Buf v2 offline-safe code generation template for UI contracts (tokens, enums, XYFlow PageGraph AST).
+# Emits TypeScript directly into libs/ui/proto-ui-contracts/generated/ts.
+version: v2
+clean: true
+managed:
+  enabled: true
+inputs:
+  - directory: proto
+plugins:
+  - local: protoc-gen-es
+    out: generated/ts
+    opt:
+      - target=ts
+      - import_extension=.js

@@ -18,6 +18,10 @@
 
 ## 2. Domain Boundaries (`libs/<domain>/<lang>-<name>` Mapping)
 
+### Stack Selection Justification
+Cite [`docs/ARCHITECTURE_DECISION_MATRIX.md`](../ARCHITECTURE_DECISION_MATRIX.md) to justify why each chosen UI framework (`react-mui`, `ng-mat`, `vue-vuetify`, `svelte-tw`, `rn-paper`, `fl-mat`, `kt-compose`) and backend/data-access stack (`ts-supabase`, `ts-firebase`, `ts-nestjs`, `py-nest`, `kt-spring-boot`, `go-*`, `rs-*`) best fits this project's latency, platform, ecosystem, and DX needs.
+
+### Package & App Mapping
 Map every responsibility strictly to `mono-magic`'s 4-domain `libs/` + `apps/` layout (`eslint.config.mjs` enforced):
 
 | Package / App Path | Nx Project Name | Tags (`scope:*`, `type:*`, `lang:*`) | Responsibility & Forbidden Dependencies |
@@ -26,7 +30,7 @@ Map every responsibility strictly to `mono-magic`'s 4-domain `libs/` + `apps/` l
 | `libs/data-access/proto-contracts` | `proto-contracts` | `scope:data-access`, `type:interfaces`, `lang:proto` | Shared wire DTOs, error enums, pagination/RPC contracts |
 | `libs/data-access/<lang>-<provider>` | `<proj>` | `scope:data-access`, `type:data-access`, `lang:<lang>` | Concrete adapters, DB/broker/ML singletons, external HTTP/SDK I/O |
 | `libs/features/<lang>-<name>` | `<proj>` | `scope:features`, `type:feature`, `lang:<lang>` | Feature state, view-models, orchestrators depending only on `type:interfaces` |
-| `libs/ui/*` | `atomic-design-interfaces` + 4 UI libs | `scope:ui` | Bottom-up Atoms, Molecules, Organisms, Templates (presentation only) |
+| `libs/ui/*` | `atomic-design-interfaces` + UI libs | `scope:ui` | Bottom-up Atoms, Molecules, Organisms, Templates (presentation only) |
 | `apps/<app-name>` | `<app>` | `scope:app`, `type:app`, `lang:<lang>` | Thin deployable web, mobile, or FastAPI/Spring/NestJS/Go/Rust entrypoint |
 
 ---

@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package monomagic.ui.v1;
+
+// Semantic color tokens shared across all mono-magic UI libraries (TS, Dart, Kotlin, Rust).
+enum MagicColor {
+  // Unspecified fallback color.
+  MAGIC_COLOR_UNSPECIFIED = 0;
+  // Primary brand accent color.
+  MAGIC_COLOR_PRIMARY = 1;
+  // Secondary accent color.
+  MAGIC_COLOR_SECONDARY = 2;
+  // Success semantic color.
+  MAGIC_COLOR_SUCCESS = 3;
+  // Warning semantic color.
+  MAGIC_COLOR_WARNING = 4;
+  // Error / destructive semantic color.
+  MAGIC_COLOR_ERROR = 5;
+  // Informational semantic color.
+  MAGIC_COLOR_INFO = 6;
+  // Neutral / default surface color.
+  MAGIC_COLOR_NEUTRAL = 7;
+}
+
+// Standardized component sizing scale across all UI frameworks.
+enum MagicSize {
+  // Unspecified fallback size.
+  MAGIC_SIZE_UNSPECIFIED = 0;
+  // Small compact density.
+  MAGIC_SIZE_SM = 1;
+  // Default medium density.
+  MAGIC_SIZE_MD = 2;
+  // Large prominent density.
+  MAGIC_SIZE_LG = 3;
+}
+
+// Visual surface appearance variants shared across Atomic Design components.
+enum MagicAppearance {
+  // Unspecified fallback appearance.
+  MAGIC_APPEARANCE_UNSPECIFIED = 0;
+  // Filled / contained solid surface.
+  MAGIC_APPEARANCE_SOLID = 1;
+  // Outlined bordered surface.
+  MAGIC_APPEARANCE_OUTLINE = 2;
+  // Minimal / text-only surface.
+  MAGIC_APPEARANCE_TEXT = 3;
+  // Tonal / soft elevated surface.
+  MAGIC_APPEARANCE_TONAL = 4;
+}
+
+// Target UI framework identifiers supported by mono-magic and the Flow UI Builder.
+enum UiFramework {
+  // Unspecified framework.
+  UI_FRAMEWORK_UNSPECIFIED = 0;
+  // React 19 + MUI v9 (libs/ui/react-mui).
+  UI_FRAMEWORK_REACT_MUI = 1;
+  // Angular 22 + Angular Material 22 (libs/ui/ng-mat).
+  UI_FRAMEWORK_NG_MAT = 2;
+  // Expo / React Native + Paper (libs/ui/rn-paper).
+  UI_FRAMEWORK_RN_PAPER = 3;
+  // Flutter Material 3 (libs/ui/fl-mat).
+  UI_FRAMEWORK_FL_MAT = 4;
+  // Vue 3 + Vuetify 3 (libs/ui/vue-vuetify).
+  UI_FRAMEWORK_VUE_VUETIFY = 5;
+  // Svelte 5 + Tailwind v4 + Bits UI (libs/ui/svelte-tw).
+  UI_FRAMEWORK_SVELTE_TW = 6;
+  // Kotlin Jetpack Compose + Material 3 (libs/ui/kt-compose).
+  UI_FRAMEWORK_KT_COMPOSE = 7;
+}
+
+// Target design system family identifiers.
+enum DesignSystem {
+  // Unspecified design system.
+  DESIGN_SYSTEM_UNSPECIFIED = 0;
+  // Material Design 3.
+  DESIGN_SYSTEM_MATERIAL_3 = 1;
+  // Tailwind CSS utility design system.
+  DESIGN_SYSTEM_TAILWIND = 2;
+  // React Native Paper Material You.
+  DESIGN_SYSTEM_PAPER = 3;
+}
+
+// Portable theme token bundle emitted by rs-design-tokens and consumed by UI libraries.
+message DesignTokenSet {
+  // Unique theme identifier (e.g. "magic-light", "magic-dark").
+  string theme_id = 1;
+  // Whether this token set represents a dark mode palette.
+  bool dark_mode = 2;
+  // Hex color token map keyed by semantic token name (e.g. "color.primary").
+  map<string, string> colors = 3;
+  // Spacing scale map in pixels keyed by token name (e.g. "space.md").
+  map<string, int32> spacing_px = 4;
+  // Border radius scale map in pixels keyed by token name (e.g. "radius.md").
+  map<string, int32> radius_px = 5;
+}

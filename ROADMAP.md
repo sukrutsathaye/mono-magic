@@ -55,19 +55,20 @@ flowchart TD
 | --- | --- | --- | --- | --- |
 | **Phase 0** | Monorepo Foundation, 4 UI Libraries (11 Atoms + 5 Molecules), GH Pages Portal | `libs/ui/*`, `tools/ci/*`, `.github/workflows/*` | — | Completed |
 | **Phase 1** | Docs, `.gemini/` Orchestration, Strict Boundaries, Committed Visual Baselines & Coverage Portal | `README.md`, `ROADMAP.md`, `.gemini/*`, `eslint.config.mjs`, `libs/ui/*` | Phase 0 | Completed |
+| **Phase 1B** | Skills Compliance & Cross-Library Remediation (Waves 1–4: Tags/Hygiene, Data-Access Parity, UI Superset & 7-Category Stories, Docs/Coverage & Vue/Svelte Molecules) | `libs/ui/*`, `libs/data-access/*`, `libs/utils/*`, `tools/ci/*` | Phase 1, 2A, 3A, 3B | Planned |
 | **Phase 2A** | Atomic Design Expansion — Wave 2 Molecules (Batch 1: 5 + Batch 2: 5 × 4 UI Libs) | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 1 | Completed |
 | **Phase 2B** | Atomic Design Expansion — Wave 1 Core Organisms (5 Organisms × 4 UI Libs) | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 2A | Planned |
 | **Phase 2C** | Atomic Design Expansion — Wave 2 Domain Organisms (Commerce, Live Conferencing, Reflective Learning) & Templates | `libs/ui/atomic-design-interfaces`, `libs/ui/{react-mui,ng-mat,rn-paper,fl-mat}` | Phase 2B | Planned |
 | **Phase 3A** | Pure Shared Utilities (`ts-core`, `ts-formatters`, `ts-pose-math`, `ts-design-tokens`, `py-common`, `py-nlp`, `go-core`) | `libs/utils/{ts-*,py-*,rs-*,go-*}` | Phase 1 | Completed |
 | **Phase 3B** | Hybrid Data-Access Contracts (`proto-contracts`, `ts-interfaces`, `py-interfaces`) & Compliance Harness | `libs/data-access/{proto-contracts,ts-interfaces,py-interfaces}` | Phase 3A | Completed (TS/Py/Proto) |
-| **Phase 3C** | Data-Access Implementations (`ts-firebase`, `ts-supabase`, `ts-nestjs-*`, `java-spring-boot-*`, Cloud SDKs, Domain Wrappers) | `libs/data-access/*` | Phase 3B | In Progress |
-| **Phase 4A** | Open-Source Realtime & ML Integrations (LiveKit, PoseNet / MediaPipe, Smart Whiteboard / Transcripts, Payments) | `libs/features/ts-*`, `libs/data-access/*` | Phase 2C, 3C | Planned |
-| **Phase 4B** | Additional UI Frameworks & Design Systems (Vue, Svelte, Tailwind + `shadcn/ui`) | `libs/ui/{vue-*,svelte-*,react-shadcn}` | Phase 2C | In Progress |
-| **Phase 4C** | Polyglot Microservices (`api-pose-coach`, `api-reflective-learning`, Go/Rust Realtime Workers, Spring Boot, NestJS) | `apps/api-*`, `libs/data-access/*` | Phase 3C | Planned |
-| **Phase 5A** | Flagship App 1: Interactive Live Coaching & Learning Platform (Yoga + PoseNet + Multi-Subject + Whiteboard) | `apps/yoga-live*` (or `apps/live-coaching*`) | Phase 2C, 4A, 4C | Planned |
-| **Phase 5B** | Flagship App 2: Hand-Knitted Articles Showcase & Ordering Platform | `apps/knitted-showcase*` | Phase 2C, 3C | Planned |
-| **Phase 5C** | Flagship App 3: Reflective Learning App (Wikipedia + Text/Markdown + Books/PDF/EPUB; [Blueprint](docs/projects/reflective-learning.md)) | `apps/reflective-learning*`, `apps/api-reflective-learning` | Phase 2C, 3C, 4C | Planned |
-| **Phase 5D** | Flagship App 4: Couples Relationship Journal App | `apps/couples-journal*` | Phase 2C, 3C | Planned |
+| **Phase 3C** | Data-Access Implementations (`ts-firebase`, `ts-supabase`, `ts-redis`/`py-redis`, full `ts-nestjs`, NestJS-inspired `py-nest`, `kt-spring-boot`, `py-agent-graph`/`py-ml-core`/`py-rl-core`, Cloud SDKs) | `libs/data-access/*` | Phase 3B | In Progress |
+| **Phase 4A** | Open-Source Realtime, Visual Flow & QA Integrations (LiveKit, PoseNet/MediaPipe, `ts-flow-studio` XYFlow UI Builder & BPMN Studio, `ts-playwright-crawler` QA Explorer, Payments) | `libs/features/ts-*`, `libs/data-access/*` | Phase 2C, 3C | Planned |
+| **Phase 4B** | Additional UI Frameworks & Design Systems (`vue-vuetify`, `svelte-tw`, `react-shadcn`, `kt-compose` Kotlin Jetpack Compose, `proto-ui-contracts`) | `libs/ui/{vue-*,svelte-*,react-shadcn,kt-compose,proto-ui-contracts}` | Phase 2C | In Progress |
+| **Phase 4C** | Polyglot Microservices (`api-pose-coach`, `api-reflective-learning`, `api-ml-pipeline`, `api-claims-engine`, Go/Rust Realtime & Sensor Workers, Kotlin Spring Boot, NestJS Gateway) | `apps/api-*`, `libs/data-access/*` | Phase 3C | Planned |
+| **Phase 5A** | Flagship App 1: Quanti-Fit Interactive Live Coaching & Learning Platform ([Blueprint](docs/projects/quanti-fit.md)) | `apps/quanti-fit-*` | Phase 2C, 4A, 4C | Planned |
+| **Phase 5B** | Flagship App 2: Hand-Knitted Articles Showcase & Ordering Platform ([Blueprint](docs/projects/knitted-showcase.md)) | `apps/knitted-showcase*` | Phase 2C, 3C | Planned |
+| **Phase 5C** | Flagship App 3: Reflective Learning App ([Blueprint](docs/projects/reflective-learning.md)) | `apps/reflective-learning*`, `apps/api-reflective-learning` | Phase 2C, 3C, 4C | Planned |
+| **Phase 5D** | Flagship App 4: Couples Relationship Journal App ([Blueprint](docs/projects/couples-journal.md)) | `apps/couples-journal*` | Phase 2C, 3C | Planned |
 
 ---
 
@@ -109,6 +110,30 @@ flowchart TD
 - [x] **Publish Coverage Reports to GitHub Pages Showcase Portal**:
   - *Acceptance Criteria*:
     - Extend `tools/ci/storybook-pages.mjs` and `.github/workflows/storybook-gh-pages.yml` to collect Unit Test and Storybook Test HTML coverage reports (plus coverage percentage badges from `coverage-summary.json` / `lcov.info`) and link them directly from each project card on the GitHub Pages portal (`https://sukrutsathaye.github.io/mono-magic/`).
+
+#### Skills Compliance & Cross-Library Remediation Plan (`Phase 1B` — Waves 1–4)
+- [ ] **Wave 1 — Governance, Canonical Nx Tags & Systems Hygiene**:
+  - *Acceptance Criteria*:
+    - Add missing canonical Nx tags across all 7 UI projects (`lang:ts` on `atomic-design-interfaces`; `type:ui` + `lang:ts` on `react-mui`, `ng-mat`, `rn-paper`; `type:ui` + `lang:dart` on `fl-mat`; `type:ui` on `vue-vuetify`, `svelte-tw`) and `provider:<name>` tags on all 4 concrete data-access providers (`ts-firebase`, `ts-supabase`, `ts-reflective-api`, `py-reflective-nlp`).
+    - Replace the 3 production `.expect("validated parameters")` calls in `libs/utils/rs-pose-math/src/filter.rs` with `?` error propagation (zero `unwrap()`/`expect()` in non-test Rust code).
+    - Add `cargo fmt -- --check` to Rust `lint` targets (`rs-pose-math`, `rs-design-tokens`) and `test -z "$(gofmt -l .)"` to Go `lint` (`go-core`).
+    - Add `from __future__ import annotations` to `libs/data-access/py-interfaces/src/py_data_access_interfaces/__init__.py`.
+    - Enable `coverage.enabled: true` in `libs/data-access/ts-interfaces/vitest.config.mts` and remove redundant `reporters` keys alongside `reporter` in TypeScript Vitest configs.
+- [ ] **Wave 2 — Data-Access Wire Contract Parity & LSP Completeness**:
+  - *Acceptance Criteria*:
+    - Add `proto/monomagic/reflective/v1/reflective.proto` to `libs/data-access/proto-contracts` (`buf lint` clean) and mirror reflective DTOs & protocols into `libs/data-access/py-interfaces` so `py-reflective-nlp` implements shared `py-interfaces` contracts rather than owning standalone `schemas.py`/`protocols.py`.
+    - Add `runRealtimeProviderContractTests` and `runPaymentProviderContractTests` to `libs/data-access/ts-interfaces/src/lib/testing/contract-suites.ts` and wire `runRealtimeProviderContractTests` into `ts-firebase` and `ts-supabase`.
+- [ ] **Wave 3 — UI Root Framework Superset & 7-Category Story Matrix**:
+  - *Acceptance Criteria*:
+    - Enforce Root Framework Superset attribute forwarding in `vue-vuetify` (`v-bind="$attrs"` / `inheritAttrs: false` across all 11 atoms) and `svelte-tw` (`HTML*Attributes` + `...restProps` across all 11 atoms, plus `$bindable()` in `MagicButtonToggle.svelte`).
+    - Close framework-specific contract gaps: add `slotProps` to the 15 remaining `react-mui` components, add `MagicValueAccessor` / CVA to `date-picker`, `rating`, and `search-bar` in `ng-mat`, and add `onClick` parity (`chip`, `card`) plus explicit `inline`/`disablePortal` props (`menu`, `select`, `date-picker`) in `rn-paper`.
+    - Upgrade all UI library stories and Widgetbook use-cases to the Canonical 7-Category State Matrix (`Default`/`InteractivePlayground`, `Variants`, `SizesAndColors`, `DisabledAndLoading`, `ErrorAndEdgeCases`, `CustomSlotsAndComposition`, `DarkTheme`) with categorized `argTypes` (`vue-vuetify`, `svelte-tw`), a `play:` test on `ng-mat` `Avatar`, and regenerated `__vis__/` visual baselines passing `test-storybook`.
+- [ ] **Wave 4 — Documentation, Measured Coverage Gates & Vue/Svelte Molecule Parity**:
+  - *Acceptance Criteria*:
+    - Complete inline docs: add missing TSDoc on top-level exports (`atomic-design-interfaces`, `rn-paper`, `ng-mat`, `react-mui`), add `# Examples` doc-tests (`cargo test --doc`) to `rs-pose-math` and `rs-design-tokens`, add `//!` to `rs-design-tokens/src/main.rs` and `#[repr(C)]` to `ContrastReport`/`WcagLevel`, and add `%w` wrapping (`retry.Do`) + table-driven `t.Run` tests in `go-core`.
+    - Complete per-package `README.md` standards: add Public API Tables (`libs/utils/*` [7/7], `libs/data-access/*` [4/7]), Usage Examples (all missing libs), Architecture sections (`vue-vuetify`, `svelte-tw`), update `ts-interfaces/README.md` with `reflective` exports, and fix stale `"all 5 molecules"` in `libs/ui/fl-mat/README.md`.
+    - Replace flat placeholder `80`/`90` entries in `tools/ci/coverage-metrics.json` with measured coverage across all 21 libraries, enforce automated `>=80%`/`>=90%` coverage gates for `fl-mat`, `rs-*`, and `go-core`, and re-sync via `node tools/ci/sync-readmes-and-coverage.mjs`.
+    - Implement all **17 Molecules** in `libs/ui/vue-vuetify` and `libs/ui/svelte-tw` (with unit tests `>=80%`, 7-Category stories, and `__vis__/` baselines) to achieve 1:1 parity across all 6 UI frameworks.
 
 ---
 
@@ -268,12 +293,20 @@ classDiagram
 - [x] **`@mono-magic/data-access-ts-supabase` (`libs/data-access/ts-supabase`)**:
   - *Acceptance Criteria*: Implements `IAuthProvider` (Supabase Auth), `IDataRepository` (PostgREST / Postgres), `IStorageProvider` (Supabase Storage), and `IRealtimeProvider` (Supabase Realtime channels), passing the identical contract compliance suite.
 
-#### Phase 3C.2 — NestJS Backend Wrappers (`libs/data-access/ts-nestjs-*`)
-- [ ] **`@mono-magic/data-access-ts-nestjs` (`libs/data-access/ts-nestjs-core` & wrappers)**:
-  - *Acceptance Criteria*: Reusable NestJS dynamic modules and decorators following official NestJS idioms:
+#### Phase 3C.2 — Full NestJS & NestJS-Inspired Python (`py-nest`) + Redis Silos
+- [ ] **`@mono-magic/data-access-ts-nestjs` (`libs/data-access/ts-nestjs`)**:
+  - *Acceptance Criteria*: Complete modular NestJS wrapper silo (subpath exports `{core,graphql,swagger,redis,auth,prisma,queues,ws,microservices}`) following official NestJS DI idioms:
     - Auth/OIDC/JWT Guards & Passport strategies implementing `IAuthProvider`
     - Prisma / TypeORM PostgreSQL repository adapters implementing `IDataRepository`
-    - Caching (Redis), Configuration (`@nestjs/config`), OpenAPI/Swagger, Queues (`BullMQ`), and WebSockets/Microservice transport wrappers.
+    - GraphQL (`@nestjs/graphql`), OpenAPI/Swagger + Scalar (`@nestjs/swagger`), Caching/Locks (`ts-redis`), Configuration (`@nestjs/config`), Queues (`BullMQ`), Health/OpenTelemetry, and WebSockets/gRPC/Kafka Microservice transports.
+- [ ] **`py-nest` (`libs/data-access/py-nest`)**:
+  - *Acceptance Criteria*: NestJS-inspired modular Python framework silo over FastAPI + `lifespan` DI singletons with clean internal submodules & `uv` optional extras (`py-nest[fastapi,swagger,graphql,redis,auth,db,otel]`): automatic OpenAPI/Swagger + Scalar docs, Strawberry GraphQL, async Redis (`py-redis`), SQLModel repositories, and structured OTel telemetry.
+- [ ] **Caching & Distributed Locks (`libs/data-access/ts-redis` & `libs/data-access/py-redis`)**:
+  - *Acceptance Criteria*: Implements `ICacheProvider` & `IDistributedLock` (`cache/v1/cache.proto`) backed by Redis/Valkey with local Docker Compose setup and Contract Compliance tests.
+- [ ] **AI, ML, RL & Agentic Silos (`libs/data-access/{py-agent-graph,py-ml-core,py-rl-core,ts-ai-sdk}`)**:
+  - *Acceptance Criteria*: Isolated `uv` workspace packages wired to `ai/v1/ai.proto`: `py-agent-graph` (LangChain/LangGraph DI wrapper), `py-ml-core` (PyTorch/ONNX/MLflow), `py-rl-core` (Gymnasium + Stable-Baselines3), and `ts-ai-sdk`.
+- [ ] **Kotlin Native / KMP Track (`libs/utils/kt-core`, `libs/data-access/kt-interfaces`)**:
+  - *Acceptance Criteria*: Gradle-in-Nx Kotlin core utilities (`Result`, retry, logging) and `kt-interfaces` wired to `proto-contracts` Kotlin codegen + Ktor/Koin DI.
 
 #### Phase 3C.3 — Enterprise Java/Kotlin Spring Boot Data-Access (`libs/data-access/java-spring-boot-*`)
 - [ ] **`java-spring-boot-data-access` (`libs/data-access/java-spring-boot-starter`)**:
