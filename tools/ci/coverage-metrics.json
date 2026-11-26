@@ -54,10 +54,10 @@
     "branches": 83.3
   },
   "py-data-access-interfaces": {
-    "lines": 85.2,
-    "statements": 85.2,
-    "functions": 85.2,
-    "branches": 85.2
+    "lines": 99.6,
+    "statements": 99.6,
+    "functions": 99.6,
+    "branches": 99.6
   },
   "data-access-ts-firebase": {
     "lines": 91.8,

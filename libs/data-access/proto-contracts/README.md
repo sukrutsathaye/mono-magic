@@ -34,11 +34,11 @@ pnpm nx breaking proto-contracts
 pnpm nx run proto-contracts:generate
 ```
 
-| Target Language | Generator Plugin / Tool | Output Directory | Consuming Library |
+| Target Language | Generator Plugin / Tool | Output Directory | Workspace Package & Consumers |
 | :--- | :--- | :--- | :--- |
-| **TypeScript** | `protoc-gen-es` (`@bufbuild/protoc-gen-es`) | `libs/data-access/ts-interfaces/src/gen/` | `@mono-magic/data-access-ts-interfaces` (exported via `./proto`) |
-| **Python** | `uv run --package py-data-access-interfaces python -m grpc_tools.protoc` (`--python_out` + `--pyi_out`) | `libs/data-access/py-interfaces/src/py_data_access_interfaces/gen/` | `py-data-access-interfaces` (importable via `py_data_access_interfaces.gen.monomagic.*`) |
-| **Kotlin / Java / Go / Rust / Dart** *(Extensible)* | `protoc-gen-kotlin` / `protoc-gen-go` / `prost` / `protoc-gen-dart` | Respective `libs/data-access/<lang>-interfaces` | Added as each language interface library is scaffolded |
+| **TypeScript** | `protoc-gen-es` (`@bufbuild/protoc-gen-es`) | `libs/data-access/proto-contracts/generated/ts/` | `@mono-magic/proto-contracts` (consumed by `@mono-magic/data-access-ts-interfaces/proto`) |
+| **Python** | `uv run --package py-data-access-interfaces python -m grpc_tools.protoc` (`--python_out` + `--pyi_out`) | `libs/data-access/proto-contracts/generated/py/` | `py-proto-contracts` (consumed by `py-data-access-interfaces.proto`) |
+| **Kotlin / Java / Go / Rust / Dart** *(Extensible)* | `protoc-gen-kotlin` / `protoc-gen-go` / `prost` / `protoc-gen-dart` | `libs/data-access/proto-contracts/generated/<lang>/` | Added as each language interface library is scaffolded |
 
 > **Why `v1` in package names?** Buf's `STANDARD` lint rule (`PACKAGE_VERSION_SUFFIX`) requires major-version suffixes (`monomagic.common.v1`, `monomagic.ai.v1`) so future breaking schema evolutions can ship cleanly under `v2` without breaking existing `v1` consumers.
 

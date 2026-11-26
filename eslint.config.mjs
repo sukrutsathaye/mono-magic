@@ -11,7 +11,7 @@ export default [
         "**/vitest.config.*.timestamp*",
         "**/test-output/**",
         "**/coverage/**",
-        "**/src/gen/**"
+        "**/generated/**"
       ]
     },
     {

@@ -1,4 +1,5 @@
 # Buf v2 offline-safe code generation template for UI contracts (tokens, enums, XYFlow PageGraph AST).
+# Emits TypeScript directly into libs/ui/proto-ui-contracts/generated/ts.
 version: v2
 clean: true
 managed:
@@ -6,9 +7,8 @@ managed:
 inputs:
   - directory: proto
 plugins:
-  # Local TypeScript codegen via @bufbuild/protoc-gen-es (wired directly into atomic-design-interfaces)
   - local: protoc-gen-es
-    out: ../atomic-design-interfaces/src/gen
+    out: generated/ts
     opt:
       - target=ts
       - import_extension=.js

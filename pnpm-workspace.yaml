@@ -3,6 +3,7 @@ packages:
   - "libs/ui/*"
   - "libs/utils/ts-*"
   - "libs/data-access/ts-*"
+  - "libs/data-access/proto-contracts"
   - "libs/features/ts-*"
   - "!libs/ui/fl-mat"
 

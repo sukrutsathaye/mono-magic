@@ -11,7 +11,7 @@ Framework-agnostic TypeScript Atomic Design component contracts (`Atoms`, `Molec
   - `src/lib/atoms/` — 11 foundational Atom contracts (`*AtomProps`).
   - `src/lib/molecules/` — 17 composite Molecule contracts (`*MoleculeProps`).
   - `src/lib/organisms/` & `src/lib/templates/` — Higher-order Organism and Page Template contracts.
-  - `src/gen/` — Generated TypeScript enums, tokens, and `PageGraphDocument` AST emitted from [`libs/ui/proto-ui-contracts`](../proto-ui-contracts/README.md).
+  - `src/proto.ts` (`./proto`) — Re-exports generated TypeScript enums, tokens, and `PageGraphDocument` AST from workspace package `@mono-magic/proto-ui-contracts` ([`libs/ui/proto-ui-contracts`](../proto-ui-contracts/README.md)).
 
 ---
 

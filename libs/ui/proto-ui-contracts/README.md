@@ -34,10 +34,10 @@ pnpm nx breaking proto-ui-contracts
 pnpm nx run proto-ui-contracts:generate
 ```
 
-| Target Language | Generator Plugin | Output Directory | Consuming Library |
+| Target Language | Generator Plugin | Output Directory | Workspace Package & Consumers |
 | :--- | :--- | :--- | :--- |
-| **TypeScript** | `protoc-gen-es` (`@bufbuild/protoc-gen-es`) | `libs/ui/atomic-design-interfaces/src/gen/` | `@mono-magic/atomic-design-interfaces` (re-exported via `./proto`) |
-| **Dart / Kotlin / Rust** *(Planned)* | `protoc-gen-dart` / `protoc-gen-kotlin` / `prost` | `fl-mat`, `kt-compose`, `rs-design-tokens` | Future multiplatform UI & token emitters |
+| **TypeScript** | `protoc-gen-es` (`@bufbuild/protoc-gen-es`) | `libs/ui/proto-ui-contracts/generated/ts/` | `@mono-magic/proto-ui-contracts` (consumed by `@mono-magic/atomic-design-interfaces/proto`) |
+| **Dart / Kotlin / Rust** *(Planned)* | `protoc-gen-dart` / `protoc-gen-kotlin` / `prost` | `libs/ui/proto-ui-contracts/generated/<lang>/` | `fl-mat`, `kt-compose`, `rs-design-tokens` |
 
 ---
 

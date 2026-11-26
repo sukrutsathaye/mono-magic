@@ -32,6 +32,7 @@
     ]
   },
   "dependencies": {
+    "@mono-magic/proto-contracts": "workspace:*",
     "@mono-magic/utils-ts-core": "workspace:*"
   }
 }

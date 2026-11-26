@@ -1,0 +1,19 @@
+{
+  "name": "@mono-magic/proto-contracts",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./ts-index.ts",
+  "types": "./ts-index.ts",
+  "exports": {
+    ".": {
+      "types": "./ts-index.ts",
+      "import": "./ts-index.ts",
+      "default": "./ts-index.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.17.0"
+  }
+}

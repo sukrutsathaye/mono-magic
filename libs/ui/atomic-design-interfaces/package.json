@@ -22,5 +22,7 @@
     "name": "atomic-design-interfaces",
     "tags": ["scope:ui", "type:interfaces"]
   },
-  "dependencies": {}
+  "dependencies": {
+    "@mono-magic/proto-ui-contracts": "workspace:*"
+  }
 }

@@ -32,6 +32,9 @@
         "{projectRoot}/buf.gen.yaml",
         "{projectRoot}/proto/**/*.proto"
       ],
+      "outputs": [
+        "{projectRoot}/generated"
+      ],
       "options": {
         "cwd": "libs/ui/proto-ui-contracts",
         "command": "pnpm exec buf generate"

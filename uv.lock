@@ -6,6 +6,7 @@ requires-python = ">=3.12"
 members = [
     "mono-repo-magic-python",
     "py-data-access-interfaces",
+    "py-proto-contracts",
     "py-reflective-nlp",
     "py-utils-common",
     "py-utils-nlp",
@@ -373,7 +374,7 @@ name = "py-data-access-interfaces"
 version = "0.1.0"
 source = { editable = "libs/data-access/py-interfaces" }
 dependencies = [
-    { name = "protobuf" },
+    { name = "py-proto-contracts" },
     { name = "pydantic" },
 ]
 
@@ -389,7 +390,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "protobuf", specifier = ">=5.29.0" },
+    { name = "py-proto-contracts", editable = "libs/data-access/proto-contracts" },
     { name = "pydantic", specifier = ">=2.10.0" },
 ]
 
@@ -402,6 +403,17 @@ dev = [
     { name = "pytest-cov", specifier = ">=5.0.0" },
     { name = "ruff", specifier = ">=0.7.0" },
 ]
+
+[[package]]
+name = "py-proto-contracts"
+version = "0.1.0"
+source = { editable = "libs/data-access/proto-contracts" }
+dependencies = [
+    { name = "protobuf" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "protobuf", specifier = ">=5.29.0" }]
 
 [[package]]
 name = "py-reflective-nlp"

@@ -1,6 +1,6 @@
 # Buf v2 offline-safe code generation template for mono-magic data-access wire contracts.
-# Generates TypeScript ES + .d.ts directly into libs/data-access/ts-interfaces/src/gen.
-# Python (*_pb2.py + *_pb2.pyi) is generated offline via grpc_tools.protoc in project.json:generate.
+# Emits TypeScript into libs/data-access/proto-contracts/generated/ts.
+# Python (*_pb2.py + *_pb2.pyi) is emitted into generated/py via project.json:generate.
 version: v2
 clean: true
 managed:
@@ -9,7 +9,7 @@ inputs:
   - directory: proto
 plugins:
   - local: protoc-gen-es
-    out: ../ts-interfaces/src/gen
+    out: generated/ts
     opt:
       - target=ts
       - import_extension=.js
