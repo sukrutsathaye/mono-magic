@@ -182,6 +182,10 @@ function summarizeModules(projectRoot) {
 
   const pySrc = join(ROOT, projectRoot, 'src');
   if (existsSync(pySrc)) {
+    if (existsSync(join(pySrc, '__init__.py'))) {
+      const mods = listBasenames(pySrc).filter((item) => item !== '__init__' && item !== 'py.typed');
+      return mods.length ? `modules: ${mods.join(', ')}` : '';
+    }
     const pkgs = readdirSync(pySrc, { withFileTypes: true }).filter((d) => d.isDirectory() && !d.name.startsWith('_'));
     const mods = [];
     for (const pkg of pkgs) {

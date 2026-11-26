@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Awaitable, Callable, Mapping
 from typing import Any, Protocol, runtime_checkable
 
-from .common import DataAccessError, PaginatedResult, QuerySpec, Result
+from ..common import DataAccessError, PaginatedResult, QuerySpec, Result
 
 
 @runtime_checkable
