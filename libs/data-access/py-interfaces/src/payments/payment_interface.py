@@ -10,7 +10,7 @@ from typing import Any, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from .common import DataAccessError, Result
+from ..common import DataAccessError, Result
 
 
 class Money(BaseModel):

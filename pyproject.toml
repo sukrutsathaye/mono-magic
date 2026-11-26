@@ -5,3 +5,6 @@ requires-python = ">=3.12"
 
 [tool.uv.workspace]
 members = ["apps/api-*", "libs/*/py-*", "libs/data-access/proto-contracts"]
+
+[tool.uv.config-settings-package]
+py-data-access-interfaces = { editable_mode = "strict" }
