@@ -62,6 +62,7 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 
 ### Custom Skills (`.gemini/skills/`)
 - **`engineering-standards`** *(Mandatory)* ([.gemini/skills/engineering-standards/SKILL.md](.gemini/skills/engineering-standards/SKILL.md)): Concrete SOLID principles, clean code & performance hygiene, documentation gates, unit/E2E coverage thresholds, and `libs/<domain>/<lang>-<name>` naming/tagging.
+- **`git-workflow`** *(Mandatory)* ([.gemini/skills/git-workflow/SKILL.md](.gemini/skills/git-workflow/SKILL.md)): `main -> dev` pre-task sync, `<type>/<scope>-<slug>` branching, micro-atomic commits (function/story/test-level; whole-file commits allowed only for isolated generator scaffolding), Conventional Commits, pre-PR commit audits, and `gh` PR/issue linking.
 - **`token-budget-guardrails`** *(Mandatory for `/teamwork` & Subagents)* ([.gemini/skills/token-budget-guardrails/SKILL.md](.gemini/skills/token-budget-guardrails/SKILL.md)): Index-first discovery via [REPO_INDEX.md](REPO_INDEX.md), `main -> dev` pre-task sync, PRs against `dev`, bounded parallel fan-out, disjoint file ownership, model tiering, and affected-only verification.
 - **`polyglot-unit-testing`** *(Mandatory)* ([.gemini/skills/polyglot-unit-testing/SKILL.md](.gemini/skills/polyglot-unit-testing/SKILL.md)): Per-language unit and contract compliance testing playbooks across TS/Vitest (Node, React 19, Angular 22, RN Paper, Vue 3, Svelte 5), Python (`pytest`), Flutter (`flutter_test`), Rust (`cargo test`), and Go (`go test -race -cover`), plus automated `README.md` coverage table syncing.
 - **`interactive-stories`** *(Mandatory for UI)* ([.gemini/skills/interactive-stories/SKILL.md](.gemini/skills/interactive-stories/SKILL.md)): Canonical 7-Category Component State Matrix across Storybook (`react-mui`, `ng-mat`, `rn-paper`, `vue-vuetify`, `svelte-tw`) and Flutter Widgetbook (`fl-mat`) with categorized Controls/knobs, stateful wrappers, `play` tests, and visual baselines.
@@ -94,6 +95,7 @@ This repository is a polyglot monorepo powered by **Nx** (`v24.0.6`), **pnpm** (
 - `/audit-ui-parity` ([.gemini/commands/audit-ui-parity.toml](.gemini/commands/audit-ui-parity.toml))
 - `/add-polyglot-util` ([.gemini/commands/add-polyglot-util.toml](.gemini/commands/add-polyglot-util.toml))
 - `/pre-pr-check` ([.gemini/commands/pre-pr-check.toml](.gemini/commands/pre-pr-check.toml))
+- `/atomic-commit` ([.gemini/commands/atomic-commit.toml](.gemini/commands/atomic-commit.toml))
 - `/write-stories` ([.gemini/commands/write-stories.toml](.gemini/commands/write-stories.toml))
 - `/unit-test` ([.gemini/commands/unit-test.toml](.gemini/commands/unit-test.toml))
 - `/doc-gen` ([.gemini/commands/doc-gen.toml](.gemini/commands/doc-gen.toml))
