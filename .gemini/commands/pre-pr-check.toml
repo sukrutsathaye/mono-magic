@@ -2,21 +2,22 @@ description = "Run the complete pre-PR verification gate (affected lint/typechec
 prompt = """
 # Pre-PR Verification & Drift Gate (Target: `dev`)
 
-Follow `token-budget-guardrails` (`.gemini/skills/token-budget-guardrails/SKILL.md`), `coverage-and-quality` (`.gemini/skills/coverage-and-quality/SKILL.md`), and `repo-updater` (`.gemini/skills/repo-updater/SKILL.md`).
+Follow `git-workflow` (`.gemini/skills/git-workflow/SKILL.md`), `token-budget-guardrails` (`.gemini/skills/token-budget-guardrails/SKILL.md`), `coverage-and-quality` (`.gemini/skills/coverage-and-quality/SKILL.md`), and `repo-updater` (`.gemini/skills/repo-updater/SKILL.md`).
 
 ## User Request
 {{args}}
 
 ## Execution Checklist
-1. Confirm the active branch was branched from `dev` (after merging `origin/main` into `dev`).
-2. Run affected quality gates:
+1. Confirm the active branch was branched from `dev` (after merging `origin/main` into `dev`) using `<type>/<scope>-<slug>`.
+2. Audit commit granularity with `git log --oneline --stat origin/dev..HEAD` and verify every hand-authored commit is micro-atomic (function, story, test block, or small cohesive line group; whole-file commits allowed only for isolated generator/codegen output).
+3. Run affected quality gates:
    ```bash
    pnpm nx affected -t lint typecheck test
    ```
-3. Refresh and verify repository index and README coverage tables:
+4. Refresh and verify repository index and README coverage tables:
    ```bash
    node tools/ci/generate-repo-index.mjs --check
    node tools/ci/sync-readmes-and-coverage.mjs --check
    ```
-4. Open the Pull Request against `--base dev` (`gh pr create --base dev ...`).
+5. Open the Pull Request against `--base dev` (`gh pr create --base dev ...`) with `Closes #<issue>` or `Part of #<issue>`.
 """
