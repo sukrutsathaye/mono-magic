@@ -1,4 +1,10 @@
 import {
+  hasFacebookAuth,
+  hasGitHubAuth,
+  hasGoogleAuth,
+  isSocialAuthProvider,
+} from '@mono-magic/data-access-ts-interfaces';
+import {
   expectOk,
   runAuthProviderContractTests,
   runDataRepositoryContractTests,
@@ -414,6 +420,27 @@ describe('@mono-magic/data-access-ts-supabase', () => {
 
       const unsub2 = expectOk(await statusRealtime.subscribe('ch-3', () => undefined));
       await unsub2();
+    });
+  });
+
+  describe('SupabaseAuthProvider social logins (Google & GitHub)', () => {
+    it('supports Google and GitHub sign-in without implementing unused social providers', async () => {
+      const auth = new SupabaseAuthProvider(createInMemorySupabaseClient());
+
+      expect(hasGoogleAuth(auth)).toBe(true);
+      expect(hasGitHubAuth(auth)).toBe(true);
+      expect(hasFacebookAuth(auth)).toBe(false);
+      expect(isSocialAuthProvider(auth)).toBe(false);
+
+      const googleSession = expectOk(
+        await auth.signInWithGoogle({ redirectTo: 'https://app.mono-magic.local/auth/callback' }),
+      );
+      expect(googleSession.accessToken).toBeTruthy();
+
+      const githubSession = expectOk(
+        await auth.signInWithGitHub({ scopes: ['read:user', 'user:email'] }),
+      );
+      expect(githubSession.accessToken).toBeTruthy();
     });
   });
 });
