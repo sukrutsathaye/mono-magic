@@ -1,7 +1,7 @@
-"""Payment provider contracts and DTOs."""
+"""Payment provider contracts, DTOs, and abstract base class."""
 
+from .payment_base import BasePaymentProvider
 from .payment_interface import (
-    BasePaymentProvider,
     Money,
     PaymentIntent,
     PaymentProvider,
