@@ -293,7 +293,7 @@ const ITEMS = [
     "size": "L",
     "phase": "Phase 3B",
     "track": "Track 4: Data-Access",
-    "iteration": "Iteration 2",
+    "iteration": "Iteration 1",
     "startDate": "2026-11-18",
     "targetDate": "2026-12-23",
     "estimate": 5
@@ -360,12 +360,12 @@ const ITEMS = [
     "url": "https://github.com/sukrutsathaye/mono-magic/issues/58",
     "parentNumber": 54,
     "isEpic": false,
-    "status": "Backlog",
+    "status": "In progress",
     "priority": "P2",
     "size": "M",
     "phase": "Phase 3B",
     "track": "Track 4: Data-Access",
-    "iteration": "Iteration 2",
+    "iteration": "Iteration 1",
     "startDate": "2026-12-16",
     "targetDate": "2026-12-23",
     "estimate": 3
@@ -471,7 +471,7 @@ const ITEMS = [
     "size": "XL",
     "phase": "Phase 3C",
     "track": "Track 4: Data-Access",
-    "iteration": "Iteration 2",
+    "iteration": "Iteration 1",
     "startDate": "2026-11-20",
     "targetDate": "2027-01-20",
     "estimate": 8
@@ -722,7 +722,7 @@ const ITEMS = [
     "size": "XL",
     "phase": "Phase 4B",
     "track": "Track 2: UI Libraries",
-    "iteration": "Iteration 4",
+    "iteration": "Iteration 1",
     "startDate": "2026-11-20",
     "targetDate": "2027-01-20",
     "estimate": 8
