@@ -68,4 +68,49 @@ describe.runIf(IS_INTEGRATION)('Firebase Local Emulator Suite (live integration)
     expect(signedIn.localId).toBe(created.localId);
     expect(signedIn.idToken).toBeTruthy();
   });
+
+  it('creates, reads, and updates a document in the Firestore Emulator', async () => {
+    const docId = `entity-${RUN_ID}`;
+    const docUrl = `http://${FIRESTORE_HOST}/v1/projects/${PROJECT_ID}/databases/(default)/documents/contract_entities/${docId}`;
+
+    const createRes = await fetch(docUrl, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer owner',
+      },
+      body: JSON.stringify({
+        fields: {
+          name: { stringValue: `Firebase Entity ${RUN_ID}` },
+          score: { integerValue: '42' },
+          source: { stringValue: 'ts-firebase-integration' },
+        },
+      }),
+    });
+    expect(createRes.ok).toBe(true);
+
+    const readRes = await fetch(docUrl, {
+      headers: { Authorization: 'Bearer owner' },
+    });
+    expect(readRes.ok).toBe(true);
+    const doc = (await readRes.json()) as FirestoreDocumentResponse;
+    expect(doc.fields.name?.stringValue).toBe(`Firebase Entity ${RUN_ID}`);
+    expect(doc.fields.score?.integerValue).toBe('42');
+
+    const updateRes = await fetch(`${docUrl}?updateMask.fieldPaths=score`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer owner',
+      },
+      body: JSON.stringify({
+        fields: {
+          score: { integerValue: '99' },
+        },
+      }),
+    });
+    expect(updateRes.ok).toBe(true);
+    const updated = (await updateRes.json()) as FirestoreDocumentResponse;
+    expect(updated.fields.score?.integerValue).toBe('99');
+  });
 });
