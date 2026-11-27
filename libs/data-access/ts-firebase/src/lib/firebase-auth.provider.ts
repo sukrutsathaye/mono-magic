@@ -3,9 +3,12 @@ import {
   createDataAccessError,
   type AuthSession,
   type DataAccessError,
+  type IGitHubAuthProvider,
+  type IGoogleAuthProvider,
   type OAuthProvider,
   type SignInWithEmailInput,
   type SignUpWithEmailInput,
+  type SocialSignInOptions,
   type UserClaims,
 } from '@mono-magic/data-access-ts-interfaces';
 import { err, ok, type Result } from '@mono-magic/utils-ts-core';
@@ -40,9 +43,14 @@ async function mapFirebaseUserToSession(
 }
 
 /**
- * Concrete {@link BaseAuthProvider} implementation backed by Firebase Authentication.
+ * Concrete {@link BaseAuthProvider} implementation backed by Firebase Authentication,
+ * opting into Google ({@link IGoogleAuthProvider}) and GitHub ({@link IGitHubAuthProvider})
+ * social logins.
  */
-export class FirebaseAuthProvider extends BaseAuthProvider {
+export class FirebaseAuthProvider
+  extends BaseAuthProvider
+  implements IGoogleAuthProvider, IGitHubAuthProvider
+{
   private readonly auth: FirebaseAuthClientLike;
 
   /**
@@ -101,6 +109,24 @@ export class FirebaseAuthProvider extends BaseAuthProvider {
     } catch (cause) {
       return err(normalizeFirebaseError(cause, 'Firebase OAuth sign-in failed'));
     }
+  }
+
+  /**
+   * Signs in with Google via Firebase OAuth.
+   */
+  public signInWithGoogle(
+    options?: SocialSignInOptions,
+  ): Promise<Result<AuthSession, DataAccessError>> {
+    return this.signInWithOAuth('google', options as Readonly<Record<string, unknown>> | undefined);
+  }
+
+  /**
+   * Signs in with GitHub via Firebase OAuth.
+   */
+  public signInWithGitHub(
+    options?: SocialSignInOptions,
+  ): Promise<Result<AuthSession, DataAccessError>> {
+    return this.signInWithOAuth('github', options as Readonly<Record<string, unknown>> | undefined);
   }
 
   /**
