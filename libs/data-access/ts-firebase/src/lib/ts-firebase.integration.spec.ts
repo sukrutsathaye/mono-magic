@@ -113,4 +113,21 @@ describe.runIf(IS_INTEGRATION)('Firebase Local Emulator Suite (live integration)
     const updated = (await updateRes.json()) as FirestoreDocumentResponse;
     expect(updated.fields.score?.integerValue).toBe('99');
   });
+
+  it('writes and reads a node in the Realtime Database Emulator', async () => {
+    const nodeUrl = `http://${RTDB_HOST}/integration_events/${RUN_ID}.json?ns=${PROJECT_ID}-default-rtdb`;
+    const payload = { event: 'integration.ping', runId: RUN_ID, ok: true };
+
+    const putRes = await fetch(nodeUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    expect(putRes.ok).toBe(true);
+
+    const getRes = await fetch(nodeUrl);
+    expect(getRes.ok).toBe(true);
+    const stored = (await getRes.json()) as typeof payload;
+    expect(stored).toEqual(payload);
+  });
 });
