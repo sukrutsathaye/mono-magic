@@ -707,7 +707,7 @@ function renderStandaloneCoverageHtml(lib, metrics) {
 `;
 }
 
-function buildNonShowcaseCoverage(outDir) {
+function buildNonShowcaseCoverage(outDir, onlyLibs = null) {
   const storedMetrics =
     readJsonIfExists(join(WORKSPACE_ROOT, 'tools/ci/coverage-metrics.json')) ??
     {};
@@ -716,6 +716,13 @@ function buildNonShowcaseCoverage(outDir) {
 
   for (const lib of NON_SHOWCASE_LIBRARIES) {
     const destDir = join(covRootDir, lib.name);
+    if (
+      onlyLibs &&
+      !onlyLibs.has(lib.name) &&
+      existsSync(join(destDir, 'coverage-metadata.json'))
+    ) {
+      continue;
+    }
     rmSync(destDir, { recursive: true, force: true });
     mkdirSync(destDir, { recursive: true });
 
@@ -966,14 +973,14 @@ ${libSectionHtml}
 `;
 }
 
-function assemblePages(outDir) {
+function assemblePages(outDir, onlyLibs = null) {
   if (!existsSync(outDir)) {
     console.error(`Output directory "${outDir}" does not exist.`);
     process.exit(1);
   }
 
-  // Ensure non-showcase coverage cards are staged
-  buildNonShowcaseCoverage(outDir);
+  // Ensure non-showcase coverage cards are staged (preserving cached untouched libs when onlyLibs is set)
+  buildNonShowcaseCoverage(outDir, onlyLibs);
 
   const projectMap = new Map(
     findShowcaseProjects().map((project) => [project.name, project]),
@@ -995,7 +1002,6 @@ function assemblePages(outDir) {
       if ((!coverage || (!coverage.unit && !coverage.storybook)) && projectInfo) {
         coverage = stageProjectCoverage(projectInfo, dir);
       }
-      rmSync(metadataPath, { force: true });
       return {
         name: entry.name,
         packageName: metadata?.packageName ?? entry.name,
@@ -1031,18 +1037,106 @@ function assemblePages(outDir) {
   );
 }
 
+function getFlagValue(args, flag) {
+  const idx = args.indexOf(flag);
+  return idx !== -1 && args[idx + 1] ? args[idx + 1] : null;
+}
+
 function parseOutDir(args) {
-  const outIdx = args.indexOf('--out');
-  if (outIdx !== -1 && args[outIdx + 1]) {
-    return resolve(WORKSPACE_ROOT, args[outIdx + 1]);
+  const val = getFlagValue(args, '--out');
+  return val ? resolve(WORKSPACE_ROOT, val) : DEFAULT_OUT_DIR;
+}
+
+function parseOnlyLibs(args) {
+  const val = getFlagValue(args, '--only');
+  if (!val) return null;
+  const list = val
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return list.length > 0 ? new Set(list) : null;
+}
+
+function discoverAffectedPlan(args) {
+  const allShowcases = findShowcaseProjects();
+  const forceFull = args.includes('--full');
+  const base = getFlagValue(args, '--base') ?? process.env['NX_BASE'] ?? null;
+  const head = getFlagValue(args, '--head') ?? process.env['NX_HEAD'] ?? 'HEAD';
+
+  let changedFiles = [];
+  if (!forceFull && base && !/^0+$/.test(base)) {
+    try {
+      const diffOut = execFileSync(
+        'git',
+        ['diff', '--name-only', `${base}..${head}`],
+        { cwd: WORKSPACE_ROOT, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] },
+      );
+      changedFiles = diffOut.split('\n').map((l) => l.trim()).filter(Boolean);
+    } catch {
+      changedFiles = [];
+    }
   }
-  return DEFAULT_OUT_DIR;
+
+  const infraChanged = changedFiles.some(
+    (f) =>
+      f === 'tools/ci/storybook-pages.mjs' ||
+      f === '.github/workflows/storybook-gh-pages.yml',
+  );
+  const metricsFileChanged = changedFiles.includes('tools/ci/coverage-metrics.json');
+  const isFull = forceFull || !base || /^0+$/.test(base) || infraChanged;
+
+  let affectedSet = new Set();
+  if (!isFull) {
+    try {
+      const out = execFileSync(
+        'pnpm',
+        ['exec', 'nx', 'show', 'projects', '--affected', '--json', `--base=${base}`, `--head=${head}`],
+        {
+          cwd: WORKSPACE_ROOT,
+          encoding: 'utf8',
+          env: { ...process.env, NX_NO_CLOUD: 'true' },
+          stdio: ['pipe', 'pipe', 'pipe'],
+        },
+      );
+      affectedSet = new Set(JSON.parse(out.trim() || '[]'));
+    } catch {
+      // Fall back to full rebuild if affected graph cannot be computed
+      return {
+        fullRebuild: true,
+        matrix: allShowcases.map(({ name, type }) => ({ name, type })),
+        coverageLibs: NON_SHOWCASE_LIBRARIES.map((l) => l.name),
+        hasChanges: true,
+      };
+    }
+  }
+
+  const showcases = isFull
+    ? allShowcases
+    : allShowcases.filter((p) => affectedSet.has(p.name));
+  const coverageLibs =
+    isFull || metricsFileChanged
+      ? NON_SHOWCASE_LIBRARIES.map((l) => l.name)
+      : NON_SHOWCASE_LIBRARIES.filter((l) => affectedSet.has(l.name)).map(
+          (l) => l.name,
+        );
+
+  return {
+    fullRebuild: isFull,
+    matrix: showcases.map(({ name, type }) => ({ name, type })),
+    coverageLibs,
+    hasChanges: showcases.length > 0 || coverageLibs.length > 0,
+  };
 }
 
 const [, , command, ...rest] = process.argv;
 
 switch (command) {
   case 'discover': {
+    if (rest.includes('--affected')) {
+      const plan = discoverAffectedPlan(rest);
+      console.log(JSON.stringify(plan, null, 2));
+      break;
+    }
     const projects = findShowcaseProjects();
     if (rest.includes('--matrix')) {
       console.log(
@@ -1074,16 +1168,16 @@ switch (command) {
     break;
   }
   case 'build-coverage': {
-    buildNonShowcaseCoverage(parseOutDir(rest));
+    buildNonShowcaseCoverage(parseOutDir(rest), parseOnlyLibs(rest));
     break;
   }
   case 'assemble': {
-    assemblePages(parseOutDir(rest));
+    assemblePages(parseOutDir(rest), parseOnlyLibs(rest));
     break;
   }
   default: {
     console.error(
-      'Usage: storybook-pages.mjs <discover [--names | --matrix] | discover-coverage | build <project> [--with-coverage] [--with-storybook-coverage] | build-coverage | assemble> [--out <dir>]',
+      'Usage: storybook-pages.mjs <discover [--names | --matrix | --affected] | discover-coverage | build <project> [--with-coverage] [--with-storybook-coverage] | build-coverage | assemble> [--out <dir>] [--only <libs>]',
     );
     process.exit(1);
   }

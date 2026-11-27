@@ -1,4 +1,5 @@
-# Discover, build, and deploy all workspace Storybooks, Flutter Widgetbooks, and Coverage Reports to GitHub Pages
+# Incrementally discover, build, and deploy only affected Storybooks, Flutter Widgetbooks,
+# and Coverage Reports to GitHub Pages (with full rebuild on workflow_dispatch / cold cache).
 name: Deploy Showcases to GitHub Pages
 
 on:
@@ -15,21 +16,54 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  NX_NO_CLOUD: 'true'
+
 jobs:
   discover:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.list.outputs.matrix }}
+      matrix: ${{ steps.plan.outputs.matrix }}
+      coverage_libs: ${{ steps.plan.outputs.coverage_libs }}
+      has_changes: ${{ steps.plan.outputs.has_changes }}
+      full_rebuild: ${{ steps.plan.outputs.full_rebuild }}
       base_path: ${{ steps.pages.outputs.base_path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - name: Configure Pages
         id: pages
         uses: actions/configure-pages@v5
-      - name: Discover Storybooks and Widgetbooks
-        id: list
-        run: echo "matrix=$(node tools/ci/storybook-pages.mjs discover --matrix)" >> "$GITHUB_OUTPUT"
+      - name: Check existing Pages site cache
+        id: site-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: dist/storybook-pages
+          key: pages-site-v1-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            pages-site-v1-${{ github.ref_name }}-
+            pages-site-v1-main-
+            pages-site-v1-dev-
+          lookup-only: true
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup-pnpm
+      - name: Discover affected showcases & coverage
+        id: plan
+        run: |
+          ARGS="--affected"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ -z "${{ steps.site-cache.outputs.cache-matched-key }}" ]; then
+            ARGS="$ARGS --full"
+          elif [ -n "${{ github.event.before }}" ]; then
+            ARGS="$ARGS --base ${{ github.event.before }} --head ${{ github.sha }}"
+          fi
+          PLAN=$(node tools/ci/storybook-pages.mjs discover $ARGS)
+          echo "$PLAN"
+          echo "matrix=$(echo "$PLAN" | jq -c '.matrix')" >> "$GITHUB_OUTPUT"
+          echo "coverage_libs=$(echo "$PLAN" | jq -r '.coverageLibs | join(",")')" >> "$GITHUB_OUTPUT"
+          echo "has_changes=$(echo "$PLAN" | jq -r '.hasChanges')" >> "$GITHUB_OUTPUT"
+          echo "full_rebuild=$(echo "$PLAN" | jq -r '.fullRebuild')" >> "$GITHUB_OUTPUT"
 
   build:
     needs: discover
@@ -53,7 +87,6 @@ jobs:
       - name: Build ${{ matrix.type }} & coverage (${{ matrix.name }})
         env:
           PAGES_BASE_PATH: ${{ needs.discover.outputs.base_path }}
-          NX_NO_CLOUD: 'true'
         run: node tools/ci/storybook-pages.mjs build "${{ matrix.name }}" --with-coverage --with-storybook-coverage
       - name: Upload built showcase
         uses: actions/upload-artifact@v4
@@ -65,19 +98,42 @@ jobs:
 
   assemble:
     needs: [discover, build]
-    if: ${{ !cancelled() && needs.discover.result == 'success' && (needs.build.result == 'success' || needs.build.result == 'failure') }}
+    if: ${{ !cancelled() && needs.discover.result == 'success' && needs.discover.outputs.has_changes == 'true' && (needs.build.result == 'success' || needs.build.result == 'skipped') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-      - name: Download built showcases
+      - name: Restore previously deployed Pages site cache
+        if: ${{ needs.discover.outputs.full_rebuild != 'true' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: dist/storybook-pages
+          key: pages-site-v1-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            pages-site-v1-${{ github.ref_name }}-
+            pages-site-v1-main-
+            pages-site-v1-dev-
+      - name: Overlay newly built showcases
+        if: ${{ needs.build.result == 'success' }}
         uses: actions/download-artifact@v4
         with:
           pattern: showcase-*
           merge-multiple: true
           path: dist/storybook-pages
       - name: Assemble GitHub Pages portal
-        run: node tools/ci/storybook-pages.mjs assemble
+        run: |
+          if [ "${{ needs.discover.outputs.full_rebuild }}" = "true" ]; then
+            node tools/ci/storybook-pages.mjs assemble
+          elif [ -n "${{ needs.discover.outputs.coverage_libs }}" ]; then
+            node tools/ci/storybook-pages.mjs assemble --only "${{ needs.discover.outputs.coverage_libs }}"
+          else
+            node tools/ci/storybook-pages.mjs assemble --only "__none__"
+          fi
+      - name: Save updated Pages site cache
+        uses: actions/cache/save@v4
+        with:
+          path: dist/storybook-pages
+          key: pages-site-v1-${{ github.ref_name }}-${{ github.sha }}
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
