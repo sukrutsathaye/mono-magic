@@ -1,4 +1,10 @@
 import {
+  hasFacebookAuth,
+  hasGitHubAuth,
+  hasGoogleAuth,
+  isSocialAuthProvider,
+} from '@mono-magic/data-access-ts-interfaces';
+import {
   expectOk,
   runAuthProviderContractTests,
   runDataRepositoryContractTests,
@@ -243,6 +249,27 @@ describe('@mono-magic/data-access-ts-firebase', () => {
       expect(presence[0]?.userId).toBe('fb-user-1');
 
       await unsubscribe();
+    });
+  });
+
+  describe('FirebaseAuthProvider social logins (Google & GitHub)', () => {
+    it('supports Google and GitHub sign-in without implementing unused social providers', async () => {
+      const auth = new FirebaseAuthProvider(createInMemoryFirebaseServices());
+
+      expect(hasGoogleAuth(auth)).toBe(true);
+      expect(hasGitHubAuth(auth)).toBe(true);
+      expect(hasFacebookAuth(auth)).toBe(false);
+      expect(isSocialAuthProvider(auth)).toBe(false);
+
+      const googleSession = expectOk(
+        await auth.signInWithGoogle({ redirectTo: 'https://app.mono-magic.local/auth/callback' }),
+      );
+      expect(googleSession.accessToken).toBeTruthy();
+
+      const githubSession = expectOk(
+        await auth.signInWithGitHub({ scopes: ['read:user', 'user:email'] }),
+      );
+      expect(githubSession.accessToken).toBeTruthy();
     });
   });
 });
