@@ -27,7 +27,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "libs/data-access/ts-firebase",
-        "command": "FIREBASE_INTEGRATION=true pnpm exec vitest run"
+        "command": "FIREBASE_INTEGRATION=true pnpm exec vitest run src/lib/ts-firebase.integration.spec.ts --coverage.enabled=false"
       }
     }
   }
