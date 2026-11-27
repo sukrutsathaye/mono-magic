@@ -3,9 +3,12 @@ import {
   createDataAccessError,
   type AuthSession,
   type DataAccessError,
+  type IGitHubAuthProvider,
+  type IGoogleAuthProvider,
   type OAuthProvider,
   type SignInWithEmailInput,
   type SignUpWithEmailInput,
+  type SocialSignInOptions,
   type UserClaims,
 } from '@mono-magic/data-access-ts-interfaces';
 import { err, ok, type Result } from '@mono-magic/utils-ts-core';
@@ -62,9 +65,14 @@ function mapSupabaseSession(session: SupabaseSessionLike): AuthSession {
 }
 
 /**
- * Concrete {@link BaseAuthProvider} implementation backed by a Supabase GoTrue client.
+ * Concrete {@link BaseAuthProvider} implementation backed by a Supabase GoTrue client,
+ * opting into Google ({@link IGoogleAuthProvider}) and GitHub ({@link IGitHubAuthProvider})
+ * social logins.
  */
-export class SupabaseAuthProvider extends BaseAuthProvider {
+export class SupabaseAuthProvider
+  extends BaseAuthProvider
+  implements IGoogleAuthProvider, IGitHubAuthProvider
+{
   private readonly auth: SupabaseAuthClientLike;
 
   /**
@@ -160,6 +168,24 @@ export class SupabaseAuthProvider extends BaseAuthProvider {
     } catch (cause) {
       return err(normalizeSupabaseError(cause, 'Supabase OAuth sign-in failed'));
     }
+  }
+
+  /**
+   * Signs in with Google via Supabase GoTrue OAuth.
+   */
+  public signInWithGoogle(
+    options?: SocialSignInOptions,
+  ): Promise<Result<AuthSession, DataAccessError>> {
+    return this.signInWithOAuth('google', options as Readonly<Record<string, unknown>> | undefined);
+  }
+
+  /**
+   * Signs in with GitHub via Supabase GoTrue OAuth.
+   */
+  public signInWithGitHub(
+    options?: SocialSignInOptions,
+  ): Promise<Result<AuthSession, DataAccessError>> {
+    return this.signInWithOAuth('github', options as Readonly<Record<string, unknown>> | undefined);
   }
 
   /**
