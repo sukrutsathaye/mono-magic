@@ -30,3 +30,10 @@ services:
         strip_path: true
         paths:
           - /storage/v1/
+  - name: meta
+    url: http://meta:8080/
+    routes:
+      - name: meta-all
+        strip_path: true
+        paths:
+          - /pg/

@@ -111,6 +111,7 @@ services:
       - rest
       - realtime
       - storage
+      - meta
     restart: unless-stopped
     ports:
       - '54321:8000'
@@ -121,3 +122,19 @@ services:
       KONG_PLUGINS: request-transformer,cors,key-auth,acl
     volumes:
       - ./kong.yml:/var/lib/kong/kong.yml:ro
+
+  meta:
+    image: supabase/postgres-meta:v0.84.2
+    container_name: mono-magic-supabase-meta
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: db
+      PG_META_DB_PORT: 5432
+      PG_META_DB_NAME: postgres
+      PG_META_DB_USER: postgres
+      PG_META_DB_PASSWORD: local-postgres-password
+
