@@ -1,0 +1,73 @@
+/**
+ * Live integration tests against the local Supabase Docker stack.
+ *
+ * Start the local Supabase stack first:
+ *   pnpm nx emulator-up data-access-ts-supabase
+ *
+ * Run this suite:
+ *   pnpm nx test-integration data-access-ts-supabase
+ *
+ * Inspect the written Auth users, Postgres rows (`public.contract_entities`),
+ * and Storage objects in Supabase Studio at http://localhost:54323.
+ */
+import { describe, expect, it } from 'vitest';
+
+const IS_INTEGRATION = process.env['SUPABASE_INTEGRATION'] === 'true';
+
+const SUPABASE_URL = process.env['SUPABASE_URL'] ?? 'http://127.0.0.1:54321';
+const ANON_KEY =
+  process.env['SUPABASE_ANON_KEY'] ??
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+const SERVICE_ROLE_KEY =
+  process.env['SUPABASE_SERVICE_ROLE_KEY'] ??
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU';
+
+const RUN_ID = Date.now().toString(36);
+
+interface GoTrueAuthResponse {
+  access_token?: string;
+  user?: {
+    id: string;
+    email: string;
+  };
+}
+
+interface ContractEntityRow {
+  id: string;
+  name: string;
+  score: number;
+}
+
+describe.runIf(IS_INTEGRATION)('Supabase Local Docker Stack (live integration)', () => {
+  it('signs up and signs in a user via GoTrue Auth', async () => {
+    const email = `integration-${RUN_ID}@mono-magic.local`;
+    const password = 'Password123!';
+
+    const signUpRes = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: ANON_KEY,
+        Authorization: `Bearer ${ANON_KEY}`,
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    expect(signUpRes.ok).toBe(true);
+    const created = (await signUpRes.json()) as GoTrueAuthResponse;
+    expect(created.user?.email).toBe(email);
+
+    const signInRes = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: ANON_KEY,
+        Authorization: `Bearer ${ANON_KEY}`,
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    expect(signInRes.ok).toBe(true);
+    const session = (await signInRes.json()) as GoTrueAuthResponse;
+    expect(session.access_token).toBeTruthy();
+    expect(session.user?.id).toBe(created.user?.id);
+  });
+});
