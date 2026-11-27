@@ -116,4 +116,42 @@ describe.runIf(IS_INTEGRATION)('Supabase Local Docker Stack (live integration)',
     expect(rows[0]?.name).toBe(`Supabase Entity ${RUN_ID}`);
     expect(rows[0]?.score).toBe(99);
   });
+
+  it('creates a bucket, uploads, and downloads an object via Storage API', async () => {
+    const bucketId = 'integration-artifacts';
+    const objectPath = `hello-${RUN_ID}.txt`;
+    const content = `Hello from Supabase integration run ${RUN_ID}`;
+    const authHeaders = {
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
+    };
+
+    // Ensure bucket exists (409/400 duplicate is fine across repeated runs)
+    await fetch(`${SUPABASE_URL}/storage/v1/bucket`, {
+      method: 'POST',
+      headers: { ...authHeaders, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: bucketId, name: bucketId, public: false }),
+    });
+
+    const uploadRes = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/${bucketId}/${objectPath}`,
+      {
+        method: 'POST',
+        headers: {
+          ...authHeaders,
+          'Content-Type': 'text/plain',
+          'x-upsert': 'true',
+        },
+        body: content,
+      }
+    );
+    expect(uploadRes.ok).toBe(true);
+
+    const downloadRes = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/${bucketId}/${objectPath}`,
+      { headers: authHeaders }
+    );
+    expect(downloadRes.ok).toBe(true);
+    expect(await downloadRes.text()).toBe(content);
+  });
 });
