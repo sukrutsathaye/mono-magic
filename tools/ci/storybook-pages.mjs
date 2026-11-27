@@ -707,7 +707,7 @@ function renderStandaloneCoverageHtml(lib, metrics) {
 `;
 }
 
-function buildNonShowcaseCoverage(outDir) {
+function buildNonShowcaseCoverage(outDir, onlyLibs = null) {
   const storedMetrics =
     readJsonIfExists(join(WORKSPACE_ROOT, 'tools/ci/coverage-metrics.json')) ??
     {};
@@ -716,6 +716,13 @@ function buildNonShowcaseCoverage(outDir) {
 
   for (const lib of NON_SHOWCASE_LIBRARIES) {
     const destDir = join(covRootDir, lib.name);
+    if (
+      onlyLibs &&
+      !onlyLibs.has(lib.name) &&
+      existsSync(join(destDir, 'coverage-metadata.json'))
+    ) {
+      continue;
+    }
     rmSync(destDir, { recursive: true, force: true });
     mkdirSync(destDir, { recursive: true });
 
