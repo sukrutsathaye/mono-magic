@@ -1,8 +1,7 @@
-"""Vendor-agnostic authentication DTOs, Protocol, and abstract base class."""
+"""Vendor-agnostic authentication DTOs and Protocols."""
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 from datetime import datetime
 from enum import StrEnum
 from typing import Any, Protocol, runtime_checkable
@@ -19,6 +18,11 @@ class OAuthProvider(StrEnum):
     GITHUB = "github"
     APPLE = "apple"
     MICROSOFT = "microsoft"
+    FACEBOOK = "facebook"
+    TWITTER = "twitter"
+    DISCORD = "discord"
+    LINKEDIN = "linkedin"
+    GITLAB = "gitlab"
     KEYCLOAK = "keycloak"
     OIDC = "oidc"
 
@@ -126,61 +130,148 @@ class AuthProvider(Protocol):
         ...
 
 
-class BaseAuthProvider(ABC):
-    """Abstract base class for concrete ``AuthProvider`` adapter implementations."""
+@runtime_checkable
+class GoogleAuthProvider(Protocol):
+    """Segregated Protocol for Google social sign-in."""
 
-    @abstractmethod
-    async def sign_in_with_email(
+    async def sign_in_with_google(
         self,
-        email: str,
-        password: str,
-    ) -> Result[AuthSession, DataAccessError]:
-        """Authenticate an existing user with email and password credentials."""
-
-    @abstractmethod
-    async def sign_up_with_email(
-        self,
-        email: str,
-        password: str,
-        *,
-        display_name: str | None = None,
-    ) -> Result[AuthSession, DataAccessError]:
-        """Register a new user account with email and password credentials."""
-
-    @abstractmethod
-    async def sign_in_with_oauth(
-        self,
-        provider: OAuthProvider,
         *,
         redirect_uri: str | None = None,
         code: str | None = None,
     ) -> Result[AuthSession, DataAccessError]:
-        """Authenticate or exchange an authorization code via an OAuth/OIDC provider."""
+        """Authenticate or exchange an authorization code with Google."""
+        ...
 
-    @abstractmethod
-    async def sign_out(
-        self,
-        access_token: str | None = None,
-    ) -> Result[None, DataAccessError]:
-        """Revoke the active session or invalidate the supplied access token."""
 
-    @abstractmethod
-    async def get_current_session(
-        self,
-        access_token: str | None = None,
-    ) -> Result[AuthSession | None, DataAccessError]:
-        """Retrieve the current session if authenticated, or ``Ok(None)`` otherwise."""
+@runtime_checkable
+class GitHubAuthProvider(Protocol):
+    """Segregated Protocol for GitHub social sign-in."""
 
-    @abstractmethod
-    async def refresh_token(
+    async def sign_in_with_github(
         self,
-        refresh_token: str,
+        *,
+        redirect_uri: str | None = None,
+        code: str | None = None,
     ) -> Result[AuthSession, DataAccessError]:
-        """Exchange a valid refresh token for a renewed ``AuthSession``."""
+        """Authenticate or exchange an authorization code with GitHub."""
+        ...
 
-    @abstractmethod
-    async def verify_token(
+
+@runtime_checkable
+class AppleAuthProvider(Protocol):
+    """Segregated Protocol for Apple social sign-in."""
+
+    async def sign_in_with_apple(
         self,
-        token: str,
-    ) -> Result[UserClaims, DataAccessError]:
-        """Validate an access token and return the normalized ``UserClaims``."""
+        *,
+        redirect_uri: str | None = None,
+        code: str | None = None,
+    ) -> Result[AuthSession, DataAccessError]:
+        """Authenticate or exchange an authorization code with Apple."""
+        ...
+
+
+@runtime_checkable
+class MicrosoftAuthProvider(Protocol):
+    """Segregated Protocol for Microsoft social sign-in."""
+
+    async def sign_in_with_microsoft(
+        self,
+        *,
+        redirect_uri: str | None = None,
+        code: str | None = None,
+    ) -> Result[AuthSession, DataAccessError]:
+        """Authenticate or exchange an authorization code with Microsoft."""
+        ...
+
+
+@runtime_checkable
+class FacebookAuthProvider(Protocol):
+    """Segregated Protocol for Facebook (Meta) social sign-in."""
+
+    async def sign_in_with_facebook(
+        self,
+        *,
+        redirect_uri: str | None = None,
+        code: str | None = None,
+    ) -> Result[AuthSession, DataAccessError]:
+        """Authenticate or exchange an authorization code with Facebook."""
+        ...
+
+
+@runtime_checkable
+class TwitterAuthProvider(Protocol):
+    """Segregated Protocol for X (Twitter) social sign-in."""
+
+    async def sign_in_with_twitter(
+        self,
+        *,
+        redirect_uri: str | None = None,
+        code: str | None = None,
+    ) -> Result[AuthSession, DataAccessError]:
+        """Authenticate or exchange an authorization code with X (Twitter)."""
+        ...
+
+
+@runtime_checkable
+class DiscordAuthProvider(Protocol):
+    """Segregated Protocol for Discord social sign-in."""
+
+    async def sign_in_with_discord(
+        self,
+        *,
+        redirect_uri: str | None = None,
+        code: str | None = None,
+    ) -> Result[AuthSession, DataAccessError]:
+        """Authenticate or exchange an authorization code with Discord."""
+        ...
+
+
+@runtime_checkable
+class LinkedInAuthProvider(Protocol):
+    """Segregated Protocol for LinkedIn social sign-in."""
+
+    async def sign_in_with_linkedin(
+        self,
+        *,
+        redirect_uri: str | None = None,
+        code: str | None = None,
+    ) -> Result[AuthSession, DataAccessError]:
+        """Authenticate or exchange an authorization code with LinkedIn."""
+        ...
+
+
+@runtime_checkable
+class GitLabAuthProvider(Protocol):
+    """Segregated Protocol for GitLab social sign-in."""
+
+    async def sign_in_with_gitlab(
+        self,
+        *,
+        redirect_uri: str | None = None,
+        code: str | None = None,
+    ) -> Result[AuthSession, DataAccessError]:
+        """Authenticate or exchange an authorization code with GitLab."""
+        ...
+
+
+@runtime_checkable
+class SocialAuthProvider(
+    GoogleAuthProvider,
+    GitHubAuthProvider,
+    AppleAuthProvider,
+    MicrosoftAuthProvider,
+    FacebookAuthProvider,
+    TwitterAuthProvider,
+    DiscordAuthProvider,
+    LinkedInAuthProvider,
+    GitLabAuthProvider,
+    Protocol,
+):
+    """Composite Protocol for providers supporting all standard social logins.
+
+    Providers that only support a subset (e.g., Google + GitHub only) should satisfy
+    the individual Protocols (``GoogleAuthProvider``, ``GitHubAuthProvider``, etc.)
+    rather than implementing unused social login methods.
+    """
