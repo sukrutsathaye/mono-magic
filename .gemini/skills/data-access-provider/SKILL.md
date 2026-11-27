@@ -32,18 +32,36 @@ Use this skill when designing, scaffolding, or implementing any `libs/data-acces
 
 ## 2. Core Contracts in `libs/data-access/{ts-interfaces,py-interfaces}`
 
-When extending `libs/data-access/ts-interfaces/src/lib/` (and mirrored in `libs/data-access/py-interfaces`):
-- **`common/query.interface.ts`**:
+### Mandatory File Separation & OCP Capability Extension Rules
+1. **Never mix pure interfaces/Protocols and runtime abstract base classes in the same file**:
+   - **TypeScript (`libs/data-access/ts-interfaces/src/lib/<domain>/`)**:
+     - `<domain>.interface.ts` — Pure type-only contracts (`interface`, `type`, DTOs). **Zero** `class` or runtime values.
+     - `<domain>.abstract.ts` — Runtime abstract base classes (`Base*`) and runtime type guards (`isSocialAuthProvider`).
+     - `index.ts` — Barrel re-exporting both files.
+   - **Python (`libs/data-access/py-interfaces/src/<domain>/`)**:
+     - `<domain>_interface.py` — Pydantic v2 DTOs, `StrEnum`s, and `typing.Protocol`s. **Zero** `ABC` classes.
+     - `<domain>_base.py` — `abc.ABC` abstract base classes (`Base*`).
+     - `__init__.py` — Re-exports both modules with explicit `__all__`.
+2. **Open–Closed (OCP) & Interface Segregation (ISP) for Optional Capabilities**:
+   - Keep base contracts (`IAuthProvider` / `BaseAuthProvider`) minimal and closed for modification.
+   - Expose **per-provider granular capability interfaces** (`IGoogleAuthProvider`, `IGitHubAuthProvider`, `IAppleAuthProvider`, `IMicrosoftAuthProvider` in TS; `GoogleAuthProvider`, `GitHubAuthProvider`, etc. + opt-in `*AuthMixin` classes in Python) so concrete providers are never forced to implement unused social logins.
+   - Compose full-suite helpers (`ISocialAuthProvider` / `BaseSocialAuthProvider`) from those granular contracts using the Template Method pattern (default delegation to `signInWithOAuth`, overridable for provider-specific SDK flows).
+   - Provide runtime type guards (`hasGoogleAuth`, `hasGitHubAuth`, `hasAppleAuth`, `hasMicrosoftAuth`, `isSocialAuthProvider` in TS; `@runtime_checkable` `isinstance(...)` in Python) so consumers never couple to concrete vendor classes.
+
+### Domain Modules
+When extending `libs/data-access/ts-interfaces/src/lib/` (and mirrored in `libs/data-access/py-interfaces/src/`):
+- **`common/`** (`query.interface.ts` / `query_interface.py`):
   - `QuerySpec<T>`, `FilterSpec<T>` (`eq`, `neq`, `in`, `gt`, `gte`, `lt`, `lte`, `contains`), `SortSpec<T>`, `PaginatedResult<T>`, and `DataAccessError`.
-- **`auth/auth.interface.ts`**:
-  - `IAuthProvider` & `BaseAuthProvider`: `signInWithEmail`, `signUpWithEmail`, `signInWithOAuth`, `signOut`, `getCurrentSession`, `refreshToken`, `verifyToken`, `onAuthStateChanged`.
-- **`repository/repository.interface.ts`**:
+- **`auth/`** (`auth.interface.ts` + `auth.abstract.ts` / `auth_interface.py` + `auth_base.py`):
+  - Core: `IAuthProvider` & `BaseAuthProvider`: `signInWithEmail`, `signUpWithEmail`, `signInWithOAuth`, `signOut`, `getCurrentSession`, `refreshToken`, `verifyToken`, `onAuthStateChanged`.
+  - Social extension (OCP/ISP): `ISocialAuthProvider`, `BaseSocialAuthProvider`, `isSocialAuthProvider`: `signInWithGoogle`, `signInWithGitHub`, `signInWithApple`, `signInWithMicrosoft`.
+- **`repository/`** (`repository.interface.ts` + `repository.abstract.ts` / `repository_interface.py` + `repository_base.py`):
   - `IDataRepository<TEntity, TId>` & `BaseDataRepository<TEntity, TId>`: `findById`, `findMany(QuerySpec)`, `create`, `update`, `delete`, `transaction`.
-- **`storage/storage.interface.ts`**:
+- **`storage/`** (`storage.interface.ts` + `storage.abstract.ts` / `storage_interface.py` + `storage_base.py`):
   - `IStorageProvider` & `BaseStorageProvider`: `upload`, `download`, `getSignedUrl`, `delete`, `list`.
-- **`realtime/realtime.interface.ts`**:
+- **`realtime/`** (`realtime.interface.ts` + `realtime.abstract.ts` / `realtime_interface.py` + `realtime_base.py`):
   - `IRealtimeProvider` & `BaseRealtimeProvider`: `publish`, `subscribe`, `presence`.
-- **`payments/payment.interface.ts`**:
+- **`payments/`** (`payment.interface.ts` + `payment.abstract.ts` / `payment_interface.py` + `payment_base.py`):
   - `IPaymentProvider` & `BasePaymentProvider`: `createPaymentIntent`, `confirmPaymentIntent`, `getPaymentIntent`, `refundPayment`.
 
 ---
