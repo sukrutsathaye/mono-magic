@@ -4,7 +4,18 @@ import type { DataAccessError } from '../common/query.interface.js';
 /**
  * Supported federated OAuth / OIDC identity providers.
  */
-export type OAuthProvider = 'google' | 'github' | 'apple' | 'microsoft' | 'oidc';
+export type OAuthProvider =
+  | 'google'
+  | 'github'
+  | 'apple'
+  | 'microsoft'
+  | 'facebook'
+  | 'twitter'
+  | 'discord'
+  | 'linkedin'
+  | 'gitlab'
+  | 'keycloak'
+  | 'oidc';
 
 /**
  * Verified identity claims for an authenticated user.
@@ -54,6 +65,18 @@ export interface SignUpWithEmailInput {
 }
 
 /**
+ * Optional parameters for federated social sign-in flows.
+ */
+export interface SocialSignInOptions {
+  /** Post-authentication redirect URL (used in redirect-based OAuth flows). */
+  readonly redirectTo?: string;
+  /** Additional OAuth scopes to request from the identity provider. */
+  readonly scopes?: ReadonlyArray<string>;
+  /** Extra provider-specific query parameters (e.g., `prompt`, `hd`, `nonce`). */
+  readonly queryParams?: Readonly<Record<string, string>>;
+}
+
+/**
  * Contract for authentication and session management providers.
  */
 export interface IAuthProvider {
@@ -79,22 +102,92 @@ export interface IAuthProvider {
 }
 
 /**
- * Abstract base class for {@link IAuthProvider} implementations.
+ * Segregated capability contract for Google social sign-in.
  */
-export abstract class BaseAuthProvider implements IAuthProvider {
-  public abstract signInWithEmail(
-    input: SignInWithEmailInput,
-  ): Promise<Result<AuthSession, DataAccessError>>;
-  public abstract signUpWithEmail(
-    input: SignUpWithEmailInput,
-  ): Promise<Result<AuthSession, DataAccessError>>;
-  public abstract signInWithOAuth(
-    provider: OAuthProvider,
-    options?: Readonly<Record<string, unknown>>,
-  ): Promise<Result<AuthSession, DataAccessError>>;
-  public abstract signOut(): Promise<Result<void, DataAccessError>>;
-  public abstract getCurrentSession(): Promise<Result<AuthSession | null, DataAccessError>>;
-  public abstract refreshToken(refreshToken?: string): Promise<Result<AuthSession, DataAccessError>>;
-  public abstract verifyToken(accessToken: string): Promise<Result<UserClaims, DataAccessError>>;
-  public abstract onAuthStateChanged(listener: (session: AuthSession | null) => void): () => void;
+export interface IGoogleAuthProvider {
+  /** Initiates or completes sign-in with Google. */
+  signInWithGoogle(options?: SocialSignInOptions): Promise<Result<AuthSession, DataAccessError>>;
 }
+
+/**
+ * Segregated capability contract for GitHub social sign-in.
+ */
+export interface IGitHubAuthProvider {
+  /** Initiates or completes sign-in with GitHub. */
+  signInWithGitHub(options?: SocialSignInOptions): Promise<Result<AuthSession, DataAccessError>>;
+}
+
+/**
+ * Segregated capability contract for Apple social sign-in.
+ */
+export interface IAppleAuthProvider {
+  /** Initiates or completes sign-in with Apple. */
+  signInWithApple(options?: SocialSignInOptions): Promise<Result<AuthSession, DataAccessError>>;
+}
+
+/**
+ * Segregated capability contract for Microsoft social sign-in.
+ */
+export interface IMicrosoftAuthProvider {
+  /** Initiates or completes sign-in with Microsoft. */
+  signInWithMicrosoft(options?: SocialSignInOptions): Promise<Result<AuthSession, DataAccessError>>;
+}
+
+/**
+ * Segregated capability contract for Facebook (Meta) social sign-in.
+ */
+export interface IFacebookAuthProvider {
+  /** Initiates or completes sign-in with Facebook. */
+  signInWithFacebook(options?: SocialSignInOptions): Promise<Result<AuthSession, DataAccessError>>;
+}
+
+/**
+ * Segregated capability contract for X (Twitter) social sign-in.
+ */
+export interface ITwitterAuthProvider {
+  /** Initiates or completes sign-in with X (Twitter). */
+  signInWithTwitter(options?: SocialSignInOptions): Promise<Result<AuthSession, DataAccessError>>;
+}
+
+/**
+ * Segregated capability contract for Discord social sign-in.
+ */
+export interface IDiscordAuthProvider {
+  /** Initiates or completes sign-in with Discord. */
+  signInWithDiscord(options?: SocialSignInOptions): Promise<Result<AuthSession, DataAccessError>>;
+}
+
+/**
+ * Segregated capability contract for LinkedIn social sign-in.
+ */
+export interface ILinkedInAuthProvider {
+  /** Initiates or completes sign-in with LinkedIn. */
+  signInWithLinkedIn(options?: SocialSignInOptions): Promise<Result<AuthSession, DataAccessError>>;
+}
+
+/**
+ * Segregated capability contract for GitLab social sign-in.
+ */
+export interface IGitLabAuthProvider {
+  /** Initiates or completes sign-in with GitLab. */
+  signInWithGitLab(options?: SocialSignInOptions): Promise<Result<AuthSession, DataAccessError>>;
+}
+
+/**
+ * Composite social capability contract for providers supporting all standard social logins.
+ *
+ * Providers that only support a subset (e.g., Google + GitHub only) should implement the
+ * individual interfaces ({@link IGoogleAuthProvider}, {@link IGitHubAuthProvider}, etc.)
+ * directly instead of this composite interface.
+ */
+export interface ISocialAuthProvider
+  extends IGoogleAuthProvider,
+    IGitHubAuthProvider,
+    IAppleAuthProvider,
+    IMicrosoftAuthProvider,
+    IFacebookAuthProvider,
+    ITwitterAuthProvider,
+    IDiscordAuthProvider,
+    ILinkedInAuthProvider,
+    IGitLabAuthProvider {}
+
