@@ -1,42 +1,136 @@
 name: CI
 
 on:
-  push:
+  pull_request:
     branches:
       - main
       - dev
-  pull_request:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Nx Cloud paused while applying for the free Open Source plan (cloud-support@nrwl.io / https://nx.dev/contact).
+  NX_NO_CLOUD: 'true'
+
 jobs:
-  main:
+  plan:
+    name: Plan Affected & Repo Governance
     runs-on: ubuntu-latest
-    env:
-      # Nx Cloud paused while applying for the free Open Source plan (cloud-support@nrwl.io / https://nx.dev/contact).
-      # Re-enable by removing NX_NO_CLOUD and uncommenting start-workers & fix-ci below.
-      NX_NO_CLOUD: 'true'
+    outputs:
+      ts: ${{ steps.affected.outputs.ts }}
+      flutter: ${{ steps.affected.outputs.flutter }}
+      python: ${{ steps.affected.outputs.python }}
+      rust: ${{ steps.affected.outputs.rust }}
+      go: ${{ steps.affected.outputs.go }}
+      proto: ${{ steps.affected.outputs.proto }}
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: nrwl/nx-set-shas@v4
       - uses: ./.github/actions/setup-pnpm
+      - name: Classify affected projects by toolchain
+        id: affected
+        run: node tools/ci/plan-affected.mjs --github-output
+      - name: Verify REPO_INDEX.md & README coverage sync
+        run: |
+          node tools/ci/generate-repo-index.mjs --check
+          node tools/ci/sync-readmes-and-coverage.mjs --check
+
+  ci-ts:
+    name: CI · TypeScript / JS
+    needs: plan
+    if: needs.plan.outputs.ts != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-pnpm
+      - name: Run affected TS/JS targets
+        run: pnpm nx run-many -t lint typecheck test build -p "${{ needs.plan.outputs.ts }}"
+
+  ci-flutter:
+    name: CI · Flutter / Dart
+    needs: plan
+    if: needs.plan.outputs.flutter != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-pnpm
       - uses: ./.github/actions/setup-flutter
+      - name: Run affected Flutter targets
+        run: pnpm nx run-many -t lint test -p "${{ needs.plan.outputs.flutter }}"
+
+  ci-python:
+    name: CI · Python (uv)
+    needs: plan
+    if: needs.plan.outputs.python != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-pnpm
       - uses: astral-sh/setup-uv@v5
       - run: uv sync --all-packages
+      - name: Run affected Python targets
+        run: pnpm nx run-many -t lint typecheck test -p "${{ needs.plan.outputs.python }}"
+
+  ci-rust:
+    name: CI · Rust (Cargo)
+    needs: plan
+    if: needs.plan.outputs.rust != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-pnpm
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
+      - name: Run affected Rust targets
+        run: pnpm nx run-many -t lint test build -p "${{ needs.plan.outputs.rust }}"
+
+  ci-go:
+    name: CI · Go
+    needs: plan
+    if: needs.plan.outputs.go != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-pnpm
       - uses: actions/setup-go@v5
         with:
           go-version: '1.24.3'
-      # - run: pnpm nx-cloud start-workers
+      - name: Run affected Go targets
+        run: pnpm nx run-many -t lint test build -p "${{ needs.plan.outputs.go }}"
 
-      - run: pnpm nx affected -t lint typecheck test build
+  ci-proto:
+    name: CI · Protobuf (buf)
+    needs: plan
+    if: needs.plan.outputs.proto != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-pnpm
+      - name: Run affected Protobuf targets
+        run: pnpm nx run-many -t lint -p "${{ needs.plan.outputs.proto }}"
 
-      # - run: pnpm nx fix-ci
-      #   if: always()
+  main:
+    name: main
+    needs: [plan, ci-ts, ci-flutter, ci-python, ci-rust, ci-go, ci-proto]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all executed CI jobs succeeded
+        run: |
+          results="${{ needs.plan.result }} ${{ needs.ci-ts.result }} ${{ needs.ci-flutter.result }} ${{ needs.ci-python.result }} ${{ needs.ci-rust.result }} ${{ needs.ci-go.result }} ${{ needs.ci-proto.result }}"
+          echo "Job results: $results"
+          for r in $results; do
+            if [ "$r" != "success" ] && [ "$r" != "skipped" ]; then
+              echo "::error::One or more CI jobs failed or were cancelled ($results)"
+              exit 1
+            fi
+          done
