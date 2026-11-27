@@ -130,4 +130,32 @@ describe.runIf(IS_INTEGRATION)('Firebase Local Emulator Suite (live integration)
     const stored = (await getRes.json()) as typeof payload;
     expect(stored).toEqual(payload);
   });
+
+  it('uploads and downloads an object in the Cloud Storage Emulator', async () => {
+    const bucket = `${PROJECT_ID}.appspot.com`;
+    const objectPath = `integration/hello-${RUN_ID}.txt`;
+    const content = `Hello from Firebase Emulator integration run ${RUN_ID}`;
+
+    const uploadRes = await fetch(
+      `http://${STORAGE_HOST}/v0/b/${encodeURIComponent(bucket)}/o?uploadType=media&name=${encodeURIComponent(objectPath)}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain',
+          Authorization: 'Bearer owner',
+        },
+        body: content,
+      }
+    );
+    expect(uploadRes.ok).toBe(true);
+
+    const downloadRes = await fetch(
+      `http://${STORAGE_HOST}/v0/b/${encodeURIComponent(bucket)}/o/${encodeURIComponent(objectPath)}?alt=media`,
+      {
+        headers: { Authorization: 'Bearer owner' },
+      }
+    );
+    expect(downloadRes.ok).toBe(true);
+    expect(await downloadRes.text()).toBe(content);
+  });
 });
