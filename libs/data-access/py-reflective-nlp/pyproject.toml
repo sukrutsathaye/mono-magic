@@ -12,11 +12,6 @@ dependencies = [
     "py-utils-nlp",
 ]
 
-[tool.uv.sources]
-py-data-access-interfaces = { workspace = true }
-py-utils-common = { workspace = true }
-py-utils-nlp = { workspace = true }
-
 [dependency-groups]
 dev = [
     "pyright>=1.1.380",
@@ -29,6 +24,11 @@ dev = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.uv.sources]
+py-data-access-interfaces = { workspace = true }
+py-utils-common = { workspace = true }
+py-utils-nlp = { workspace = true }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/py_reflective_nlp"]
