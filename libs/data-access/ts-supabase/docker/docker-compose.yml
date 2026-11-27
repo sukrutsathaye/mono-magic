@@ -124,7 +124,7 @@ services:
       - ./kong.yml:/var/lib/kong/kong.yml:ro
 
   meta:
-    image: supabase/postgres-meta:v0.84.2
+    image: supabase/postgres-meta:v1.1.0
     container_name: mono-magic-supabase-meta
     depends_on:
       db:
@@ -139,7 +139,7 @@ services:
       PG_META_DB_PASSWORD: local-postgres-password
 
   studio:
-    image: supabase/studio:20241028-1453689
+    image: supabase/studio:2026.11.23-sha-4a73166
     container_name: mono-magic-supabase-studio
     depends_on:
       - gateway
