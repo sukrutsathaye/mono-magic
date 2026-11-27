@@ -70,4 +70,50 @@ describe.runIf(IS_INTEGRATION)('Supabase Local Docker Stack (live integration)',
     expect(session.access_token).toBeTruthy();
     expect(session.user?.id).toBe(created.user?.id);
   });
+
+  it('inserts, reads, and updates a row in Postgres via PostgREST', async () => {
+    const rowId = `entity-${RUN_ID}`;
+    const headers = {
+      'Content-Type': 'application/json',
+      apikey: SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
+      Prefer: 'return=representation',
+    };
+
+    const insertRes = await fetch(`${SUPABASE_URL}/rest/v1/contract_entities`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        id: rowId,
+        name: `Supabase Entity ${RUN_ID}`,
+        score: 42,
+      }),
+    });
+    expect(insertRes.ok).toBe(true);
+    const inserted = (await insertRes.json()) as ContractEntityRow[];
+    expect(inserted[0]?.id).toBe(rowId);
+    expect(inserted[0]?.score).toBe(42);
+
+    const patchRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/contract_entities?id=eq.${encodeURIComponent(rowId)}`,
+      {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ score: 99 }),
+      }
+    );
+    expect(patchRes.ok).toBe(true);
+    const updated = (await patchRes.json()) as ContractEntityRow[];
+    expect(updated[0]?.score).toBe(99);
+
+    const selectRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/contract_entities?id=eq.${encodeURIComponent(rowId)}`,
+      { headers }
+    );
+    expect(selectRes.ok).toBe(true);
+    const rows = (await selectRes.json()) as ContractEntityRow[];
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.name).toBe(`Supabase Entity ${RUN_ID}`);
+    expect(rows[0]?.score).toBe(99);
+  });
 });
