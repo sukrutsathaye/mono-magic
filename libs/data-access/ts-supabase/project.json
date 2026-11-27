@@ -27,7 +27,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "libs/data-access/ts-supabase",
-        "command": "SUPABASE_INTEGRATION=true pnpm exec vitest run"
+        "command": "SUPABASE_INTEGRATION=true pnpm exec vitest run src/lib/ts-supabase.integration.spec.ts --coverage.enabled=false"
       }
     }
   }
